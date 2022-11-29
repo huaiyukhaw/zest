@@ -45,6 +45,7 @@ async function seed() {
       username: "rachelzest",
       displayName: "Rachel Zest",
       userId: user.id,
+      userEmail: email,
     },
   });
 
