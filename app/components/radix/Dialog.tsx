@@ -1,4 +1,4 @@
-import { forwardRef, PropsWithChildren } from "react"
+import { forwardRef } from "react"
 import { Transition as HTransition } from "@headlessui/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Fragment } from "react";
@@ -11,7 +11,7 @@ export const Title = DialogPrimitive.Title
 export const Description = DialogPrimitive.Description
 export const Close = DialogPrimitive.Close
 
-export interface TransitionProps extends PropsWithChildren {
+export interface TransitionProps extends React.PropsWithChildren {
     show: boolean
 }
 

@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import clsx from "clsx";
 import { useControlField, useField } from "remix-validated-form";
-import { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
+import type { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
 import { Listbox, Transition } from '@headlessui/react'
 
 export type SelectOption = string

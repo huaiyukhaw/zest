@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { Link } from "@prisma/client";
-export type { Link } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { Link } from "@prisma/client";
 export type LinkNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllLinksByUsername = async ({

@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { Writing } from "@prisma/client";
-export type { Writing } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { Writing } from "@prisma/client";
 export type WritingNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllWritingByUsername = async ({

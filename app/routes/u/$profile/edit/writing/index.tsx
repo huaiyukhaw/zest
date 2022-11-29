@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Writing } from "@prisma/client"
+import type { Writing } from "@prisma/client"
 import { getAllWritingByUsername } from "~/models/writing.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyWriting } from "~/images/empty"

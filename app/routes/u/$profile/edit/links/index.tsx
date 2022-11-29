@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Link as SocialLink } from "@prisma/client"
+import type { Link as SocialLink } from "@prisma/client"
 import { getAllLinksByUsername } from "~/models/link.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyLink } from "~/images/empty"

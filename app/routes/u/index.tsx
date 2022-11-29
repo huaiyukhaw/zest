@@ -58,7 +58,6 @@ export const action: ActionFunction = async ({
 const UserIndexPage = () => {
     const { profiles, claimUsername } = useLoaderData<LoaderData>()
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(() => (profiles.length == 0 || Boolean(claimUsername)))
-    const [username, setUsername] = useState<string>(claimUsername ?? "")
 
     return (
         <div className="h-full w-60 border-r flex-col dark:border-gray-700">

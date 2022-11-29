@@ -1,7 +1,6 @@
-import { useRef } from "react"
 import clsx from "clsx";
 import { useControlField, useField, useIsValid } from "remix-validated-form";
-import { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
+import type { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
 
 export interface FormInputProps extends Omit<React.ComponentProps<"input">, "id" | "value" | "onChange"> {
     label?: string;

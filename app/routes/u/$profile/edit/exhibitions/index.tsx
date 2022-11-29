@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Exhibition } from "@prisma/client"
+import type { Exhibition } from "@prisma/client"
 import { getAllExhibitionsByUsername } from "~/models/exhibition.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyExhibition } from "~/images/empty"

@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { Education } from "@prisma/client";
-export type { Education } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { Education } from "@prisma/client";
 export type EducationNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllEducationByUsername = async ({

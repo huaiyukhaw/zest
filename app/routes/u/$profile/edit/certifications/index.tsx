@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Certification } from "@prisma/client"
+import type { Certification } from "@prisma/client"
 import { getAllCertificationsByUsername } from "~/models/certification.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyCertification } from "~/images/empty"

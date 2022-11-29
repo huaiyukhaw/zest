@@ -1,4 +1,5 @@
-import { json, LoaderFunction } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import type { LoaderFunction } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { getProfileByUsername } from "~/models/profile.server";
 import { getUserId } from "~/session.server";

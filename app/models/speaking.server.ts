@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { Speaking } from "@prisma/client";
-export type { Speaking } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { Speaking } from "@prisma/client";
 export type SpeakingNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllSpeakingByUsername = async ({

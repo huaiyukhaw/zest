@@ -1,6 +1,7 @@
 import { useControlField } from "remix-validated-form"
 import { fromYearRange, yearRange } from "~/utils"
-import FormSelect, { FormSelectProps, SelectOptions } from "./FormSelect"
+import FormSelect from "./FormSelect"
+import type { FormSelectProps, SelectOptions } from "./FormSelect"
 
 export interface YearSelectProps extends Omit<FormSelectProps, "options"> {
     numberOfYear: number

@@ -1,4 +1,4 @@
-import { forwardRef, PropsWithChildren } from "react"
+import { forwardRef } from "react"
 import { Transition as HTransition } from "@headlessui/react";
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import { Fragment } from "react";
@@ -12,7 +12,7 @@ export const Description = AlertDialogPrimitive.Description
 export const Cancel = AlertDialogPrimitive.Cancel
 export const Action = AlertDialogPrimitive.Action
 
-export interface TransitionProps extends PropsWithChildren {
+export interface TransitionProps extends React.PropsWithChildren {
     show: boolean
 }
 

@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { Certification } from "@prisma/client";
-export type { Certification } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { Certification } from "@prisma/client";
 export type CertificationNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllCertificationsByUsername = async ({

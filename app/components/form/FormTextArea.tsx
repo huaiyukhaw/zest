@@ -1,7 +1,8 @@
 import clsx from "clsx";
 import { useField, useIsValid } from "remix-validated-form";
-import { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
-import TextareaAutosize, { TextareaAutosizeProps } from 'react-textarea-autosize';
+import type { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
+import TextareaAutosize from 'react-textarea-autosize';
+import type { TextareaAutosizeProps } from 'react-textarea-autosize';
 
 export interface FormTextAreaProps extends TextareaAutosizeProps {
     label?: string;

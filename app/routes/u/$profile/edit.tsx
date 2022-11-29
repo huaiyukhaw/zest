@@ -1,11 +1,12 @@
 import { useState } from "react"
-import { LoaderFunction, json } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node"
 import { AlertDialog } from "~/components/radix";
 import { requireUserId } from "~/session.server";
 import { NavLink, Outlet } from "@remix-run/react";
 import clsx from "clsx";
 import { getProfileByUsernameOrThrow } from "~/models/profile.server";
-import { EditProfileCatchData } from "../$profile";
+import type { EditProfileCatchData } from "../$profile";
 
 const routes = [
     {

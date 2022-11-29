@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Speaking } from "@prisma/client"
+import type { Speaking } from "@prisma/client"
 import { getAllSpeakingByUsername } from "~/models/speaking.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptySpeaking } from "~/images/empty"

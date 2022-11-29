@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Award } from "@prisma/client"
+import type { Award } from "@prisma/client"
 import { getAllAwardsByUsername } from "~/models/award.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyAward } from "~/images/empty"

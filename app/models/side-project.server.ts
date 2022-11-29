@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { SideProject } from "@prisma/client";
-export type { SideProject } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { SideProject } from "@prisma/client";
 export type SideProjectNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllSideProjectsByUsername = async ({

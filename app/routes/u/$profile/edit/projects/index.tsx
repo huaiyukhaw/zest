@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Project } from "@prisma/client"
+import type { Project } from "@prisma/client"
 import { getAllProjectsByUsername } from "~/models/project.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyProject } from "~/images/empty"

@@ -1,4 +1,5 @@
-import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
+import type { ActionFunction, LoaderFunction } from "@remix-run/node"
 import { Link } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"

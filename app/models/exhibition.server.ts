@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { Exhibition } from "@prisma/client";
-export type { Exhibition } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { Exhibition } from "@prisma/client";
 export type ExhibitionNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllExhibitionsByUsername = async ({

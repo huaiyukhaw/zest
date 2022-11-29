@@ -1,6 +1,6 @@
 import { useTransition } from "@remix-run/react";
 import { useField } from "remix-validated-form";
-import { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
+import type { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
 
 export interface FormImageInputProps extends Omit<React.ComponentProps<"input">, "id" | "type" | "accept"> {
     name: string;

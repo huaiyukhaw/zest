@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { WorkExperience } from "@prisma/client";
-export type { WorkExperience } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { WorkExperience } from "@prisma/client";
 export type WorkExperienceNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllWorkExperienceByUsername = async ({

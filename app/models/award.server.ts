@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import type { Award } from "@prisma/client";
-export type { Award } from "@prisma/client";
 import { prisma } from "~/db.server";
-import { ThrownResponse } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 
+export type { Award } from "@prisma/client";
 export type AwardNotFoundResponse = ThrownResponse<404, string>;
 
 export const getAllAwardsByUsername = async ({

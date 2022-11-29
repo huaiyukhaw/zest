@@ -9,7 +9,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import ErrorImage from "~/images/error.png"
 import SadLemon from "~/images/sad.png"
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";

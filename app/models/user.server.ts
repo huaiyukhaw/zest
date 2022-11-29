@@ -6,7 +6,6 @@ import bcrypt from "bcryptjs";
 import { prisma } from "~/db.server";
 
 export type { User } from "@prisma/client";
-
 export type UserNotFoundResponse = ThrownResponse<404, string>;
 
 export const isEmailAvailable = async (email: User["email"]) => {

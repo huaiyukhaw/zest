@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Education } from "@prisma/client"
+import type { Education } from "@prisma/client"
 import { getAllEducationByUsername } from "~/models/education.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyEducation } from "~/images/empty"

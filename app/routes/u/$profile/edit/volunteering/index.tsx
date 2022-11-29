@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { Volunteering } from "@prisma/client"
+import type { Volunteering } from "@prisma/client"
 import { getAllVolunteeringByUsername } from "~/models/volunteering.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyVolunteering } from "~/images/empty"

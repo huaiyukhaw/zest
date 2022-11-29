@@ -1,7 +1,7 @@
 import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
-import { WorkExperience } from "@prisma/client"
+import type { WorkExperience } from "@prisma/client"
 import { getAllWorkExperienceByUsername } from "~/models/work-experience.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyWorkExperience } from "~/images/empty"
