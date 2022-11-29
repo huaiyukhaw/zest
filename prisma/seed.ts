@@ -40,14 +40,14 @@ async function seed() {
     },
   });
 
-  await prisma.profile.create({
-    data: {
-      username: "rachelzest",
-      displayName: "Rachel Zest",
-      userId: user.id,
-      userEmail: user.email,
-    },
-  });
+  // await prisma.profile.create({
+  //   data: {
+  //     username: "rachelzest",
+  //     displayName: "Rachel Zest",
+  //     userId: user.id,
+  //     userEmail: user.email,
+  //   },
+  // });
 
   console.log(`Database has been seeded. 🌱`);
 }
