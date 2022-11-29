@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  input {
+    @apply rounded-lg border border-gray-500 text-sm placeholder:text-sm placeholder:opacity-50
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent
+    aria-[invalid]:border-red-800 aria-[invalid]:placeholder-red-300 aria-[invalid]:caret-red-500
+    aria-[invalid]:focus-visible:border-red-500 aria-[invalid]:focus-visible:outline-none aria-[invalid]:focus-visible:ring-red-500
+    dark:border-transparent dark:bg-gray-700/50;
+  }
+
+  input[type="email"] {
+    @apply w-full px-3 py-1.5;
+  }
+
+  input[type="text"] {
+    @apply w-full px-3 py-1.5;
+  }
+
+  input[type="url"] {
+    @apply w-full px-3 py-1.5;
+  }
+
+  input[type="password"] {
+    @apply w-full px-3 py-1.5;
+  }
+
+  input[type="checkbox"] {
+    @apply h-4 w-4 appearance-none accent-yellow-500 checked:border-0 checked:bg-yellow-500;
+  }
+
+  input[type="checkbox"]:checked {
+    @apply bg-checked;
+  }
+
+  textarea {
+    @apply w-full rounded-lg border border-gray-500 px-3 py-1.5
+    text-sm placeholder:text-sm placeholder:opacity-50
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent
+    aria-[invalid]:border-red-800 aria-[invalid]:placeholder-red-300 aria-[invalid]:caret-red-500
+    aria-[invalid]:focus-visible:border-red-500 aria-[invalid]:focus-visible:outline-none
+    aria-[invalid]:focus-visible:ring-red-500 dark:border-transparent dark:bg-gray-700/50;
+  }
+
+  label {
+    @apply text-sm font-medium text-gray-700 dark:text-gray-400;
+  }
+}
+
+@layer components {
+  .dialog-title {
+    @apply mb-2 text-lg font-medium text-gray-900 dark:text-gray-100;
+  }
+
+  .dialog-desc {
+    @apply mb-4 text-sm text-gray-700 dark:text-gray-400;
+  }
+
+  .dialog-footer {
+    @apply m-1 flex h-16 items-center justify-end gap-1.5;
+  }
+
+  .btn-primary {
+    @apply rounded-lg bg-primary/80 px-3 py-1 text-sm hover:bg-primary focus-visible:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 disabled:opacity-50 dark:text-white dark:ring-offset-gray-800;
+  }
+
+  .btn-secondary {
+    @apply rounded-lg border border-gray-200 bg-white px-3 py-1 text-sm hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 disabled:opacity-50 dark:border-transparent dark:bg-gray-700 dark:text-white dark:ring-offset-gray-800 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600;
+  }
+
+  .btn-transparent {
+    @apply rounded-lg bg-transparent px-3 py-1 text-sm hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 disabled:opacity-50 dark:text-white dark:ring-offset-gray-800 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600;
+  }
+}
+
+@layer utilities {
+  /* For Webkit-based browsers (Chrome, Safari and Opera) */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* For IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* For Webkit-based browsers (Chrome, Safari and Opera) */
+  .scrollbar-default::-webkit-scrollbar {
+    display: block;
+  }
+
+  /* For IE, Edge and Firefox */
+  .scrollbar-default {
+    -ms-overflow-style: auto; /* IE and Edge */
+    scrollbar-width: auto; /* Firefox */
+  }
+
+  .overflow-touch {
+    -webkit-overflow-scrolling: touch;
+  }
+}

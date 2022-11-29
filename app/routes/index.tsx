@@ -1,138 +1,144 @@
-import { Link } from "@remix-run/react";
+import { useState } from "react";
+import { Form, Link } from "@remix-run/react";
 
 import { useOptionalUser } from "~/utils";
+import { Dialog } from '~/components/radix';
+import LoginPage from "./login";
+import JoinPage from "./join";
 
-export default function Index() {
+const Index = () => {
   const user = useOptionalUser();
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [isNewUser, setIsNewUser] = useState<boolean>(false)
+
   return (
-    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
-      <div className="relative sm:pb-16 sm:pt-8">
+    <main className="relative min-h-screen bg-white dark:bg-gray-900 sm:flex sm:items-center sm:justify-center">
+      <div className="relative w-full sm:pb-16 sm:pt-8">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
             <div className="absolute inset-0">
               <img
                 className="h-full w-full object-cover"
-                src="https://user-images.githubusercontent.com/1500684/157774694-99820c51-8165-4908-a031-34fc371ac0d6.jpg"
+                src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1250&q=80"
                 alt="Sonic Youth On Stage"
               />
-              <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-yellow-900/75 mix-blend-multiply" />
             </div>
-            <div className="relative px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pb-20 lg:pt-32">
-              <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-                <span className="block uppercase text-yellow-500 drop-shadow-md">
-                  Indie Stack
-                </span>
+            <div className="relative flex h-screen flex-col justify-between px-4 pt-16 pb-8 sm:h-full sm:px-6 sm:pt-14 sm:pb-14 lg:px-8">
+              <h1 className="max-w-lg text-3xl text-white sm:max-w-3xl">
+                <span className="text-primary">Zest </span>
+                is a show, don't tell professional platform to form beautiful
+                profiles and make meaningful connections.
               </h1>
-              <p className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
-                Check the README.md file for instructions on how to get this
-                project deployed.
-              </p>
-              <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
+              <div className="mt-10">
                 {user ? (
-                  <Link
-                    to="/notes"
-                    className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                  >
-                    View Notes for {user.email}
-                  </Link>
-                ) : (
-                  <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
+                  <div className="flex flex-col sm:flex-row gap-2 items-stretch">
                     <Link
-                      to="/join"
-                      className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
+                      to="/u"
+                      className="flex w-full sm:w-fit items-center justify-center rounded-full border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
                     >
-                      Sign up
+                      View Profile for {user.email}
                     </Link>
-                    <Link
-                      to="/login"
-                      className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
-                    >
-                      Log In
-                    </Link>
+                    <Form action="/logout" method="post">
+                      <button
+                        type="submit"
+                        className="flex w-full sm:w-fit items-center justify-center rounded-full border border-transparent bg-white px-4 py-3 text-base font-medium text-black shadow-sm hover:bg-yellow-50 sm:px-8"
+                      >
+                        Log out
+                      </button>
+                    </Form>
                   </div>
+                ) : (
+                  <>
+                    <div className="hidden sm:flex flex-row gap-2 items-center">
+                      <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <Dialog.Trigger
+                          className="text-black flex items-center justify-center rounded-full border border-transparent bg-white/80 px-8 py-3 text-base font-medium shadow-sm hover:bg-white"
+                          onClick={() => setIsNewUser(true)}
+                        >
+                          Sign up
+                        </Dialog.Trigger>
+                        <Dialog.Trigger
+                          className="flex items-center justify-center rounded-full bg-primary/80 px-8 py-3 font-medium text-white hover:bg-primary"
+                          onClick={() => setIsNewUser(false)}
+                        >
+                          Log In
+                        </Dialog.Trigger>
+                        <Dialog.Transition show={isDialogOpen}>
+                          <Dialog.Content>
+                            {isNewUser ?
+                              <>
+                                <Dialog.Title className="dialog-title">
+                                  Create a new profile ✨
+                                </Dialog.Title>
+                                <Dialog.Description className="dialog-desc">
+                                  By continuing you agree to our <span className="text-gray-900 dark:text-white">
+                                    terms of service
+                                  </span> and <span className="text-gray-900 dark:text-white">
+                                    privacy policy
+                                  </span>.
+                                </Dialog.Description>
+                                <JoinPage asModal />
+                                <div className="mt-6 flex items-center justify-center">
+                                  <div className="text-center text-sm text-gray-500">
+                                    Already have an account?{" "}
+                                    <button
+                                      className="text-yellow-500 dark:text-yellow-400 underline underline-offset-2"
+                                      onClick={() => setIsNewUser(false)}
+                                    >
+                                      Log in
+                                    </button>
+                                  </div>
+                                </div>
+                              </> : <>
+                                <Dialog.Title className="dialog-title">
+                                  Login to your account 👋
+                                </Dialog.Title>
+                                <Dialog.Description className="dialog-desc">
+                                  By continuing you agree to our <span className="text-gray-900 dark:text-white">
+                                    terms of service
+                                  </span> and <span className="text-gray-900 dark:text-white">
+                                    privacy policy
+                                  </span>.
+                                </Dialog.Description>
+                                <LoginPage asModal />
+                                <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                  Don't have an account?{" "}
+                                  <button
+                                    className="text-yellow-500 dark:text-yellow-400 underline underline-offset-2"
+                                    onClick={() => setIsNewUser(true)}
+                                  >
+                                    Sign up
+                                  </button>
+                                </div>
+                              </>}
+                          </Dialog.Content>
+                        </Dialog.Transition>
+                      </Dialog.Root>
+                    </div>
+                    <div className="sm:hidden flex flex-col gap-2">
+                      <Link
+                        className="text-black flex items-center justify-center rounded-full border border-transparent bg-white/80 px-8 py-3 text-base font-medium shadow-sm hover:bg-white"
+                        to="join"
+                      >
+                        Sign up
+                      </Link>
+                      <Link
+                        className="flex items-center justify-center rounded-full bg-primary/80 px-8 py-3 font-medium text-white hover:bg-primary"
+                        to="login"
+                      >
+                        Log In
+                      </Link>
+                    </div>
+                  </>
                 )}
               </div>
-              <a href="https://remix.run">
-                <img
-                  src="https://user-images.githubusercontent.com/1500684/158298926-e45dafff-3544-4b69-96d6-d3bcc33fc76a.svg"
-                  alt="Remix"
-                  className="mx-auto mt-16 w-full max-w-[12rem] md:max-w-[16rem]"
-                />
-              </a>
             </div>
-          </div>
-        </div>
-
-        <div className="mx-auto max-w-7xl py-2 px-4 sm:px-6 lg:px-8">
-          <div className="mt-6 flex flex-wrap justify-center gap-8">
-            {[
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764397-ccd8ea10-b8aa-4772-a99b-35de937319e1.svg",
-                alt: "Fly.io",
-                href: "https://fly.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764395-137ec949-382c-43bd-a3c0-0cb8cb22e22d.svg",
-                alt: "SQLite",
-                href: "https://sqlite.org",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764484-ad64a21a-d7fb-47e3-8669-ec046da20c1f.svg",
-                alt: "Prisma",
-                href: "https://prisma.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764276-a516a239-e377-4a20-b44a-0ac7b65c8c14.svg",
-                alt: "Tailwind",
-                href: "https://tailwindcss.com",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764454-48ac8c71-a2a9-4b5e-b19c-edef8b8953d6.svg",
-                alt: "Cypress",
-                href: "https://www.cypress.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772386-75444196-0604-4340-af28-53b236faa182.svg",
-                alt: "MSW",
-                href: "https://mswjs.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772447-00fccdce-9d12-46a3-8bb4-fac612cdc949.svg",
-                alt: "Vitest",
-                href: "https://vitest.dev",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772662-92b0dd3a-453f-4d18-b8be-9fa6efde52cf.png",
-                alt: "Testing Library",
-                href: "https://testing-library.com",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772934-ce0a943d-e9d0-40f8-97f3-f464c0811643.svg",
-                alt: "Prettier",
-                href: "https://prettier.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772990-3968ff7c-b551-4c55-a25c-046a32709a8e.svg",
-                alt: "ESLint",
-                href: "https://eslint.org",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157773063-20a0ed64-b9f8-4e0b-9d1e-0b65a3d4a6db.svg",
-                alt: "TypeScript",
-                href: "https://typescriptlang.org",
-              },
-            ].map((img) => (
-              <a
-                key={img.href}
-                href={img.href}
-                className="flex h-16 w-32 justify-center p-1 grayscale transition hover:grayscale-0 focus:grayscale-0"
-              >
-                <img alt={img.alt} src={img.src} className="object-contain" />
-              </a>
-            ))}
           </div>
         </div>
       </div>
     </main>
   );
 }
+
+export default Index

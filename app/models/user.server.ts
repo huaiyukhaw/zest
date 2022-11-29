@@ -1,19 +1,45 @@
 import type { Password, User } from "@prisma/client";
+import type { ThrownResponse } from "@remix-run/react";
+import { json } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "~/db.server";
 
 export type { User } from "@prisma/client";
 
-export async function getUserById(id: User["id"]) {
+export type UserNotFoundResponse = ThrownResponse<404, string>;
+
+export const isEmailAvailable = async (email: User["email"]) => {
+  const user = await getUserByEmail(email);
+
+  return user ? false : true;
+};
+
+export const getUserById = async (id: User["id"]) => {
   return prisma.user.findUnique({ where: { id } });
-}
+};
 
-export async function getUserByEmail(email: User["email"]) {
+export const getUserByIdOrThrow = async (id: User["id"]) => {
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) {
+    throw json(`User not found`, { status: 404 });
+  }
+  return user;
+};
+
+export const getUserByEmail = async (email: User["email"]) => {
   return prisma.user.findUnique({ where: { email } });
-}
+};
 
-export async function createUser(email: User["email"], password: string) {
+export const getUserByEmailOrThrow = async (email: User["email"]) => {
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    throw json(`User not found`, { status: 404 });
+  }
+  return user;
+};
+
+export const createUser = async (email: User["email"], password: string) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   return prisma.user.create({
@@ -26,16 +52,16 @@ export async function createUser(email: User["email"], password: string) {
       },
     },
   });
-}
+};
 
-export async function deleteUserByEmail(email: User["email"]) {
+export const deleteUserByEmail = async (email: User["email"]) => {
   return prisma.user.delete({ where: { email } });
-}
+};
 
-export async function verifyLogin(
+export const verifyLogin = async (
   email: User["email"],
   password: Password["hash"]
-) {
+) => {
   const userWithPassword = await prisma.user.findUnique({
     where: { email },
     include: {
@@ -59,4 +85,4 @@ export async function verifyLogin(
   const { password: _password, ...userWithoutPassword } = userWithPassword;
 
   return userWithoutPassword;
-}
+};

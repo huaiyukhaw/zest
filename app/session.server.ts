@@ -19,20 +19,20 @@ export const sessionStorage = createCookieSessionStorage({
 
 const USER_SESSION_KEY = "userId";
 
-export async function getSession(request: Request) {
+export const getSession = async (request: Request) => {
   const cookie = request.headers.get("Cookie");
   return sessionStorage.getSession(cookie);
-}
+};
 
-export async function getUserId(
+export const getUserId = async (
   request: Request
-): Promise<User["id"] | undefined> {
+): Promise<User["id"] | undefined> => {
   const session = await getSession(request);
   const userId = session.get(USER_SESSION_KEY);
   return userId;
-}
+};
 
-export async function getUser(request: Request) {
+export const getUser = async (request: Request) => {
   const userId = await getUserId(request);
   if (userId === undefined) return null;
 
@@ -40,30 +40,30 @@ export async function getUser(request: Request) {
   if (user) return user;
 
   throw await logout(request);
-}
+};
 
-export async function requireUserId(
+export const requireUserId = async (
   request: Request,
   redirectTo: string = new URL(request.url).pathname
-) {
+) => {
   const userId = await getUserId(request);
   if (!userId) {
     const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
     throw redirect(`/login?${searchParams}`);
   }
   return userId;
-}
+};
 
-export async function requireUser(request: Request) {
+export const requireUser = async (request: Request) => {
   const userId = await requireUserId(request);
 
   const user = await getUserById(userId);
   if (user) return user;
 
   throw await logout(request);
-}
+};
 
-export async function createUserSession({
+export const createUserSession = async ({
   request,
   userId,
   remember,
@@ -73,9 +73,10 @@ export async function createUserSession({
   userId: string;
   remember: boolean;
   redirectTo: string;
-}) {
+}) => {
   const session = await getSession(request);
   session.set(USER_SESSION_KEY, userId);
+
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await sessionStorage.commitSession(session, {
@@ -85,13 +86,13 @@ export async function createUserSession({
       }),
     },
   });
-}
+};
 
-export async function logout(request: Request) {
+export const logout = async (request: Request) => {
   const session = await getSession(request);
   return redirect("/", {
     headers: {
       "Set-Cookie": await sessionStorage.destroySession(session),
     },
   });
-}
+};

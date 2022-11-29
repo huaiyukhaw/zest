@@ -16,6 +16,9 @@ model User {
 
   password Password?
   notes    Note[]
+  profiles Profile[]
+
+  @@unique([id, email])
 }
 
 model Password {
@@ -35,4 +38,263 @@ model Note {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
+}
+
+model Profile {
+  id String @id @default(cuid())
+
+  username    String  @unique
+  displayName String
+  jobTitle    String?
+  location    String?
+  pronouns    String?
+  website     String?
+  bio         String?
+  avatar      String?
+
+  projects       Project[]
+  sideProjects   SideProject[]
+  exhibitions    Exhibition[]
+  speaking       Speaking[]
+  writing        Writing[]
+  awards         Award[]
+  features       Feature[]
+  workExperience WorkExperience[]
+  volunteering   Volunteering[]
+  education      Education[]
+  certifications Certification[]
+  links          Link[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User   @relation(fields: [userId, userEmail], references: [id, email], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
+  userEmail String
+
+  @@unique([id, username])
+}
+
+model Project {
+  id String @id @default(cuid())
+
+  title       String
+  year        String
+  company     String?
+  url         String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SideProject {
+  id String @id @default(cuid())
+
+  title       String
+  year        String
+  company     String?
+  url         String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Exhibition {
+  id String @id @default(cuid())
+
+  title       String
+  year        String
+  venue       String?
+  location    String?
+  url         String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Speaking {
+  id String @id @default(cuid())
+
+  title       String
+  year        String
+  event       String?
+  location    String?
+  url         String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Writing {
+  id String @id @default(cuid())
+
+  title       String
+  year        String
+  publisher   String?
+  url         String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Award {
+  id String @id @default(cuid())
+
+  title       String
+  year        String
+  presenter   String?
+  url         String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Feature {
+  id String @id @default(cuid())
+
+  title       String
+  year        String
+  publisher   String?
+  url         String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WorkExperience {
+  id String @id @default(cuid())
+
+  from        String
+  to          String
+  title       String
+  company     String
+  location    String?
+  url         String?
+  coworkers   String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Volunteering {
+  id String @id @default(cuid())
+
+  from         String
+  to           String
+  title        String
+  organization String
+  location     String?
+  url          String?
+  description  String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Education {
+  id String @id @default(cuid())
+
+  from        String
+  to          String
+  degree      String
+  school      String
+  location    String?
+  url         String?
+  description String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Certification {
+  id String @id @default(cuid())
+
+  issued       String
+  expires      String
+  name         String
+  organization String
+  url          String?
+  description  String?
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Link {
+  id String @id @default(cuid())
+
+  name     String
+  username String?
+  url      String
+
+  published       Boolean
+  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
