@@ -44,8 +44,11 @@ async function seed() {
     data: {
       username: "rachelzest",
       displayName: "Rachel Zest",
-      userId: user.id,
-      userEmail: email,
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
     },
   });
 
