@@ -26,6 +26,7 @@ export type ProfileNotFoundResponse = ThrownResponse<404, string>;
 
 export const isUsernameAvailable = async (username: Profile["username"]) => {
   const profile = await prisma.profile.findUnique({
+    select: { username: true },
     where: { username },
   });
 

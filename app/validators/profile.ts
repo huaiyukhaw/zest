@@ -54,7 +54,9 @@ export const profileClientValidator = withZod(profileSchema);
 export const profileServerValidator = withZod(
   profileSchema.refine(
     async ({ username }) => {
-      return await isUsernameAvailable(username);
+      const usernameAvailable = await isUsernameAvailable(username);
+      console.log("usernameAvailable:", usernameAvailable);
+      return usernameAvailable;
     },
     {
       message: "That username has been taken. Please choose another.",
