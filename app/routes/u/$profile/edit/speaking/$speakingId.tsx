@@ -25,7 +25,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const form = await request.formData()
     const subaction = form.get("subaction");
-    console.log(subaction)
 
     switch (subaction) {
         case "delete":

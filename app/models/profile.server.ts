@@ -428,26 +428,28 @@ export const getProfileListItems = async ({
   });
 };
 
-export const getAllProfilesByName = async (name: string) => {
+export const getAllProfilesByName = async (username: Profile["username"]) => {
   return prisma.profile.findMany({
     select: {
       username: true,
       displayName: true,
     },
     where: {
-      username: name,
+      username,
     },
   });
 };
 
-export const getAllProfilesByNameOrThrow = async (name: string) => {
+export const getAllProfilesByNameOrThrow = async (
+  username: Profile["username"]
+) => {
   const profile = await prisma.profile.findMany({
     select: {
       username: true,
       displayName: true,
     },
     where: {
-      username: name,
+      username,
     },
   });
 
@@ -475,7 +477,7 @@ export const createProfile = async ({
   });
 };
 
-export const updateProfile = ({
+export const updateProfile = async ({
   id,
   username,
   displayName,
@@ -511,7 +513,24 @@ export const updateProfile = ({
   });
 };
 
-export const updateProfileAvatar = ({
+export const updateSectionOrder = async ({
+  id,
+  sectionOrder,
+}: Pick<Profile, "id" | "sectionOrder">) => {
+  const profile = await prisma.profile.update({
+    data: {
+      sectionOrder,
+    },
+    where: {
+      id,
+    },
+  });
+  return {
+    sectionOrder: profile.sectionOrder,
+  };
+};
+
+export const updateProfileAvatar = async ({
   username,
   avatar,
 }: Pick<Profile, "username" | "avatar">) => {

@@ -13,10 +13,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     if (result.error) return validationError(result.error);
 
-    const { from, to, title, company, location, url, description, published } = result.data
+    const { from, to, title, company, location, url, description } = result.data
 
     await createWorkExperience({
-        from, to, title, company, location, url, description, published,
+        from, to, title, company, location, url, description,
         profileUsername: params.profile
     });
 

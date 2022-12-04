@@ -97,18 +97,13 @@ export const createLink = async ({
   name,
   username,
   url,
-  published,
   profileUsername,
-}: Pick<
-  Link,
-  "name" | "username" | "url" | "published" | "profileUsername"
->) => {
+}: Pick<Link, "name" | "username" | "url" | "profileUsername">) => {
   return prisma.link.create({
     data: {
       name,
       username,
       url,
-      published,
       profile: {
         connect: {
           username: profileUsername,

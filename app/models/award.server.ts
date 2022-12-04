@@ -106,17 +106,10 @@ export const createAward = async ({
   presenter,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Award,
-  | "title"
-  | "year"
-  | "presenter"
-  | "url"
-  | "description"
-  | "published"
-  | "profileUsername"
+  "title" | "year" | "presenter" | "url" | "description" | "profileUsername"
 >) => {
   return prisma.award.create({
     data: {
@@ -125,7 +118,6 @@ export const createAward = async ({
       presenter,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

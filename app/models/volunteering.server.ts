@@ -120,7 +120,6 @@ export const createVolunteering = async ({
   location,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Volunteering,
@@ -131,7 +130,6 @@ export const createVolunteering = async ({
   | "location"
   | "url"
   | "description"
-  | "published"
   | "profileUsername"
 >) => {
   return prisma.volunteering.create({
@@ -143,7 +141,6 @@ export const createVolunteering = async ({
       location,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

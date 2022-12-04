@@ -106,17 +106,10 @@ export const createSideProject = async ({
   company,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   SideProject,
-  | "title"
-  | "year"
-  | "company"
-  | "url"
-  | "description"
-  | "published"
-  | "profileUsername"
+  "title" | "year" | "company" | "url" | "description" | "profileUsername"
 >) => {
   return prisma.sideProject.create({
     data: {
@@ -125,7 +118,6 @@ export const createSideProject = async ({
       company,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

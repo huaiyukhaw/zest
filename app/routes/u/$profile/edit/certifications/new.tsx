@@ -13,10 +13,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     if (result.error) return validationError(result.error);
 
-    const { issued, expires, name, organization, url, description, published } = result.data
+    const { issued, expires, name, organization, url, description } = result.data
 
     await createCertification({
-        issued, expires, name, organization, url, description, published,
+        issued, expires, name, organization, url, description,
         profileUsername: params.profile
     });
 

@@ -116,7 +116,6 @@ export const createCertification = async ({
   organization,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Certification,
@@ -126,7 +125,6 @@ export const createCertification = async ({
   | "organization"
   | "url"
   | "description"
-  | "published"
   | "profileUsername"
 >) => {
   return prisma.certification.create({
@@ -137,7 +135,6 @@ export const createCertification = async ({
       organization,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

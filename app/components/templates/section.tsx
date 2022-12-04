@@ -1,3 +1,6 @@
+import { marked } from "marked"
+import DOMPurify from 'isomorphic-dompurify';
+
 type Item = {
     id: string,
     title: string,
@@ -7,12 +10,12 @@ type Item = {
     description?: string | null,
 }
 
-interface SectionProps extends React.ComponentProps<"div"> {
+interface SectionTemplateProps extends React.ComponentProps<"div"> {
     header: string,
     items: Item[]
 }
 
-export const Section: React.FC<SectionProps> = ({ header, items }) => {
+export const SectionTemplate: React.FC<SectionTemplateProps> = ({ header, items }) => {
     return (
         <div>
             <div className="mb-1 flex h-10 items-center justify-between gap-3">
@@ -61,9 +64,10 @@ export const Section: React.FC<SectionProps> = ({ header, items }) => {
                                         )}
                                     {
                                         (description) && (
-                                            <p className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap mt-3">
-                                                {description}
-                                            </p>
+                                            <div
+                                                className="prose prose-neutral prose-sm dark:prose-invert mt-3"
+                                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(description)) }}
+                                            />
                                         )
                                     }
                                 </div>
@@ -76,4 +80,4 @@ export const Section: React.FC<SectionProps> = ({ header, items }) => {
     )
 }
 
-export default Section
+export default SectionTemplate

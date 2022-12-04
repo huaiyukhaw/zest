@@ -127,9 +127,7 @@ const UserIndexPage = () => {
                                     className="text-center text-xs text-gray-500 dark:text-gray-400 hover:underline underline-offset-2">
                                     Log in with a different email
                                 </Link>
-                                <AlertDialog.Cancel asChild>
-                                    <SubmitButton>Continue</SubmitButton>
-                                </AlertDialog.Cancel>
+                                <SubmitButton>Continue</SubmitButton>
                             </div>
                         </ValidatedForm>
                     </AlertDialog.Content>

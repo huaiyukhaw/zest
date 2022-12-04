@@ -106,17 +106,10 @@ export const createFeature = async ({
   publisher,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Feature,
-  | "title"
-  | "year"
-  | "publisher"
-  | "url"
-  | "description"
-  | "published"
-  | "profileUsername"
+  "title" | "year" | "publisher" | "url" | "description" | "profileUsername"
 >) => {
   return prisma.feature.create({
     data: {
@@ -125,7 +118,6 @@ export const createFeature = async ({
       publisher,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

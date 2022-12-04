@@ -6,6 +6,8 @@ import { getAllProjectsByUsername } from "~/models/project.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyProject } from "~/images/empty"
 import clsx from "clsx"
+import { marked } from "marked"
+import DOMPurify from 'isomorphic-dompurify';
 
 export type ProjectsLoaderData = {
     projects: Array<Project>
@@ -38,7 +40,7 @@ const ProjectsIndexPage = () => {
                     </Link>
                 </div>
             </div>
-            <div className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4 divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="scrollbar-hide flex flex-col flex-1 m-1 py-4 divide-y divide-gray-200 dark:divide-gray-700">
                 {
                     projects.length > 0 ? (
                         projects.map(({
@@ -48,11 +50,12 @@ const ProjectsIndexPage = () => {
                             company,
                             url,
                             description,
-                            published
+                            published,
+                            order
                         }) => (
-                            <div className="flex gap-9 justify-between py-4" key={id}>
+                            <div key={id} className="flex gap-9 justify-between py-4 -mx-4 px-4">
                                 <div className="w-24 flex-none">
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">{year}</span>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">{order}: {year}</span>
                                 </div>
                                 <div className="flex flex-col grow shrink-0 w-min">
                                     <div className={
@@ -82,9 +85,14 @@ const ProjectsIndexPage = () => {
                                                 )
                                             }
                                         </div>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 break-words mt-1 whitespace-pre-wrap">
-                                            {description}
-                                        </p>
+                                        {
+                                            (description) && (
+                                                <div
+                                                    className="prose prose-neutral prose-sm dark:prose-invert mt-1"
+                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(description)) }}
+                                                />
+                                            )
+                                        }
                                     </div>
                                     <div className="flex gap-3 mt-4">
                                         <Form action={id} method="post">
@@ -105,20 +113,21 @@ const ProjectsIndexPage = () => {
                                     </div>
                                 </div>
                             </div>
+                        )
                         ))
-                    ) : (
-                        <div className={
-                            clsx("flex flex-col items-center justify-center gap-4 h-full")
-                        }>
-                            <img src={EmptyProject} alt="" width={200} height={200} className="dark:invert" />
-                            <Link
-                                to="new"
-                                className="btn-secondary"
-                            >
-                                Add a work project you're proud of
-                            </Link>
-                        </div>
-                    )
+                        : (
+                            <div className={
+                                clsx("flex flex-col items-center justify-center gap-4 h-full")
+                            }>
+                                <img src={EmptyProject} alt="" width={200} height={200} className="dark:invert" />
+                                <Link
+                                    to="new"
+                                    className="btn-secondary"
+                                >
+                                    Add a work project you're proud of
+                                </Link>
+                            </div>
+                        )
                 }
             </div>
             <div className="dialog-footer">

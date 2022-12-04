@@ -2,7 +2,7 @@ import { redirect } from "@remix-run/node"
 import type { ActionFunction } from "@remix-run/node"
 import { validationError } from "remix-validated-form"
 import { createLink } from "~/models/link.server"
-import { linkValidator as validator } from "~/validators/link"
+import { linkValidator as validator } from "~/validators"
 import { LinkForm } from "./$linkId"
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -13,10 +13,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     if (result.error) return validationError(result.error);
 
-    const { name, username, url, published } = result.data
+    const { name, username, url } = result.data
 
     await createLink({
-        name, username, url, published,
+        name, username, url,
         profileUsername: params.profile
     });
 

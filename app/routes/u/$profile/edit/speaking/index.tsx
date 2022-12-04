@@ -6,6 +6,8 @@ import { getAllSpeakingByUsername } from "~/models/speaking.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptySpeaking } from "~/images/empty"
 import clsx from "clsx"
+import { marked } from "marked"
+import DOMPurify from 'isomorphic-dompurify';
 
 export type SpeakingLoaderData = {
     speaking: Array<Speaking>
@@ -83,12 +85,21 @@ const SpeakingIndexPage = () => {
                                                 )
                                             }
                                         </div>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 break-words mt-1">
-                                            {location}
-                                        </p>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 break-words mt-3 whitespace-pre-wrap">
-                                            {description}
-                                        </p>
+                                        {
+                                            (location) && (
+                                                <p className="text-sm text-gray-500 dark:text-gray-400 break-words mt-1">
+                                                    {location}
+                                                </p>
+                                            )
+                                        }
+                                        {
+                                            (description) && (
+                                                <div
+                                                    className="prose prose-neutral prose-sm dark:prose-invert mt-3"
+                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(description)) }}
+                                                />
+                                            )
+                                        }
                                     </div>
                                     <div className="flex gap-3 mt-4">
                                         <Form action={id} method="post">

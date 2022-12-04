@@ -106,17 +106,10 @@ export const createWriting = async ({
   publisher,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Writing,
-  | "title"
-  | "year"
-  | "publisher"
-  | "url"
-  | "description"
-  | "published"
-  | "profileUsername"
+  "title" | "year" | "publisher" | "url" | "description" | "profileUsername"
 >) => {
   return prisma.writing.create({
     data: {
@@ -125,7 +118,6 @@ export const createWriting = async ({
       publisher,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

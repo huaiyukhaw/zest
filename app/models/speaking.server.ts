@@ -116,7 +116,6 @@ export const createSpeaking = async ({
   location,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Speaking,
@@ -126,7 +125,6 @@ export const createSpeaking = async ({
   | "location"
   | "url"
   | "description"
-  | "published"
   | "profileUsername"
 >) => {
   return prisma.speaking.create({
@@ -137,7 +135,6 @@ export const createSpeaking = async ({
       location,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

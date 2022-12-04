@@ -13,10 +13,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     if (result.error) return validationError(result.error);
 
-    const { from, to, title, organization, location, url, description, published } = result.data
+    const { from, to, title, organization, location, url, description } = result.data
 
     await createVolunteering({
-        from, to, title, organization, location, url, description, published,
+        from, to, title, organization, location, url, description,
         profileUsername: params.profile
     });
 

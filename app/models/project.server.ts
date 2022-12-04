@@ -57,7 +57,7 @@ export const publishProject = async (id: Project["id"]) => {
       published: true,
     },
     where: {
-      id: id,
+      id,
     },
   });
 };
@@ -68,7 +68,7 @@ export const unpublishProject = async (id: Project["id"]) => {
       published: false,
     },
     where: {
-      id: id,
+      id,
     },
   });
 };
@@ -95,7 +95,7 @@ export const updateProject = async ({
       published,
     },
     where: {
-      id: id,
+      id,
     },
   });
 };
@@ -106,17 +106,10 @@ export const createProject = async ({
   company,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Project,
-  | "title"
-  | "year"
-  | "company"
-  | "url"
-  | "description"
-  | "published"
-  | "profileUsername"
+  "title" | "year" | "company" | "url" | "description" | "profileUsername"
 >) => {
   return prisma.project.create({
     data: {
@@ -125,7 +118,6 @@ export const createProject = async ({
       company,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

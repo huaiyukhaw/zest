@@ -13,10 +13,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     if (result.error) return validationError(result.error);
 
-    const { title, year, presenter, url, description, published } = result.data
+    const { title, year, presenter, url, description } = result.data
 
     await createAward({
-        title, year, presenter, url, description, published,
+        title, year, presenter, url, description,
         profileUsername: params.profile
     });
 

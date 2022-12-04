@@ -13,10 +13,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     if (result.error) return validationError(result.error);
 
-    const { title, year, publisher, url, description, published } = result.data
+    const { title, year, publisher, url, description } = result.data
 
     await createWriting({
-        title, year, publisher, url, description, published,
+        title, year, publisher, url, description,
         profileUsername: params.profile
     });
 

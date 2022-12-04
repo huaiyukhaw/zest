@@ -13,10 +13,10 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     if (result.error) return validationError(result.error);
 
-    const { from, to, degree, school, location, url, description, published } = result.data
+    const { from, to, degree, school, location, url, description } = result.data
 
     await createEducation({
-        from, to, degree, school, location, url, description, published,
+        from, to, degree, school, location, url, description,
         profileUsername: params.profile
     });
 

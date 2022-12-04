@@ -7,7 +7,7 @@ import FormHiddenInput from "~/components/form/FormHiddenInput"
 import { deleteLink, getLinkOrThrow, publishLink, unpublishLink, updateLink } from "~/models/link.server"
 import { CustomFormProps } from "~/types"
 
-import { linkValidator as validator } from "~/validators/link"
+import { linkValidator as validator } from "~/validators"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.linkId) throw new Error("Link id not found")

@@ -39,6 +39,8 @@ model Profile {
   bio         String?
   avatar      String?
 
+  sectionOrder String?
+
   projects       Project[]
   sideProjects   SideProject[]
   exhibitions    Exhibition[]
@@ -71,7 +73,7 @@ model Project {
   url         String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -89,7 +91,7 @@ model SideProject {
   url         String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -108,7 +110,7 @@ model Exhibition {
   url         String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -127,7 +129,7 @@ model Speaking {
   url         String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -145,7 +147,7 @@ model Writing {
   url         String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -163,7 +165,7 @@ model Award {
   url         String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -181,7 +183,7 @@ model Feature {
   url         String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -202,7 +204,7 @@ model WorkExperience {
   coworkers   String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -222,7 +224,7 @@ model Volunteering {
   url          String?
   description  String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -242,7 +244,7 @@ model Education {
   url         String?
   description String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -261,7 +263,7 @@ model Certification {
   url          String?
   description  String?
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
@@ -277,7 +279,7 @@ model Link {
   username String?
   url      String
 
-  published       Boolean
+  published       Boolean @default(true)
   profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String

@@ -120,7 +120,6 @@ export const createWorkExperience = async ({
   location,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   WorkExperience,
@@ -131,7 +130,6 @@ export const createWorkExperience = async ({
   | "location"
   | "url"
   | "description"
-  | "published"
   | "profileUsername"
 >) => {
   return prisma.workExperience.create({
@@ -143,7 +141,6 @@ export const createWorkExperience = async ({
       location,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

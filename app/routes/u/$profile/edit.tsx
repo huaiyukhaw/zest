@@ -1,67 +1,17 @@
 import { useState } from "react"
 import { json } from "@remix-run/node";
-import type { LoaderFunction } from "@remix-run/node"
+import type { LoaderFunction, ActionFunction } from "@remix-run/node"
 import { AlertDialog } from "~/components/radix";
 import { requireUserId } from "~/session.server";
-import { NavLink, Outlet } from "@remix-run/react";
-import clsx from "clsx";
-import { getProfileByUsernameOrThrow } from "~/models/profile.server";
+import { Outlet, useLoaderData } from "@remix-run/react";
+import { getProfileByUsernameOrThrow, updateSectionOrder } from "~/models/profile.server";
 import type { EditProfileCatchData } from "../$profile";
+import { Routes } from "~/components/navigation";
+import { defaultRoutes, RouteType } from "~/utils";
 
-const routes = [
-    {
-        label: "General",
-        route: "./"
-    },
-    {
-        label: "Projects",
-        route: "projects"
-    },
-    {
-        label: "Side Projects",
-        route: "side-projects"
-    },
-    {
-        label: "Exhibitions",
-        route: "exhibitions"
-    },
-    {
-        label: "Speaking",
-        route: "speaking"
-    },
-    {
-        label: "Writing",
-        route: "writing"
-    },
-    {
-        label: "Awards",
-        route: "awards"
-    },
-    {
-        label: "Features",
-        route: "features"
-    },
-    {
-        label: "Work Experience",
-        route: "work-experience"
-    },
-    {
-        label: "Volunteering",
-        route: "volunteering"
-    },
-    {
-        label: "Education",
-        route: "education"
-    },
-    {
-        label: "Certifications",
-        route: "certifications"
-    },
-    {
-        label: "Social Links",
-        route: "links"
-    },
-]
+export type SectionOrderData = {
+    sectionOrder: Array<RouteType> | null
+}
 
 export const loader: LoaderFunction = async ({
     request, params
@@ -69,17 +19,47 @@ export const loader: LoaderFunction = async ({
     if (!params.profile) throw new Error("Profile username not found")
 
     const userId = await requireUserId(request);
-    const { userId: profileOwnerId, userEmail: profileOwnerEmail } = await getProfileByUsernameOrThrow(params.profile)
+    const { userId: profileOwnerId, userEmail: profileOwnerEmail, sectionOrder } = await getProfileByUsernameOrThrow(params.profile)
+
     if (!profileOwnerId.includes(userId)) {
         const data: EditProfileCatchData = { profileOwnerEmail }
         throw json(data, { status: 401 })
     }
 
-    return json({})
+    if (!sectionOrder) {
+        return json({ sectionOrder: null })
+    }
+
+    return json({
+        sectionOrder: sectionOrder.split(",").map((id) => {
+            const index = defaultRoutes.findIndex((route) => route.id === id)
+            return defaultRoutes[index]
+        })
+    })
 };
+
+export const action: ActionFunction = async ({ request, params }) => {
+    if (!params.profile) throw new Error("Profile username not found")
+
+    const form = await request.formData()
+    const sectionOrder = form.get("sectionOrder")
+
+    if (sectionOrder) {
+        const profile = await getProfileByUsernameOrThrow(params.profile)
+
+        await updateSectionOrder({
+            id: profile.id, sectionOrder: sectionOrder.toString()
+        })
+    }
+
+    return json({
+        sectionOrder: null
+    })
+}
 
 const ProfileEditPage = () => {
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false)
+    const { sectionOrder } = useLoaderData<SectionOrderData>()
 
     return (
         <AlertDialog.Root open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen} >
@@ -103,34 +83,12 @@ const ProfileEditPage = () => {
                             <h3 className="pl-9 pr-6 text-xs py-1.5 text-gray-500 dark:text-gray-400">
                                 Profile
                             </h3>
-                            <ul>
-                                {routes.map((item, index) => (
-                                    <NavLink to={item.route} key={item.route}>
-                                        {
-                                            ({ isActive }) => (
-                                                <li key={index} className={
-                                                    clsx("hover:cursor-pointer hover:bg-gray-100/40 dark:hover:bg-gray-700/40 px-9 py-1.5 group/item",
-                                                        isActive && "bg-gray-100 dark:bg-gray-700")
-                                                }>
-                                                    <span className={
-                                                        clsx(
-                                                            "text-sm text-gray-600 dark:text-gray-400 group-hover/item:text-gray-700 dark:group-hover/item:text-gray-200",
-                                                            isActive && "text-gray-700 dark:text-gray-200"
-                                                        )
-                                                    }>
-                                                        {item.label}
-                                                    </span>
-                                                </li>
-                                            )
-                                        }
-                                    </NavLink>
-                                ))}
-                            </ul>
+                            <Routes sectionOrder={sectionOrder} />
                         </div>
                         <div className="
                             flex flex-col min-w-0 flex-1 px-8 pt-8
                             divide-y divide-gray-200 dark:divide-gray-700
-                            ">
+                        ">
                             <Outlet />
                         </div>
                     </div>

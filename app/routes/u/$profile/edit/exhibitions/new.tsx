@@ -10,14 +10,13 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const form = await request.formData()
     const result = await validator.validate(form);
-    console.log("result", result)
 
     if (result.error) return validationError(result.error);
 
-    const { title, year, venue, location, url, description, published } = result.data
+    const { title, year, venue, location, url, description } = result.data
 
     await createExhibition({
-        title, year, venue, location, url, description, published,
+        title, year, venue, location, url, description,
         profileUsername: params.profile
     });
 

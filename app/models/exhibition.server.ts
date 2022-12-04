@@ -57,7 +57,7 @@ export const publishExhibition = async (id: Exhibition["id"]) => {
       published: true,
     },
     where: {
-      id: id,
+      id,
     },
   });
 };
@@ -68,7 +68,7 @@ export const unpublishExhibition = async (id: Exhibition["id"]) => {
       published: false,
     },
     where: {
-      id: id,
+      id,
     },
   });
 };
@@ -104,7 +104,7 @@ export const updateExhibition = async ({
       published,
     },
     where: {
-      id: id,
+      id,
     },
   });
 };
@@ -116,7 +116,6 @@ export const createExhibition = async ({
   location,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Exhibition,
@@ -126,7 +125,6 @@ export const createExhibition = async ({
   | "location"
   | "url"
   | "description"
-  | "published"
   | "profileUsername"
 >) => {
   return prisma.exhibition.create({
@@ -137,7 +135,6 @@ export const createExhibition = async ({
       location,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

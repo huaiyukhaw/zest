@@ -6,6 +6,8 @@ import { getAllCertificationsByUsername } from "~/models/certification.server"
 import { AlertDialog } from "~/components/radix"
 import { EmptyCertification } from "~/images/empty"
 import clsx from "clsx"
+import { marked } from "marked"
+import DOMPurify from 'isomorphic-dompurify';
 
 export type CertificationLoaderData = {
     certification: Array<Certification>
@@ -38,7 +40,7 @@ const CertificationIndexPage = () => {
                     </Link>
                 </div>
             </div>
-            <div className="overflow-y-auexpires scrollbar-hide flex flex-col flex-1 m-1 py-4 divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4 divide-y divide-gray-200 dark:divide-gray-700">
                 {
                     certification.length > 0 ? (
                         certification.map(({
@@ -53,7 +55,7 @@ const CertificationIndexPage = () => {
                         }) => (
                             <div className="flex gap-9 justify-between py-4" key={id}>
                                 <div className="w-24 flex-none">
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">{issued} — {expires}</span>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">{issued}{expires !== "Does not expire" && ` — ${expires}`}</span>
                                 </div>
                                 <div className="flex flex-col grow shrink-0 w-min">
                                     <div className={
@@ -83,9 +85,14 @@ const CertificationIndexPage = () => {
                                                 )
                                             }
                                         </div>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 break-words mt-1 whitespace-pre-wrap">
-                                            {description}
-                                        </p>
+                                        {
+                                            (description) && (
+                                                <div
+                                                    className="prose prose-neutral prose-sm dark:prose-invert mt-1"
+                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked(description)) }}
+                                                />
+                                            )
+                                        }
                                     </div>
                                     <div className="flex gap-3 mt-4">
                                         <Form action={id} method="post">
@@ -93,7 +100,7 @@ const CertificationIndexPage = () => {
                                                 published ? "draft" : "publish"
                                             } />
                                             <button type="submit" className="text-xs text-gray-500 dark:text-gray-400 hover:underline hover:underline-offset-2">{
-                                                published ? "Revert expires draft" : "Publish"
+                                                published ? "Revert to draft" : "Publish"
                                             }</button>
                                         </Form>
                                         <div>

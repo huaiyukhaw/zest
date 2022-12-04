@@ -6,7 +6,8 @@ import { getProfileByUsername } from "~/models/profile.server";
 import type { ProfileWithAllIncluded } from "~/models/profile.server"
 import SadLemon from "~/images/sad.png"
 import { ErrorFragment } from "~/components/boundaries";
-import { Section } from "~/components/preview";
+import { SectionTemplate } from "~/components/templates";
+import { defaultRoutes } from "~/utils";
 
 export type ProfileLoaderData = {
     profile: ProfileWithAllIncluded
@@ -69,222 +70,267 @@ const ProfilePage = () => {
         volunteering,
         education,
         certifications,
-        links
+        links,
+        sectionOrder
     } = profile
+
+    const sections = sectionOrder ? sectionOrder.split(",").map((id) => {
+        const index = defaultRoutes.findIndex((route) => route.id === id)
+        return defaultRoutes[index]
+    }) : defaultRoutes
+
+    const GeneralSection = () => (
+        <div className="flex gap-6 mb-6 items-center">
+            {
+                avatar && JSON.parse(avatar).url && (
+                    <img className="
+                                group object-cover aspect-ratio h-24 w-24 rounded-full
+                                flex flex-col items-center justify-center
+                            "
+                        src={JSON.parse(avatar).url}
+                        alt="Avatar"
+                    />
+                )
+            }
+            <div>
+                <h2 className="text-lg font-medium text-gray-700 dark:text-gray-200">
+                    {displayName}
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap">
+                    {jobTitle && jobTitle}{(jobTitle && location) && " at "}{location && location}{((jobTitle || location) && pronouns) && ", "}{pronouns && pronouns}
+                </p>
+                {
+                    website && (
+                        <div>
+                            <a
+                                href={website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap mt-3 hover:underline hover:underline-offset-2"
+                            >
+                                {website}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 inline-flex">
+                                    <path fillRule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clipRule="evenodd" />
+                                </svg>
+                            </a>
+                        </div>
+                    )
+                }
+            </div>
+        </div>
+    )
+
+    const BioSection = () => {
+        return bio ? (
+            <div className="mb-6">
+                <h2 className="text-base font-medium text-gray-700 dark:text-gray-200">
+                    About
+                </h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap mt-3">
+                    {bio}
+                </p>
+            </div>
+        ) : null
+    }
+
+    const ProjectSection = () => {
+        return projects.length > 0 ? (
+            <SectionTemplate header="Projects" items={
+                projects.map(({ id, title, year, company, url, description }) => ({
+                    id,
+                    title: `${title}${company ? ` at ${company}` : ""}`,
+                    description,
+                    duration: year,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const SideProjectSection = () => {
+        return sideProjects.length > 0 ? (
+            <SectionTemplate header="Side Projects" items={
+                sideProjects.map(({ id, title, year, company, url, description }) => ({
+                    id,
+                    title: `${title}${company ? ` at ${company}` : ""}`,
+                    description,
+                    duration: year,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const ExhibitionSection = () => {
+        return exhibitions.length > 0 ? (
+            <SectionTemplate header="Exhibitions" items={
+                exhibitions.map(({ id, title, year, venue, location, url, description }) => ({
+                    id,
+                    title: `${title}${venue ? ` at ${venue}` : ""}`,
+                    subtitle: location,
+                    description,
+                    duration: year,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const SpeakingSection = () => {
+        return speaking.length > 0 ? (
+            <SectionTemplate header="Speaking" items={
+                speaking.map(({ id, title, year, event, location, url, description }) => ({
+                    id,
+                    title: `${title}${event ? ` at ${event}` : ""}`,
+                    subtitle: location,
+                    description,
+                    duration: year,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const WritingSection = () => {
+        return writing.length > 0 ? (
+            <SectionTemplate header="Writing" items={
+                writing.map(({ id, title, year, publisher, url, description }) => ({
+                    id,
+                    title: `${title}${publisher ? `, ${publisher}` : ""}`,
+                    description,
+                    duration: year,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const AwardSection = () => {
+        return awards.length > 0 ? (
+            <SectionTemplate header="Awards" items={
+                awards.map(({ id, title, year, presenter, url, description }) => ({
+                    id,
+                    title: `${title}${presenter ? ` from ${presenter}` : ""}`,
+                    description,
+                    duration: year,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const FeatureSection = () => {
+        return features.length > 0 ? (
+            <SectionTemplate header="Features" items={
+                features.map(({ id, title, year, publisher, url, description }) => ({
+                    id,
+                    title: `${title}${publisher ? ` on ${publisher}` : ""}`,
+                    description,
+                    duration: year,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const WorkExperienceSection = () => {
+        return workExperience.length > 0 ? (
+            <SectionTemplate header="Work Experience" items={
+                workExperience.map(({ id, title, from, to, company, location, url, description }) => ({
+                    id,
+                    title: `${title} at ${company}`,
+                    subtitle: location,
+                    description,
+                    duration: `${from} — ${to}`,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const VolunteeringSection = () => {
+        return volunteering.length > 0 ? (
+            <SectionTemplate header="Volunteering" items={
+                volunteering.map(({ id, from, to, title, organization, location, url, description }) => ({
+                    id,
+                    title: `${title} at ${organization}`,
+                    subtitle: location,
+                    description,
+                    duration: `${from} — ${to}`,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const EducationSection = () => {
+        return education.length > 0 ? (
+            <SectionTemplate header="Education" items={
+                education.map(({ id, from, to, degree, school, location, url, description }) => ({
+                    id,
+                    title: `${degree} at ${school}`,
+                    subtitle: location,
+                    description,
+                    duration: `${from} — ${to}`,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const CertificationSection = () => {
+        return certifications.length > 0 ? (
+            <SectionTemplate header="Certification" items={
+                certifications.map(({ id, issued, expires, name, organization, url, description }) => ({
+                    id,
+                    title: `${name} at ${organization}`,
+                    description,
+                    duration: `${issued}${expires === "Does not expire" ? "" : ` — ${expires}`}`,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const SocialLinkSection = () => {
+        return links.length > 0 ? (
+            <SectionTemplate header="Social Links" items={
+                links.map(({ id, name, username, url }) => ({
+                    id,
+                    title: `${username ?? url}`,
+                    duration: name,
+                    url
+                }))
+            } />
+        ) : null
+    }
+
+    const Sections: {
+        [key: string]: () => JSX.Element | null
+    } = {
+        ProjectSection,
+        SideProjectSection,
+        ExhibitionSection,
+        SpeakingSection,
+        WritingSection,
+        AwardSection,
+        FeatureSection,
+        WorkExperienceSection,
+        VolunteeringSection,
+        EducationSection,
+        CertificationSection,
+        SocialLinkSection,
+    }
 
     return (
         <>
             <div className="max-w-screen-sm mx-auto mt-4 mb-20 sm:mt-20 px-4">
-                <div className="flex gap-6 mb-6 items-center">
-                    {
-                        avatar && JSON.parse(avatar).url && (
-                            <img className="
-                                group object-cover aspect-ratio h-24 w-24 rounded-full
-                                flex flex-col items-center justify-center
-                            "
-                                src={JSON.parse(avatar).url}
-                                alt="Avatar"
-                            />
-                        )
-                    }
-                    <div>
-                        <h2 className="text-lg font-medium text-gray-700 dark:text-gray-200">
-                            {displayName}
-                        </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap">
-                            {jobTitle && jobTitle}{(jobTitle && location) && " at "}{location && location}{((jobTitle || location) && pronouns) && ", "}{pronouns && pronouns}
-                        </p>
-                        {
-                            website && (
-                                <div>
-                                    <a
-                                        href={website}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap mt-3 hover:underline hover:underline-offset-2"
-                                    >
-                                        {website}
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 inline-flex">
-                                            <path fillRule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clipRule="evenodd" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            )
-                        }
-                    </div>
-                </div>
-                {
-                    bio && (
-                        <div className="mb-6">
-                            <h2 className="text-base font-medium text-gray-700 dark:text-gray-200">
-                                About
-                            </h2>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap mt-3">
-                                {bio}
-                            </p>
-                        </div>
-                    )
-                }
-                {
-                    projects.length > 0 && (
-                        <Section header="Projects" items={
-                            projects.map(({ id, title, year, company, url, description }) => ({
-                                id,
-                                title: `${title}${company ? ` at ${company}` : ""}`,
-                                description,
-                                duration: year,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    sideProjects.length > 0 && (
-                        <Section header="Side Projects" items={
-                            sideProjects.map(({ id, title, year, company, url, description }) => ({
-                                id,
-                                title: `${title}${company ? ` at ${company}` : ""}`,
-                                description,
-                                duration: year,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    exhibitions.length > 0 && (
-                        <Section header="Exhibitions" items={
-                            exhibitions.map(({ id, title, year, venue, location, url, description }) => ({
-                                id,
-                                title: `${title}${venue ? ` at ${venue}` : ""}`,
-                                subtitle: location,
-                                description,
-                                duration: year,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    speaking.length > 0 && (
-                        <Section header="Speaking" items={
-                            speaking.map(({ id, title, year, event, location, url, description }) => ({
-                                id,
-                                title: `${title}${event ? ` at ${event}` : ""}`,
-                                subtitle: location,
-                                description,
-                                duration: year,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    writing.length > 0 && (
-                        <Section header="Writing" items={
-                            writing.map(({ id, title, year, publisher, url, description }) => ({
-                                id,
-                                title: `${title}${publisher ? `, ${publisher}` : ""}`,
-                                description,
-                                duration: year,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    awards.length > 0 && (
-                        <Section header="Awards" items={
-                            awards.map(({ id, title, year, presenter, url, description }) => ({
-                                id,
-                                title: `${title}${presenter ? ` from ${presenter}` : ""}`,
-                                description,
-                                duration: year,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    features.length > 0 && (
-                        <Section header="Features" items={
-                            features.map(({ id, title, year, publisher, url, description }) => ({
-                                id,
-                                title: `${title}${publisher ? ` on ${publisher}` : ""}`,
-                                description,
-                                duration: year,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    workExperience.length > 0 && (
-                        <Section header="Work Experience" items={
-                            workExperience.map(({ id, title, from, to, company, location, url, description }) => ({
-                                id,
-                                title: `${title} at ${company}`,
-                                subtitle: location,
-                                description,
-                                duration: `${from} — ${to}`,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    volunteering.length > 0 && (
-                        <Section header="Volunteering" items={
-                            volunteering.map(({ id, from, to, title, organization, location, url, description }) => ({
-                                id,
-                                title: `${title} at ${organization}`,
-                                subtitle: location,
-                                description,
-                                duration: `${from} — ${to}`,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    education.length > 0 && (
-                        <Section header="Education" items={
-                            education.map(({ id, from, to, degree, school, location, url, description }) => ({
-                                id,
-                                title: `${degree} at ${school}`,
-                                subtitle: location,
-                                description,
-                                duration: `${from} — ${to}`,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    certifications.length > 0 && (
-                        <Section header="Certification" items={
-                            certifications.map(({ id, issued, expires, name, organization, url, description }) => ({
-                                id,
-                                title: `${name} at ${organization}`,
-                                description,
-                                duration: `${issued}${expires === "Does not expire" ? "" : ` — ${expires}`}`,
-                                url
-                            }))
-                        } />
-                    )
-                }
-                {
-                    links.length > 0 && (
-                        <Section header="Social Links" items={
-                            links.map(({ id, name, username, url }) => ({
-                                id,
-                                title: `${username ?? url}`,
-                                duration: name,
-                                url
-                            }))
-                        } />
-                    )
-                }
+                <GeneralSection />
+                <BioSection />
+                {sections.map(({ id }) => {
+                    const Section = Sections[id]
+                    return <Section key={id} />
+                })}
             </div>
             <Outlet />
         </>

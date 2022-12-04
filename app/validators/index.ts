@@ -13,3 +13,5 @@ export * from "./work-experience";
 export * from "./volunteering";
 export * from "./education";
 export * from "./certification";
+export * from "./link";
+export * from "./order";

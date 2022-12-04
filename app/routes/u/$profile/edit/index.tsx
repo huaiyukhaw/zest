@@ -66,7 +66,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const uploadHandler: UploadHandler = composeUploadHandlers(
         async ({ name, data }) => {
-            console.log("name", name)
             if (name !== "avatar") {
                 return undefined;
             }

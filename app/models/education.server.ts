@@ -120,7 +120,6 @@ export const createEducation = async ({
   location,
   url,
   description,
-  published,
   profileUsername,
 }: Pick<
   Education,
@@ -131,7 +130,6 @@ export const createEducation = async ({
   | "location"
   | "url"
   | "description"
-  | "published"
   | "profileUsername"
 >) => {
   return prisma.education.create({
@@ -143,7 +141,6 @@ export const createEducation = async ({
       location,
       url,
       description,
-      published,
       profile: {
         connect: {
           username: profileUsername,

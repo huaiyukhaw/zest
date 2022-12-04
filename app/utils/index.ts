@@ -5,3 +5,4 @@ export * from "./isObject";
 export * from "./isPrimitive";
 export * from "./utils";
 export * from "./cloudinary.server";
+export * from "./getDefaultRoutes";
