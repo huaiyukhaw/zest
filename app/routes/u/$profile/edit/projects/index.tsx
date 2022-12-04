@@ -51,11 +51,10 @@ const ProjectsIndexPage = () => {
                             url,
                             description,
                             published,
-                            order
                         }) => (
                             <div key={id} className="flex gap-9 justify-between py-4 -mx-4 px-4">
                                 <div className="w-24 flex-none">
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">{order}: {year}</span>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">{year}</span>
                                 </div>
                                 <div className="flex flex-col grow shrink-0 w-min">
                                     <div className={
