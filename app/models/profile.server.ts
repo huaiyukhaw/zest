@@ -466,6 +466,10 @@ export const createProfile = async ({
   userId,
 }: Pick<Profile, "username" | "displayName" | "userId">) => {
   return prisma.profile.create({
+    select: {
+      username: true,
+      displayName: true,
+    },
     data: {
       username,
       displayName,
