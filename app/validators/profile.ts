@@ -34,20 +34,22 @@ export const profileSchema = z.object({
     }),
 });
 
-export const profileClientValidator = withZod(
-  profileSchema.refine(
-    async ({ username }) => {
-      const { usernameTaken } = await (
-        await fetch(`/api/username-exists?username=${username}`)
-      ).json();
-      return !usernameTaken;
-    },
-    {
-      message: "That username has been taken. Please choose another.",
-      path: ["username"],
-    }
-  )
-);
+// export const profileClientValidator = withZod(
+//   profileSchema.refine(
+//     async ({ username }) => {
+//       const { usernameTaken } = await (
+//         await fetch(`/api/username-exists?username=${username}`)
+//       ).json();
+//       return !usernameTaken;
+//     },
+//     {
+//       message: "That username has been taken. Please choose another.",
+//       path: ["username"],
+//     }
+//   )
+// );
+
+export const profileClientValidator = withZod(profileSchema);
 
 export const profileServerValidator = withZod(
   profileSchema.refine(
