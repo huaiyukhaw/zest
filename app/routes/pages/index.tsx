@@ -1,6 +1,6 @@
 const PagesIndexPage = () => {
     return (
-        <div>Pages Index</div>
+        <div>Pages Index Page</div>
     )
 }
 
