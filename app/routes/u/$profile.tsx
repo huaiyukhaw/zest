@@ -1,5 +1,5 @@
 import { Form, Link, Outlet, useCatch, useLoaderData } from "@remix-run/react";
-import { ThrownResponse } from "@remix-run/react"
+import type { ThrownResponse } from "@remix-run/react"
 import type { LoaderFunction, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node";
 import { getProfileByUsername } from "~/models/profile.server";

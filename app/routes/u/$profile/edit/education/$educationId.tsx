@@ -6,7 +6,7 @@ import { setFormDefaults, ValidatedForm, validationError } from "remix-validated
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
 import { FormHiddenInput } from "~/components/form"
 import { deleteEducation, getEducationOrThrow, publishEducation, unpublishEducation, updateEducation } from "~/models/education.server"
-import { CustomFormProps } from "~/types"
+import type { CustomFormProps } from "~/types"
 import { educationValidator as validator } from "~/validators/education"
 
 export const loader: LoaderFunction = async ({ params }) => {

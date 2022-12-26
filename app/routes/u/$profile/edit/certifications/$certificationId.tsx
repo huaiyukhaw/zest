@@ -6,7 +6,7 @@ import { setFormDefaults, ValidatedForm, validationError } from "remix-validated
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
 import { FormHiddenInput } from "~/components/form"
 import { deleteCertification, getCertificationOrThrow, publishCertification, unpublishCertification, updateCertification } from "~/models/certification.server"
-import { CustomFormProps } from "~/types"
+import type { CustomFormProps } from "~/types"
 import { certificationValidator as validator } from "~/validators/certification"
 
 export const loader: LoaderFunction = async ({ params }) => {

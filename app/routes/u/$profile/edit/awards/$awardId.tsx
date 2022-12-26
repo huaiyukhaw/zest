@@ -5,7 +5,7 @@ import { setFormDefaults, ValidatedForm, validationError } from "remix-validated
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
 import { FormHiddenInput } from "~/components/form"
 import { deleteAward, getAwardOrThrow, publishAward, unpublishAward, updateAward } from "~/models/award.server"
-import { CustomFormProps } from "~/types"
+import type { CustomFormProps } from "~/types"
 import { awardValidator as validator } from "~/validators/award"
 import { useCallback } from "react"
 

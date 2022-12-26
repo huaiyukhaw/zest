@@ -1,7 +1,10 @@
-import { json, LoaderFunction } from "@remix-run/node";
-import { getPostWithProfile, PostWithProfile } from "~/models/post.server";
+import { json } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
+import { getPostWithProfile } from "~/models/post.server";
+import type { PostWithProfile } from "~/models/post.server";
 import { Link } from "react-router-dom";
-import { ThrownResponse, useCatch, useLoaderData } from "@remix-run/react";
+import { useCatch, useLoaderData } from "@remix-run/react";
+import type { ThrownResponse } from "@remix-run/react";
 import MDEditor from '@uiw/react-md-editor';
 import { avatarSchema } from "~/validators";
 import { TagLabels } from "~/components/templates";

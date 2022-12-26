@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import type { Post, Prisma, Tag, PostsOnTags } from "@prisma/client";
+import type { Post, Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
 import slugify from "slugify";
