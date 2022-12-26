@@ -109,15 +109,15 @@ export const PostForm: React.FC<CustomFormProps> = ({
     const [tagsValue] = useControlField<string>("tags", formId);
     const [contentValue] = useControlField<string>("content", formId);
 
-    if (subaction === "edit") {
-        useEffect(() => {
+    useEffect(() => {
+        if (subaction === "edit") {
             const timer = setTimeout(() => {
                 submit(getValues(), { method: "post", replace: true });
             }, 2000);
 
             return () => clearTimeout(timer);
-        }, [titleValue, tagsValue, contentValue])
-    }
+        }
+    }, [subaction, titleValue, tagsValue, contentValue])
 
     return (
         <>
