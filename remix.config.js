@@ -7,6 +7,7 @@ module.exports = {
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
   serverDependenciesToBundle: [
     /^is-plain-obj.*/,
+    /^react-is.*/,
     /^@uiw\/react-markdown-preview.*/,
     /^@uiw\/react-md-editor.*/,
     /^bail.*/,
