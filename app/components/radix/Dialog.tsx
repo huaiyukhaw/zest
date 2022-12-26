@@ -81,3 +81,5 @@ export const Content: React.FC<ContentProps> = forwardRef(
         </DialogPrimitive.Content>
     )
 );
+
+Content.displayName = "Content"

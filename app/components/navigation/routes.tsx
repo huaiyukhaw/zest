@@ -3,7 +3,8 @@ import { defaultRoutes } from "~/utils";
 import type { RouteType } from "~/utils"
 import { Form, NavLink, useMatches, useSubmit } from "@remix-run/react";
 import clsx from "clsx";
-import { SortableItem, SortableItemType, SortableList } from "../sortable";
+import { SortableItem, SortableList } from "~/components/sortable";
+import type { SortableItemType } from "~/components/sortable"
 
 export type RoutesProps = {
     sectionOrder: Array<RouteType> | null

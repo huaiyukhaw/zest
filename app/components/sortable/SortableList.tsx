@@ -5,15 +5,16 @@ import {
     PointerSensor,
     useSensor,
     useSensors,
-    DragEndEvent,
 } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
 import {
     arrayMove,
     SortableContext,
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import SortableItem, { SortableItemType } from "./SortableItem";
+import SortableItem from "./SortableItem";
+import type { SortableItemType } from "./SortableItem";
 
 export type SortableListProps = {
     items: SortableItemType[]

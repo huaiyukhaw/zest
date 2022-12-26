@@ -81,3 +81,5 @@ export const Content: React.FC<ContentProps> = forwardRef(
         </AlertDialogPrimitive.Content>
     )
 );
+
+Content.displayName = "Content"

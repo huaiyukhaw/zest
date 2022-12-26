@@ -6,7 +6,7 @@ import { AlertDialog } from "~/components/radix";
 import { requireUserId } from "~/session.server";
 import { Form, Outlet, useLoaderData, useSearchParams } from "@remix-run/react";
 import { getProfileByUsername, updateSectionOrder } from "~/models/profile.server";
-import type { EditProfileCatchData } from "../$profile";
+import type { EditProfileCatchData } from "~/routes/u/$profile";
 import { Routes } from "~/components/navigation";
 import { defaultRoutes, RouteType } from "~/utils";
 import clsx from "clsx";
