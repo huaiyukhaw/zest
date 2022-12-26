@@ -6,7 +6,7 @@ import type { ThrownResponse } from "@remix-run/react";
 export type { Link } from "@prisma/client";
 export type LinkNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllLinksByUsername = async ({
+export const getAllLinksByUsername = ({
   profileUsername,
   published,
 }: Pick<Link, "profileUsername"> & {
@@ -23,7 +23,7 @@ export const getAllLinksByUsername = async ({
   });
 };
 
-export const getLink = async (id: Link["id"]) => {
+export const getLink = (id: Link["id"]) => {
   return prisma.link.findUnique({
     where: {
       id,
@@ -43,7 +43,7 @@ export const getLinkOrThrow = async (id: Link["id"]) => {
   return link;
 };
 
-export const deleteLink = async (id: Link["id"]) => {
+export const deleteLink = (id: Link["id"]) => {
   return prisma.link.delete({
     where: {
       id,
@@ -51,7 +51,7 @@ export const deleteLink = async (id: Link["id"]) => {
   });
 };
 
-export const publishLink = async (id: Link["id"]) => {
+export const publishLink = (id: Link["id"]) => {
   return prisma.link.update({
     data: {
       published: true,
@@ -62,7 +62,7 @@ export const publishLink = async (id: Link["id"]) => {
   });
 };
 
-export const unpublishLink = async (id: Link["id"]) => {
+export const unpublishLink = (id: Link["id"]) => {
   return prisma.link.update({
     data: {
       published: false,
@@ -73,7 +73,7 @@ export const unpublishLink = async (id: Link["id"]) => {
   });
 };
 
-export const updateLink = async ({
+export const updateLink = ({
   id,
   name,
   username,
@@ -93,7 +93,7 @@ export const updateLink = async ({
   });
 };
 
-export const createLink = async ({
+export const createLink = ({
   name,
   username,
   url,

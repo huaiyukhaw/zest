@@ -12,131 +12,123 @@ const Index = () => {
   const [isNewUser, setIsNewUser] = useState<boolean>(false)
 
   return (
-    <main className="relative min-h-screen bg-white dark:bg-gray-900 sm:flex sm:items-center sm:justify-center">
-      <div className="relative w-full sm:pb-16 sm:pt-8">
-        <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
-            <div className="absolute inset-0">
-              <img
-                className="h-full w-full object-cover"
-                src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1250&q=80"
-                alt="Sonic Youth On Stage"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-yellow-900/75 mix-blend-multiply" />
+    <main className="flex flex-col items-center justify-center gap-y-2 min-h-screen mx-4">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl text-black dark:text-white text-center">The Professional Profile</h1>
+      <p className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 text-center">for people in tech with robust work profiles at its core.</p>
+      {
+        (user) ? (
+          <>
+            <Link to="u" className="btn-secondary mt-10">
+              Continue
+            </Link>
+            <Form action="/logout" method="post">
+              <button
+                type="submit"
+                className="px-3 py-1 text-sm underline underline-offset-2 hover:underline-offset-4"
+              >
+                Log out
+              </button>
+            </Form>
+          </>
+        ) : (
+          <>
+            <div className="hidden sm:flex flex-row gap-y-2 items-center">
+              <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <div className="flex flex-col gap-2 items-center justify-center mt-10">
+                  <Dialog.Trigger
+                    className="btn-secondary"
+                    onClick={() => setIsNewUser(false)}
+                  >
+                    Continue
+                  </Dialog.Trigger>
+                  <small className="text-gray-500 dark:text-gray-400">or</small>
+                  <Dialog.Trigger
+                    className="group py-1 text-sm border-b-2 border-yellow-400 hover:border-yellow-500 dark:border-yellow-500 dark:hover:border-yellow-400 relative"
+                    onClick={() => setIsNewUser(true)}
+                  >
+                    <span>
+                      Signup w/ email
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 absolute inset-y-0 -right-5 my-auto transition duration-750 ease-in-out group-hover:translate-x-1">
+                      <path fillRule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clipRule="evenodd" />
+                    </svg>
+                  </Dialog.Trigger>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Don't miss out on your favorite username ;)</p>
+                </div>
+                <Dialog.Transition show={isDialogOpen}>
+                  <Dialog.Content>
+                    {isNewUser ?
+                      <>
+                        <Dialog.Title className="dialog-title">
+                          Create a new profile ✨
+                        </Dialog.Title>
+                        <Dialog.Description className="dialog-desc">
+                          By continuing you agree to our <span className="text-gray-900 dark:text-white">
+                            terms of service
+                          </span> and <span className="text-gray-900 dark:text-white">
+                            privacy policy
+                          </span>.
+                        </Dialog.Description>
+                        <JoinPage asModal />
+                        <div className="mt-6 flex items-center justify-center">
+                          <div className="text-center text-sm text-gray-500">
+                            Already have an account?{" "}
+                            <button
+                              className="text-yellow-500 dark:text-yellow-400 underline underline-offset-2"
+                              onClick={() => setIsNewUser(false)}
+                            >
+                              Log in
+                            </button>
+                          </div>
+                        </div>
+                      </> : <>
+                        <Dialog.Title className="dialog-title">
+                          Login to your account 👋
+                        </Dialog.Title>
+                        <Dialog.Description className="dialog-desc">
+                          By continuing you agree to our <span className="text-gray-900 dark:text-white">
+                            terms of service
+                          </span> and <span className="text-gray-900 dark:text-white">
+                            privacy policy
+                          </span>.
+                        </Dialog.Description>
+                        <LoginPage asModal />
+                        <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                          Don't have an account?{" "}
+                          <button
+                            className="text-yellow-500 dark:text-yellow-400 underline underline-offset-2"
+                            onClick={() => setIsNewUser(true)}
+                          >
+                            Sign up
+                          </button>
+                        </div>
+                      </>}
+                  </Dialog.Content>
+                </Dialog.Transition>
+              </Dialog.Root>
             </div>
-            <div className="relative flex h-screen flex-col justify-between px-4 pt-16 pb-8 sm:h-full sm:px-6 sm:pt-14 sm:pb-14 lg:px-8">
-              <h1 className="max-w-lg text-3xl text-white sm:max-w-3xl">
-                <span className="text-primary">Zest </span>
-                is a show, don't tell professional platform to form beautiful
-                profiles and make meaningful connections.
-              </h1>
-              <div className="mt-10">
-                {user ? (
-                  <div className="flex flex-col sm:flex-row gap-2 items-stretch">
-                    <Link
-                      to="/u"
-                      className="flex w-full sm:w-fit items-center justify-center rounded-full border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                    >
-                      View Profile for {user.email}
-                    </Link>
-                    <Form action="/logout" method="post">
-                      <button
-                        type="submit"
-                        className="flex w-full sm:w-fit items-center justify-center rounded-full border border-transparent bg-white px-4 py-3 text-base font-medium text-black shadow-sm hover:bg-yellow-50 sm:px-8"
-                      >
-                        Log out
-                      </button>
-                    </Form>
-                  </div>
-                ) : (
-                  <>
-                    <div className="hidden sm:flex flex-row gap-2 items-center">
-                      <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <Dialog.Trigger
-                          className="text-black flex items-center justify-center rounded-full border border-transparent bg-white/80 px-8 py-3 text-base font-medium shadow-sm hover:bg-white"
-                          onClick={() => setIsNewUser(true)}
-                        >
-                          Sign up
-                        </Dialog.Trigger>
-                        <Dialog.Trigger
-                          className="flex items-center justify-center rounded-full bg-primary/80 px-8 py-3 font-medium text-white hover:bg-primary"
-                          onClick={() => setIsNewUser(false)}
-                        >
-                          Log In
-                        </Dialog.Trigger>
-                        <Dialog.Transition show={isDialogOpen}>
-                          <Dialog.Content>
-                            {isNewUser ?
-                              <>
-                                <Dialog.Title className="dialog-title">
-                                  Create a new profile ✨
-                                </Dialog.Title>
-                                <Dialog.Description className="dialog-desc">
-                                  By continuing you agree to our <span className="text-gray-900 dark:text-white">
-                                    terms of service
-                                  </span> and <span className="text-gray-900 dark:text-white">
-                                    privacy policy
-                                  </span>.
-                                </Dialog.Description>
-                                <JoinPage asModal />
-                                <div className="mt-6 flex items-center justify-center">
-                                  <div className="text-center text-sm text-gray-500">
-                                    Already have an account?{" "}
-                                    <button
-                                      className="text-yellow-500 dark:text-yellow-400 underline underline-offset-2"
-                                      onClick={() => setIsNewUser(false)}
-                                    >
-                                      Log in
-                                    </button>
-                                  </div>
-                                </div>
-                              </> : <>
-                                <Dialog.Title className="dialog-title">
-                                  Login to your account 👋
-                                </Dialog.Title>
-                                <Dialog.Description className="dialog-desc">
-                                  By continuing you agree to our <span className="text-gray-900 dark:text-white">
-                                    terms of service
-                                  </span> and <span className="text-gray-900 dark:text-white">
-                                    privacy policy
-                                  </span>.
-                                </Dialog.Description>
-                                <LoginPage asModal />
-                                <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                                  Don't have an account?{" "}
-                                  <button
-                                    className="text-yellow-500 dark:text-yellow-400 underline underline-offset-2"
-                                    onClick={() => setIsNewUser(true)}
-                                  >
-                                    Sign up
-                                  </button>
-                                </div>
-                              </>}
-                          </Dialog.Content>
-                        </Dialog.Transition>
-                      </Dialog.Root>
-                    </div>
-                    <div className="sm:hidden flex flex-col gap-2">
-                      <Link
-                        className="text-black flex items-center justify-center rounded-full border border-transparent bg-white/80 px-8 py-3 text-base font-medium shadow-sm hover:bg-white"
-                        to="join"
-                      >
-                        Sign up
-                      </Link>
-                      <Link
-                        className="flex items-center justify-center rounded-full bg-primary/80 px-8 py-3 font-medium text-white hover:bg-primary"
-                        to="login"
-                      >
-                        Log In
-                      </Link>
-                    </div>
-                  </>
-                )}
-              </div>
+            <div className="sm:hidden flex flex-col gap-2 items-center justify-center mt-10">
+              <Link
+                className="btn-secondary"
+                to="login"
+              >
+                Continue
+              </Link>
+              <Link
+                className="group py-1 text-sm border-b-2 border-yellow-400 hover:border-yellow-500 dark:border-yellow-500 dark:hover:border-yellow-400 relative"
+                to="join"
+              >
+                <span>
+                  Signup w/ email
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 absolute inset-y-0 -right-5 my-auto transition duration-750 ease-in-out group-hover:translate-x-1">
+                  <path fillRule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clipRule="evenodd" />
+                </svg>
+              </Link>
             </div>
-          </div>
-        </div>
-      </div>
+          </>
+        )
+      }
     </main>
   );
 }

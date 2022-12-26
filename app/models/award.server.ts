@@ -1,18 +1,51 @@
 import { json } from "@remix-run/node";
-import type { Award } from "@prisma/client";
+import type { Award, Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { Award } from "@prisma/client";
 export type AwardNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllAwardsByUsername = async ({
+export type AwardsWithPostsIncluded = Array<
+  Prisma.AwardGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllAwardsByUsername = ({
   profileUsername,
   published,
 }: Pick<Award, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.award.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
@@ -23,7 +56,7 @@ export const getAllAwardsByUsername = async ({
   });
 };
 
-export const getAward = async (id: Award["id"]) => {
+export const getAward = (id: Award["id"]) => {
   return prisma.award.findUnique({
     where: {
       id,
@@ -43,7 +76,7 @@ export const getAwardOrThrow = async (id: Award["id"]) => {
   return award;
 };
 
-export const deleteAward = async (id: Award["id"]) => {
+export const deleteAward = (id: Award["id"]) => {
   return prisma.award.delete({
     where: {
       id,
@@ -51,7 +84,7 @@ export const deleteAward = async (id: Award["id"]) => {
   });
 };
 
-export const publishAward = async (id: Award["id"]) => {
+export const publishAward = (id: Award["id"]) => {
   return prisma.award.update({
     data: {
       published: true,
@@ -62,7 +95,7 @@ export const publishAward = async (id: Award["id"]) => {
   });
 };
 
-export const unpublishAward = async (id: Award["id"]) => {
+export const unpublishAward = (id: Award["id"]) => {
   return prisma.award.update({
     data: {
       published: false,
@@ -73,7 +106,7 @@ export const unpublishAward = async (id: Award["id"]) => {
   });
 };
 
-export const updateAward = async ({
+export const updateAward = ({
   id,
   title,
   year,
@@ -100,7 +133,7 @@ export const updateAward = async ({
   });
 };
 
-export const createAward = async ({
+export const createAward = ({
   title,
   year,
   presenter,

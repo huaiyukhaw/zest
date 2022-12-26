@@ -3,16 +3,12 @@ import clsx from "clsx";
 import { useIsSubmitting } from "remix-validated-form";
 
 export interface SubmitButtonProps extends React.ComponentProps<"button"> {
-    primary?: boolean
-    full?: boolean
     formId?: string
 }
 
 export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(({
     disabled,
     children,
-    primary = false,
-    full = false,
     formId,
     className,
     type = "submit",
@@ -27,9 +23,7 @@ export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(({
             disabled={disabled || isSubmitting}
             className={
                 clsx(
-                    "relative",
-                    full ? "w-full" : "w-full sm:w-fit",
-                    primary ? "btn-primary" : "btn-secondary",
+                    "relative btn-secondary",
                     className
                 )
             }

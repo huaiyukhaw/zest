@@ -5,7 +5,7 @@ export interface FormHiddenInputProps extends Omit<React.ComponentProps<"input">
     formId?: string
 }
 
-export const FormHiddenInput: React.FC<FormHiddenInputProps> = ({ formId, name, className = "flex-1", ...rest }) => {
+export const FormHiddenInput: React.FC<FormHiddenInputProps> = ({ formId, name, className = "hidden", ...rest }) => {
     const { getInputProps } = useField(name, {
         ... (formId) && { formId }
     });

@@ -1,16 +1,14 @@
 import type { ActionFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useSearchParams } from "@remix-run/react";
-
 import { createUserSession, getUserId } from "~/session.server";
 import { verifyLogin } from "~/models/user.server";
 import { safeRedirect } from "~/utils";
-
 import clsx from "clsx"
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { FormInput, SubmitButton } from "~/components/form";
 import { loginClientValidator, loginServerValidator } from "~/validators";
-import FormHiddenInput from "~/components/form/FormHiddenInput";
+import { FormHiddenInput } from "~/components/form"
 
 export async function loader({ request }: LoaderArgs) {
   const userId = await getUserId(request);
@@ -90,7 +88,7 @@ const LoginPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
             name="email"
             label="Email address"
             type="email"
-            autoFocus={true}
+            autoFocus
             autoCapitalize="off"
             spellCheck={false}
             showSuccessIcon
@@ -116,7 +114,7 @@ const LoginPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
                 Remember me
               </label>
             </div>
-            <SubmitButton className="py-2">Login</SubmitButton>
+            <SubmitButton>Login</SubmitButton>
           </div>
           {
             !asModal && <div className="pt-2 text-center text-sm text-gray-500 dark:text-gray-400">

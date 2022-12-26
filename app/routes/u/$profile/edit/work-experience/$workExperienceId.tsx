@@ -1,13 +1,14 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteWorkExperience, getWorkExperienceOrThrow, publishWorkExperience, unpublishWorkExperience, updateWorkExperience } from "~/models/work-experience.server"
 import { CustomFormProps } from "~/types"
 
 import { workExperienceValidator as validator } from "~/validators/work-experience"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.workExperienceId) throw new Error("Work experience id not found")
@@ -58,7 +59,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export const WorkExperienceForm: React.FC<CustomFormProps> = ({ subaction, formId }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
                     Work Experience
                 </h2>
@@ -69,7 +70,7 @@ export const WorkExperienceForm: React.FC<CustomFormProps> = ({ subaction, formI
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <YearSelect
@@ -92,7 +93,7 @@ export const WorkExperienceForm: React.FC<CustomFormProps> = ({ subaction, formI
                         label="Title*"
                         type="text"
                         placeholder="Software engineer, data scientist, etc"
-
+                        autoFocus
                     />
                     <FormInput
                         name="company"
@@ -135,6 +136,13 @@ export const WorkExperienceForm: React.FC<CustomFormProps> = ({ subaction, formI
 }
 
 const WorkExperienceIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <WorkExperienceForm subaction="edit" formId="editWorkExperienceForm" />
     )

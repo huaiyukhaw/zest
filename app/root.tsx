@@ -9,7 +9,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import SadLemon from "~/images/sad.png"
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getUser } from "./session.server";
@@ -57,17 +56,14 @@ export const CatchBoundary = () => {
         <Links />
       </head>
       <body>
-        <div className="h-screen">
-          <div className="flex flex-col items-center justify-center h-screen">
-            <img src={SadLemon} alt="" className="w-16 h-16" />
-            <div className="mt-4 z-20 text-xl font-semibold">Looking for something? &#128269;</div>
-            <div className="mt-1 z-20">We couldn't find the page you're looking for!</div>
-            <div className="mt-4 z-20">
-              <Link to="/" className="btn-secondary">Head back</Link>
-            </div>
-            <div className="absolute z-0 select-none opacity-[5%] filter transition duration-200 blur-sm">
-              <h1 className="text-[20rem] font-black">404</h1>
-            </div>
+        <div className="h-screen px-4 text-center flex flex-col items-center justify-center">
+          <div className="mt-4 z-20 text-3xl font-bold">Looking for something? &#128269;</div>
+          <div className="mt-2 z-20">We couldn't find the page you're looking for!</div>
+          <div className="mt-4 z-20">
+            <Link to="/" className="btn-secondary">Head back</Link>
+          </div>
+          <div className="absolute z-0 select-none opacity-[2%] filter transition duration-200 blur-[2px]">
+            <h1 className="text-[20rem] font-black">404</h1>
           </div>
         </div>
         <Scripts />

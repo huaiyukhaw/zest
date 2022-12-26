@@ -1,18 +1,51 @@
 import { json } from "@remix-run/node";
-import type { Exhibition } from "@prisma/client";
+import type { Exhibition, Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { Exhibition } from "@prisma/client";
 export type ExhibitionNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllExhibitionsByUsername = async ({
+export type ExhibitionsWithPostsIncluded = Array<
+  Prisma.ExhibitionGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllExhibitionsByUsername = ({
   profileUsername,
   published,
 }: Pick<Exhibition, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.exhibition.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
@@ -23,7 +56,7 @@ export const getAllExhibitionsByUsername = async ({
   });
 };
 
-export const getExhibition = async (id: Exhibition["id"]) => {
+export const getExhibition = (id: Exhibition["id"]) => {
   return prisma.exhibition.findUnique({
     where: {
       id,
@@ -43,7 +76,7 @@ export const getExhibitionOrThrow = async (id: Exhibition["id"]) => {
   return exhibition;
 };
 
-export const deleteExhibition = async (id: Exhibition["id"]) => {
+export const deleteExhibition = (id: Exhibition["id"]) => {
   return prisma.exhibition.delete({
     where: {
       id,
@@ -51,7 +84,7 @@ export const deleteExhibition = async (id: Exhibition["id"]) => {
   });
 };
 
-export const publishExhibition = async (id: Exhibition["id"]) => {
+export const publishExhibition = (id: Exhibition["id"]) => {
   return prisma.exhibition.update({
     data: {
       published: true,
@@ -62,7 +95,7 @@ export const publishExhibition = async (id: Exhibition["id"]) => {
   });
 };
 
-export const unpublishExhibition = async (id: Exhibition["id"]) => {
+export const unpublishExhibition = (id: Exhibition["id"]) => {
   return prisma.exhibition.update({
     data: {
       published: false,
@@ -73,7 +106,7 @@ export const unpublishExhibition = async (id: Exhibition["id"]) => {
   });
 };
 
-export const updateExhibition = async ({
+export const updateExhibition = ({
   id,
   title,
   year,
@@ -109,7 +142,7 @@ export const updateExhibition = async ({
   });
 };
 
-export const createExhibition = async ({
+export const createExhibition = ({
   title,
   year,
   venue,

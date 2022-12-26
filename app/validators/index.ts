@@ -15,3 +15,4 @@ export * from "./education";
 export * from "./certification";
 export * from "./link";
 export * from "./order";
+export * from "./post";

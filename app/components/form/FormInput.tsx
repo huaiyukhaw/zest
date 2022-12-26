@@ -7,11 +7,13 @@ export interface FormInputProps extends Omit<React.ComponentProps<"input">, "id"
     name: string;
     validationBehavior?: Partial<ValidationBehaviorOptions>;
     showSuccessIcon?: boolean
+    hideError?: boolean
     formId?: string
     transform?: (value: string) => string
+    transparent?: boolean
 }
 
-export const FormInput: React.FC<FormInputProps> = ({ formId, label, name, className = "flex-1", validationBehavior, maxLength, showSuccessIcon = false, transform, ...rest }) => {
+export const FormInput: React.FC<FormInputProps> = ({ formId, label, name, className = "flex-1", validationBehavior, maxLength, showSuccessIcon = false, hideError = false, transform, transparent = false, ...rest }) => {
     const { error, getInputProps, touched } = useField(name, {
         ... (formId) && { formId },
         validationBehavior: {
@@ -19,14 +21,12 @@ export const FormInput: React.FC<FormInputProps> = ({ formId, label, name, class
         }
     });
     const isValid = useIsValid(formId)
-    const [value, setValue] = useControlField<string>(name);
+    const [value, setValue] = useControlField<string>(name, formId);
 
     return (
         <fieldset className={className}>
             <div className="flex justify-between">
-                <label
-                    htmlFor={name}
-                >
+                <label htmlFor={name}>
                     {label}
                 </label>
                 {maxLength && (
@@ -44,6 +44,9 @@ export const FormInput: React.FC<FormInputProps> = ({ formId, label, name, class
                         maxLength,
                         ...rest,
                     })}
+                    className={clsx(
+                        transparent && "bg-transparent border-transparent"
+                    )}
                     aria-invalid={error ? true : undefined}
                 />
                 <div className={
@@ -80,9 +83,12 @@ export const FormInput: React.FC<FormInputProps> = ({ formId, label, name, class
                     )
                 }
             </div>
-            {error ?
-                <p className="mt-1 text-xs font-semibold text-red-600" aria-live="polite">{error}</p> :
-                <p className="mt-1 text-xs font-semibold invisible">.</p>
+            {
+                (!hideError) && (
+                    (error) ?
+                        <p className="mt-1 text-xs font-semibold text-red-600" aria-live="polite">{error}</p> :
+                        <p className="mt-1 text-xs font-semibold invisible">.</p>
+                )
             }
         </fieldset>
     )

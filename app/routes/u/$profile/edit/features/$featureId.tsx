@@ -1,13 +1,13 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteFeature, getFeatureOrThrow, publishFeature, unpublishFeature, updateFeature } from "~/models/feature.server"
 import { CustomFormProps } from "~/types"
-
 import { featureValidator as validator } from "~/validators/feature"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.featureId) throw new Error("Feature id not found")
@@ -60,7 +60,7 @@ export const FeatureForm: React.FC<CustomFormProps> = ({
 }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
                     Features
                 </h2>
@@ -71,7 +71,7 @@ export const FeatureForm: React.FC<CustomFormProps> = ({
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <FormInput
@@ -79,6 +79,7 @@ export const FeatureForm: React.FC<CustomFormProps> = ({
                         label="Title*"
                         type="text"
                         placeholder="My Great Feature"
+                        autoFocus
                     />
                     <YearSelect
                         name="year"
@@ -120,6 +121,13 @@ export const FeatureForm: React.FC<CustomFormProps> = ({
 }
 
 const FeatureIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <FeatureForm subaction="edit" formId="editFeatureForm" />
     )

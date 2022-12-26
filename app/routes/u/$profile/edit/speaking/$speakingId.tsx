@@ -1,13 +1,13 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteSpeaking, getSpeakingOrThrow, publishSpeaking, unpublishSpeaking, updateSpeaking } from "~/models/speaking.server"
 import { CustomFormProps } from "~/types"
-
 import { speakingValidator as validator } from "~/validators/speaking"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.speakingId) throw new Error("Speaking id not found")
@@ -40,12 +40,12 @@ export const action: ActionFunction = async ({ request, params }) => {
             break;
 
         case "edit":
-            const editResult = await validator.validate(form);
-            if (editResult.error) return validationError(editResult.error);
+            const result = await validator.validate(form);
+            if (result.error) return validationError(result.error);
 
             await updateSpeaking({
                 id: params.speakingId,
-                ...editResult.data,
+                ...result.data,
             })
             break;
 
@@ -60,7 +60,7 @@ export const SpeakingForm: React.FC<CustomFormProps> = ({
 }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
                     Speaking
                 </h2>
@@ -71,7 +71,7 @@ export const SpeakingForm: React.FC<CustomFormProps> = ({
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <FormInput
@@ -79,6 +79,7 @@ export const SpeakingForm: React.FC<CustomFormProps> = ({
                         label="Speaking title*"
                         type="text"
                         placeholder="My Great Talk"
+                        autoFocus
                     />
                     <YearSelect
                         name="year"
@@ -128,6 +129,13 @@ export const SpeakingForm: React.FC<CustomFormProps> = ({
 }
 
 const SpeakingIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <SpeakingForm
             subaction="edit"

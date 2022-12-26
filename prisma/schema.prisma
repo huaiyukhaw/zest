@@ -8,39 +8,33 @@ generator client {
 }
 
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  password Password?
-  profiles Profile[]
+  id        String    @id @default(cuid())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  password  Password?
+  profiles  Profile[]
 
   @@unique([id, email])
 }
 
 model Password {
-  hash String
-
+  hash   String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
 }
 
 model Profile {
-  id String @id @default(cuid())
-
-  username    String  @unique
-  displayName String
-  jobTitle    String?
-  location    String?
-  pronouns    String?
-  website     String?
-  bio         String?
-  avatar      String?
-
-  sectionOrder String?
-
+  id             String           @id @default(cuid())
+  username       String           @unique
+  displayName    String
+  jobTitle       String?
+  location       String?
+  pronouns       String?
+  website        String?
+  bio            String?
+  avatar         String?
+  sectionOrder   String?
   projects       Project[]
   sideProjects   SideProject[]
   exhibitions    Exhibition[]
@@ -53,237 +47,373 @@ model Profile {
   education      Education[]
   certifications Certification[]
   links          Link[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user      User   @relation(fields: [userId, userEmail], references: [id, email], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
-  userEmail String
+  posts          Post[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  user           User             @relation(fields: [userId, userEmail], references: [id, email], onDelete: Cascade, onUpdate: Cascade)
+  userId         String
+  userEmail      String
+  tags           ProfilesOnTags[]
 
   @@unique([id, username])
 }
 
-model Project {
-  id String @id @default(cuid())
-
-  title       String
-  year        String
-  company     String?
-  url         String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model SideProject {
-  id String @id @default(cuid())
-
-  title       String
-  year        String
-  company     String?
-  url         String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Exhibition {
-  id String @id @default(cuid())
-
-  title       String
-  year        String
-  venue       String?
-  location    String?
-  url         String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Speaking {
-  id String @id @default(cuid())
-
-  title       String
-  year        String
-  event       String?
-  location    String?
-  url         String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Writing {
-  id String @id @default(cuid())
-
-  title       String
-  year        String
-  publisher   String?
-  url         String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Award {
-  id String @id @default(cuid())
-
-  title       String
-  year        String
-  presenter   String?
-  url         String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  id              String          @id @default(cuid())
+  title           String
+  year            String
+  presenter       String?
+  url             String?
+  description     String?
+  published       Boolean         @default(true)
+  posts           PostsOnAwards[]
+  profile         Profile         @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Feature {
-  id String @id @default(cuid())
-
-  title       String
-  year        String
-  publisher   String?
-  url         String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model WorkExperience {
-  id String @id @default(cuid())
-
-  from        String
-  to          String
-  title       String
-  company     String
-  location    String?
-  url         String?
-  coworkers   String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Volunteering {
-  id String @id @default(cuid())
-
-  from         String
-  to           String
-  title        String
-  organization String
-  location     String?
-  url          String?
-  description  String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Education {
-  id String @id @default(cuid())
-
-  from        String
-  to          String
-  degree      String
-  school      String
-  location    String?
-  url         String?
-  description String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  profileId       String
-  profileUsername String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
 
 model Certification {
-  id String @id @default(cuid())
-
-  issued       String
-  expires      String
-  name         String
-  organization String
-  url          String?
-  description  String?
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  id              String                  @id @default(cuid())
+  issued          String
+  expires         String
+  name            String
+  organization    String
+  url             String?
+  description     String?
+  published       Boolean                 @default(true)
+  posts           PostsOnCertifications[]
+  profile         Profile                 @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Education {
+  id              String             @id @default(cuid())
+  from            String
+  to              String
+  degree          String
+  school          String
+  location        String?
+  url             String?
+  description     String?
+  published       Boolean            @default(true)
+  posts           PostsOnEducation[]
+  profile         Profile            @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model Exhibition {
+  id              String              @id @default(cuid())
+  title           String
+  year            String
+  venue           String?
+  location        String?
+  url             String?
+  description     String?
+  published       Boolean             @default(true)
+  posts           PostsOnExhibition[]
+  profile         Profile             @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
+model Feature {
+  id              String           @id @default(cuid())
+  title           String
+  year            String
+  publisher       String?
+  url             String?
+  description     String?
+  published       Boolean          @default(true)
+  posts           PostsOnFeature[]
+  profile         Profile          @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model Link {
-  id String @id @default(cuid())
-
-  name     String
-  username String?
-  url      String
-
-  published       Boolean @default(true)
-  profile         Profile @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  id              String   @id @default(cuid())
+  name            String
+  username        String?
+  url             String
+  published       Boolean  @default(true)
+  profile         Profile  @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   profileId       String
   profileUsername String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Project {
+  id              String           @id @default(cuid())
+  title           String
+  year            String
+  company         String?
+  url             String?
+  description     String?
+  published       Boolean          @default(true)
+  posts           PostsOnProject[]
+  profile         Profile          @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model SideProject {
+  id              String               @id @default(cuid())
+  title           String
+  year            String
+  company         String?
+  url             String?
+  description     String?
+  published       Boolean              @default(true)
+  posts           PostsOnSideProject[]
+  profile         Profile              @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+}
+
+model Speaking {
+  id              String            @id @default(cuid())
+  title           String
+  year            String
+  event           String?
+  location        String?
+  url             String?
+  description     String?
+  published       Boolean           @default(true)
+  posts           PostsOnSpeaking[]
+  profile         Profile           @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Volunteering {
+  id              String                @id @default(cuid())
+  from            String
+  to              String
+  title           String
+  organization    String
+  location        String?
+  url             String?
+  description     String?
+  published       Boolean               @default(true)
+  posts           PostsOnVolunteering[]
+  profile         Profile               @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+}
+
+model WorkExperience {
+  id              String                  @id @default(cuid())
+  from            String
+  to              String
+  title           String
+  company         String
+  location        String?
+  url             String?
+  coworkers       String?
+  description     String?
+  published       Boolean                 @default(true)
+  posts           PostsOnWorkExperience[]
+  profile         Profile                 @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+}
+
+model Writing {
+  id              String           @id @default(cuid())
+  title           String
+  year            String
+  publisher       String?
+  url             String?
+  description     String?
+  published       Boolean          @default(true)
+  posts           PostsOnWriting[]
+  profile         Profile          @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Post {
+  id              String                  @id @default(cuid())
+  slug            String                  @unique
+  title           String?
+  content         String?
+  published       Boolean                 @default(true)
+  profile         Profile                 @relation(fields: [profileId, profileUsername], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  profileId       String
+  profileUsername String
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+  awards          PostsOnAwards[]
+  certifications  PostsOnCertifications[]
+  education       PostsOnEducation[]
+  exhibitions     PostsOnExhibition[]
+  features        PostsOnFeature[]
+  projects        PostsOnProject[]
+  sideProjects    PostsOnSideProject[]
+  speaking        PostsOnSpeaking[]
+  volunteering    PostsOnVolunteering[]
+  workExperience  PostsOnWorkExperience[]
+  writing         PostsOnWriting[]
+  tags            PostsOnTags[]
+}
+
+model Tag {
+  value    String           @unique
+  posts    PostsOnTags[]
+  profiles ProfilesOnTags[]
+}
+
+model PostsOnTags {
+  tag        Tag      @relation(fields: [value], references: [value], onDelete: Cascade, onUpdate: Cascade)
+  value      String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId     String
+  assignedAt DateTime @default(now())
+
+  @@id([value, postId])
+}
+
+model ProfilesOnTags {
+  tag             Tag      @relation(fields: [value], references: [value], onDelete: Cascade, onUpdate: Cascade)
+  value           String
+  profile         Profile  @relation(fields: [profileUsername], references: [username], onDelete: Cascade, onUpdate: Cascade)
+  profileUsername String
+  assignedAt      DateTime @default(now())
+
+  @@id([value, profileUsername])
+}
+
+model PostsOnAwards {
+  award      Award    @relation(fields: [awardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  awardId    String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId     String
+  assignedAt DateTime @default(now())
+
+  @@id([awardId, postId])
+}
+
+model PostsOnCertifications {
+  certification   Certification @relation(fields: [certificationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  certificationId String
+  post            Post          @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId          String
+  assignedAt      DateTime      @default(now())
+
+  @@id([certificationId, postId])
+}
+
+model PostsOnEducation {
+  education   Education @relation(fields: [educationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  educationId String
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId      String
+  assignedAt  DateTime  @default(now())
+
+  @@id([educationId, postId])
+}
+
+model PostsOnExhibition {
+  exhibition   Exhibition @relation(fields: [exhibitionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  exhibitionId String
+  post         Post       @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId       String
+  assignedAt   DateTime   @default(now())
+
+  @@id([exhibitionId, postId])
+}
+
+model PostsOnFeature {
+  feature    Feature  @relation(fields: [featureId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  featureId  String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId     String
+  assignedAt DateTime @default(now())
+
+  @@id([featureId, postId])
+}
+
+model PostsOnProject {
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  projectId  String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId     String
+  assignedAt DateTime @default(now())
+
+  @@id([projectId, postId])
+}
+
+model PostsOnSideProject {
+  sideProject   SideProject @relation(fields: [sideProjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sideProjectId String
+  post          Post        @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId        String
+  assignedAt    DateTime    @default(now())
+
+  @@id([sideProjectId, postId])
+}
+
+model PostsOnSpeaking {
+  speaking   Speaking @relation(fields: [speakingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  speakingId String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId     String
+  assignedAt DateTime @default(now())
+
+  @@id([speakingId, postId])
+}
+
+model PostsOnVolunteering {
+  volunteering   Volunteering @relation(fields: [volunteeringId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  volunteeringId String
+  post           Post         @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId         String
+  assignedAt     DateTime     @default(now())
+
+  @@id([volunteeringId, postId])
+}
+
+model PostsOnWorkExperience {
+  workExperience   WorkExperience @relation(fields: [workExperienceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  workExperienceId String
+  post             Post           @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId           String
+  assignedAt       DateTime       @default(now())
+
+  @@id([workExperienceId, postId])
+}
+
+model PostsOnWriting {
+  writing    Writing  @relation(fields: [writingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  writingId  String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId     String
+  assignedAt DateTime @default(now())
+
+  @@id([writingId, postId])
 }

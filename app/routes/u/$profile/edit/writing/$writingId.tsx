@@ -1,13 +1,14 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteWriting, getWritingOrThrow, publishWriting, unpublishWriting, updateWriting } from "~/models/writing.server"
 import { CustomFormProps } from "~/types"
 
 import { writingValidator as validator } from "~/validators/writing"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.writingId) throw new Error("Writing id not found")
@@ -60,7 +61,7 @@ export const WritingForm: React.FC<CustomFormProps> = ({
 }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
                     Writing
                 </h2>
@@ -71,7 +72,7 @@ export const WritingForm: React.FC<CustomFormProps> = ({
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <FormInput
@@ -79,6 +80,7 @@ export const WritingForm: React.FC<CustomFormProps> = ({
                         label="Title*"
                         type="text"
                         placeholder="My Great Piece"
+                        autoFocus
                     />
                     <YearSelect
                         name="year"
@@ -120,6 +122,13 @@ export const WritingForm: React.FC<CustomFormProps> = ({
 }
 
 const WritingIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <WritingForm subaction="edit" formId="editWritingForm" />
     )

@@ -1,18 +1,51 @@
 import { json } from "@remix-run/node";
-import type { Volunteering } from "@prisma/client";
+import type { Prisma, Volunteering } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { Volunteering } from "@prisma/client";
 export type VolunteeringNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllVolunteeringByUsername = async ({
+export type VolunteeringWithPostsIncluded = Array<
+  Prisma.VolunteeringGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllVolunteeringByUsername = ({
   profileUsername,
   published,
 }: Pick<Volunteering, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.volunteering.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
@@ -23,7 +56,7 @@ export const getAllVolunteeringByUsername = async ({
   });
 };
 
-export const getVolunteering = async (id: Volunteering["id"]) => {
+export const getVolunteering = (id: Volunteering["id"]) => {
   return prisma.volunteering.findUnique({
     where: {
       id,
@@ -43,7 +76,7 @@ export const getVolunteeringOrThrow = async (id: Volunteering["id"]) => {
   return volunteering;
 };
 
-export const deleteVolunteering = async (id: Volunteering["id"]) => {
+export const deleteVolunteering = (id: Volunteering["id"]) => {
   return prisma.volunteering.delete({
     where: {
       id,
@@ -51,7 +84,7 @@ export const deleteVolunteering = async (id: Volunteering["id"]) => {
   });
 };
 
-export const publishVolunteering = async (id: Volunteering["id"]) => {
+export const publishVolunteering = (id: Volunteering["id"]) => {
   return prisma.volunteering.update({
     data: {
       published: true,
@@ -62,7 +95,7 @@ export const publishVolunteering = async (id: Volunteering["id"]) => {
   });
 };
 
-export const unpublishVolunteering = async (id: Volunteering["id"]) => {
+export const unpublishVolunteering = (id: Volunteering["id"]) => {
   return prisma.volunteering.update({
     data: {
       published: false,
@@ -73,7 +106,7 @@ export const unpublishVolunteering = async (id: Volunteering["id"]) => {
   });
 };
 
-export const updateVolunteering = async ({
+export const updateVolunteering = ({
   id,
   from,
   to,
@@ -112,7 +145,7 @@ export const updateVolunteering = async ({
   });
 };
 
-export const createVolunteering = async ({
+export const createVolunteering = ({
   from,
   to,
   title,

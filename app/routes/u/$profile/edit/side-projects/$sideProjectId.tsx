@@ -1,13 +1,14 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteSideProject, getSideProjectOrThrow, publishSideProject, unpublishSideProject, updateSideProject } from "~/models/side-project.server"
 import { CustomFormProps } from "~/types"
 
 import { sideProjectValidator as validator } from "~/validators/side-project"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.sideProjectId) throw new Error("Side project id not found")
@@ -15,7 +16,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     const sideProject = await getSideProjectOrThrow(params.sideProjectId)
 
     return json(
-        setFormDefaults("editProjectForm", sideProject)
+        setFormDefaults("editSideProjectForm", sideProject)
     );
 }
 
@@ -58,9 +59,9 @@ export const action: ActionFunction = async ({ request, params }) => {
 export const SideProjectForm: React.FC<CustomFormProps> = ({ subaction, formId }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
-                    Projects
+                    Side Projects
                 </h2>
             </div>
             <ValidatedForm
@@ -69,7 +70,7 @@ export const SideProjectForm: React.FC<CustomFormProps> = ({ subaction, formId }
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <FormInput
@@ -77,6 +78,7 @@ export const SideProjectForm: React.FC<CustomFormProps> = ({ subaction, formId }
                         label="Title*"
                         type="text"
                         placeholder="My Great Project"
+                        autoFocus
                     />
                     <YearSelect
                         name="year"
@@ -121,6 +123,13 @@ export const SideProjectForm: React.FC<CustomFormProps> = ({ subaction, formId }
 }
 
 const SideProjectIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <SideProjectForm subaction="edit" formId="editSideProjectForm" />
     )

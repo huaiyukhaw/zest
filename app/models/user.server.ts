@@ -14,7 +14,7 @@ export const isEmailAvailable = async (email: User["email"]) => {
   return user ? false : true;
 };
 
-export const getUserById = async (id: User["id"]) => {
+export const getUserById = (id: User["id"]) => {
   return prisma.user.findUnique({ where: { id } });
 };
 
@@ -26,7 +26,7 @@ export const getUserByIdOrThrow = async (id: User["id"]) => {
   return user;
 };
 
-export const getUserByEmail = async (email: User["email"]) => {
+export const getUserByEmail = (email: User["email"]) => {
   return prisma.user.findUnique({ where: { email } });
 };
 
@@ -53,7 +53,7 @@ export const createUser = async (email: User["email"], password: string) => {
   });
 };
 
-export const deleteUserByEmail = async (email: User["email"]) => {
+export const deleteUserByEmail = (email: User["email"]) => {
   return prisma.user.delete({ where: { email } });
 };
 

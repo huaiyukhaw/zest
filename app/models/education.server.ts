@@ -1,18 +1,51 @@
 import { json } from "@remix-run/node";
-import type { Education } from "@prisma/client";
+import type { Education, Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { Education } from "@prisma/client";
 export type EducationNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllEducationByUsername = async ({
+export type EducationWithPostsIncluded = Array<
+  Prisma.EducationGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllEducationByUsername = ({
   profileUsername,
   published,
 }: Pick<Education, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.education.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
@@ -23,7 +56,7 @@ export const getAllEducationByUsername = async ({
   });
 };
 
-export const getEducation = async (id: Education["id"]) => {
+export const getEducation = (id: Education["id"]) => {
   return prisma.education.findUnique({
     where: {
       id,
@@ -43,7 +76,7 @@ export const getEducationOrThrow = async (id: Education["id"]) => {
   return education;
 };
 
-export const deleteEducation = async (id: Education["id"]) => {
+export const deleteEducation = (id: Education["id"]) => {
   return prisma.education.delete({
     where: {
       id,
@@ -51,7 +84,7 @@ export const deleteEducation = async (id: Education["id"]) => {
   });
 };
 
-export const publishEducation = async (id: Education["id"]) => {
+export const publishEducation = (id: Education["id"]) => {
   return prisma.education.update({
     data: {
       published: true,
@@ -62,7 +95,7 @@ export const publishEducation = async (id: Education["id"]) => {
   });
 };
 
-export const unpublishEducation = async (id: Education["id"]) => {
+export const unpublishEducation = (id: Education["id"]) => {
   return prisma.education.update({
     data: {
       published: false,
@@ -73,7 +106,7 @@ export const unpublishEducation = async (id: Education["id"]) => {
   });
 };
 
-export const updateEducation = async ({
+export const updateEducation = ({
   id,
   from,
   to,
@@ -112,7 +145,7 @@ export const updateEducation = async ({
   });
 };
 
-export const createEducation = async ({
+export const createEducation = ({
   from,
   to,
   degree,

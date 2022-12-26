@@ -1,18 +1,51 @@
 import { json } from "@remix-run/node";
-import type { Writing } from "@prisma/client";
+import type { Prisma, Writing } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { Writing } from "@prisma/client";
 export type WritingNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllWritingByUsername = async ({
+export type WritingWithPostsIncluded = Array<
+  Prisma.WritingGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllWritingByUsername = ({
   profileUsername,
   published,
 }: Pick<Writing, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.writing.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
@@ -23,7 +56,7 @@ export const getAllWritingByUsername = async ({
   });
 };
 
-export const getWriting = async (id: Writing["id"]) => {
+export const getWriting = (id: Writing["id"]) => {
   return prisma.writing.findUnique({
     where: {
       id,
@@ -43,7 +76,7 @@ export const getWritingOrThrow = async (id: Writing["id"]) => {
   return writing;
 };
 
-export const deleteWriting = async (id: Writing["id"]) => {
+export const deleteWriting = (id: Writing["id"]) => {
   return prisma.writing.delete({
     where: {
       id,
@@ -51,7 +84,7 @@ export const deleteWriting = async (id: Writing["id"]) => {
   });
 };
 
-export const publishWriting = async (id: Writing["id"]) => {
+export const publishWriting = (id: Writing["id"]) => {
   return prisma.writing.update({
     data: {
       published: true,
@@ -62,7 +95,7 @@ export const publishWriting = async (id: Writing["id"]) => {
   });
 };
 
-export const unpublishWriting = async (id: Writing["id"]) => {
+export const unpublishWriting = (id: Writing["id"]) => {
   return prisma.writing.update({
     data: {
       published: false,
@@ -73,7 +106,7 @@ export const unpublishWriting = async (id: Writing["id"]) => {
   });
 };
 
-export const updateWriting = async ({
+export const updateWriting = ({
   id,
   title,
   year,
@@ -100,7 +133,7 @@ export const updateWriting = async ({
   });
 };
 
-export const createWriting = async ({
+export const createWriting = ({
   title,
   year,
   publisher,

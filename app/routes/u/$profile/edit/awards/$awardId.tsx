@@ -1,13 +1,13 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteAward, getAwardOrThrow, publishAward, unpublishAward, updateAward } from "~/models/award.server"
 import { CustomFormProps } from "~/types"
-
 import { awardValidator as validator } from "~/validators/award"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.awardId) throw new Error("Award id not found")
@@ -17,7 +17,6 @@ export const loader: LoaderFunction = async ({ params }) => {
     return json(
         setFormDefaults("editAwardForm", award)
     );
-
 }
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -61,7 +60,7 @@ export const AwardForm: React.FC<CustomFormProps> = ({
 }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
                     Awards
                 </h2>
@@ -72,7 +71,7 @@ export const AwardForm: React.FC<CustomFormProps> = ({
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <FormInput
@@ -80,6 +79,7 @@ export const AwardForm: React.FC<CustomFormProps> = ({
                         label="Title*"
                         type="text"
                         placeholder="My Great Award"
+                        autoFocus
                     />
                     <YearSelect
                         name="year"
@@ -122,6 +122,13 @@ export const AwardForm: React.FC<CustomFormProps> = ({
 }
 
 const AwardIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <AwardForm subaction="edit" formId="editAwardForm" />
     )

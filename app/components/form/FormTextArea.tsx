@@ -1,20 +1,18 @@
 import clsx from "clsx";
-import { useField, useIsValid } from "remix-validated-form";
+import { useControlField, useField, useIsValid } from "remix-validated-form";
 import type { ValidationBehaviorOptions } from "remix-validated-form/dist/types/internal/getInputProps";
 import TextareaAutosize from 'react-textarea-autosize';
 import type { TextareaAutosizeProps } from 'react-textarea-autosize';
 
-export interface FormTextAreaProps extends TextareaAutosizeProps {
+export interface FormTextAreaProps extends Omit<TextareaAutosizeProps, "id" | "value" | "onChange"> {
     label?: string;
     name: string;
-    optional?: boolean;
     validationBehavior?: Partial<ValidationBehaviorOptions>;
-    showCount?: boolean
     showSuccessIcon?: boolean
     formId?: string
 }
 
-export const FormTextArea: React.FC<FormTextAreaProps> = ({ formId, label, name, optional, className = "flex-1", validationBehavior, showCount = false, showSuccessIcon = false, minRows = 2, maxRows, ...rest }) => {
+export const FormTextArea: React.FC<FormTextAreaProps> = ({ formId, label, name, className = "flex-1", validationBehavior, maxLength, showSuccessIcon = false, minRows = 2, maxRows, ...rest }) => {
     const { error, getInputProps, touched } = useField(name, {
         ... (formId) && { formId },
         validationBehavior: {
@@ -22,27 +20,19 @@ export const FormTextArea: React.FC<FormTextAreaProps> = ({ formId, label, name,
         }
     });
     const isValid = useIsValid(formId)
+    const [value, setValue] = useControlField<string>(name, formId);
 
     return (
         <fieldset className={className}>
             <div className="flex justify-between">
-                <div className="flex items-baseline gap-1.5">
-                    <label
-                        htmlFor={name}
-                    >
-                        {label}
-                    </label>
-                    {
-                        optional && (
-                            <span className="text-xs text-gray-500">
-                                Optional
-                            </span>
-                        )
-                    }
-                </div>
-                {showCount && (
-                    <span className="text-xs text-gray-500">
-                        0
+                <label
+                    htmlFor={name}
+                >
+                    {label}
+                </label>
+                {maxLength && (
+                    <span className="text-xs text-gray-500 font-medium">
+                        {value ? value.length : 0} of {maxLength}
                     </span>
                 )}
             </div>
@@ -50,8 +40,11 @@ export const FormTextArea: React.FC<FormTextAreaProps> = ({ formId, label, name,
                 <TextareaAutosize
                     {...getInputProps({
                         id: name,
+                        value: value ?? "",
+                        onChange: (e) => setValue(e.target.value),
                         minRows,
                         maxRows,
+                        maxLength,
                         ...rest,
                     })}
                     aria-invalid={error ? true : undefined}

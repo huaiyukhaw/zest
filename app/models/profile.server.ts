@@ -7,18 +7,210 @@ export type { Profile } from "@prisma/client";
 
 export type ProfileWithAllIncluded = Prisma.ProfileGetPayload<{
   include: {
-    projects: true;
-    sideProjects: true;
-    exhibitions: true;
-    speaking: true;
-    writing: true;
-    awards: true;
-    features: true;
-    workExperience: true;
-    volunteering: true;
-    education: true;
-    certifications: true;
+    projects: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    sideProjects: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    exhibitions: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    speaking: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    writing: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    awards: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    features: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    workExperience: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    volunteering: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    education: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
+    certifications: {
+      include: {
+        posts: {
+          include: {
+            post: {
+              select: {
+                id: true;
+                slug: true;
+                title: true;
+                tags: true;
+                content: true;
+                published: true;
+              };
+            };
+          };
+        };
+      };
+    };
     links: true;
+    posts: {
+      include: {
+        tags: true;
+      };
+    };
   };
 }>;
 
@@ -32,7 +224,7 @@ export const isUsernameAvailable = async (username: Profile["username"]) => {
   return profile ? false : true;
 };
 
-export const getProfileByUsername = async (
+export const getProfileByUsername = (
   username: Profile["username"],
   includeAll?: boolean
 ) => {
@@ -43,11 +235,43 @@ export const getProfileByUsername = async (
           where: {
             published: true,
           },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
+          },
           orderBy: [{ year: "desc" }, { updatedAt: "desc" }],
         },
         sideProjects: {
           where: {
             published: true,
+          },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
           },
           orderBy: [{ year: "desc" }, { updatedAt: "desc" }],
         },
@@ -55,11 +279,43 @@ export const getProfileByUsername = async (
           where: {
             published: true,
           },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
+          },
           orderBy: [{ year: "desc" }, { updatedAt: "desc" }],
         },
         speaking: {
           where: {
             published: true,
+          },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
           },
           orderBy: [{ year: "desc" }, { updatedAt: "desc" }],
         },
@@ -67,11 +323,43 @@ export const getProfileByUsername = async (
           where: {
             published: true,
           },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
+          },
           orderBy: [{ year: "desc" }, { updatedAt: "desc" }],
         },
         awards: {
           where: {
             published: true,
+          },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
           },
           orderBy: [{ year: "desc" }, { updatedAt: "desc" }],
         },
@@ -79,11 +367,43 @@ export const getProfileByUsername = async (
           where: {
             published: true,
           },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
+          },
           orderBy: [{ year: "desc" }, { updatedAt: "desc" }],
         },
         workExperience: {
           where: {
             published: true,
+          },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
           },
           orderBy: [{ to: "desc" }, { from: "desc" }, { updatedAt: "desc" }],
         },
@@ -91,17 +411,65 @@ export const getProfileByUsername = async (
           where: {
             published: true,
           },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
+          },
           orderBy: [{ to: "desc" }, { from: "desc" }, { updatedAt: "desc" }],
         },
         education: {
           where: {
             published: true,
           },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
+          },
           orderBy: [{ to: "desc" }, { from: "desc" }, { updatedAt: "desc" }],
         },
         certifications: {
           where: {
             published: true,
+          },
+          include: {
+            posts: {
+              include: {
+                post: {
+                  select: {
+                    id: true,
+                    slug: true,
+                    title: true,
+                    tags: true,
+                    content: true,
+                    published: true,
+                  },
+                },
+              },
+            },
           },
           orderBy: [
             { expires: "desc" },
@@ -110,6 +478,15 @@ export const getProfileByUsername = async (
           ],
         },
         links: {
+          where: {
+            published: true,
+          },
+          orderBy: { updatedAt: "desc" },
+        },
+        posts: {
+          include: {
+            tags: true,
+          },
           where: {
             published: true,
           },
@@ -204,6 +581,15 @@ export const getProfileByUsernameOrThrow = async (
           },
           orderBy: { updatedAt: "desc" },
         },
+        posts: {
+          include: {
+            tags: true,
+          },
+          where: {
+            published: true,
+          },
+          orderBy: { updatedAt: "desc" },
+        },
       },
     }),
     where: { username },
@@ -214,17 +600,15 @@ export const getProfileByUsernameOrThrow = async (
   return profile;
 };
 
-export const getProfileListItems = async ({
-  userId,
-}: Pick<Profile, "userId">) => {
+export const getProfileListItems = ({ userId }: Pick<Profile, "userId">) => {
   return prisma.profile.findMany({
     where: { userId },
-    select: { id: true, username: true },
+    select: { id: true, username: true, avatar: true },
     orderBy: { updatedAt: "desc" },
   });
 };
 
-export const createProfile = async ({
+export const createProfile = ({
   username,
   displayName,
   userId,
@@ -246,7 +630,7 @@ export const createProfile = async ({
   });
 };
 
-export const updateProfile = async ({
+export const updateProfile = ({
   id,
   username,
   displayName,
@@ -299,7 +683,7 @@ export const updateSectionOrder = async ({
   };
 };
 
-export const updateProfileAvatar = async ({
+export const updateProfileAvatar = ({
   username,
   avatar,
 }: Pick<Profile, "username" | "avatar">) => {
@@ -313,7 +697,7 @@ export const updateProfileAvatar = async ({
   });
 };
 
-export const deleteProfile = async ({
+export const deleteProfile = ({
   id,
   userId,
 }: Pick<Profile, "id" | "userId">) => {

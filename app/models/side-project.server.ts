@@ -1,18 +1,51 @@
 import { json } from "@remix-run/node";
-import type { SideProject } from "@prisma/client";
+import type { Prisma, SideProject } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { SideProject } from "@prisma/client";
 export type SideProjectNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllSideProjectsByUsername = async ({
+export type SideProjectsWithPostsIncluded = Array<
+  Prisma.SideProjectGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllSideProjectsByUsername = ({
   profileUsername,
   published,
 }: Pick<SideProject, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.sideProject.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
@@ -23,7 +56,7 @@ export const getAllSideProjectsByUsername = async ({
   });
 };
 
-export const getSideProject = async (id: SideProject["id"]) => {
+export const getSideProject = (id: SideProject["id"]) => {
   return prisma.sideProject.findUnique({
     where: {
       id,
@@ -38,12 +71,12 @@ export const getSideProjectOrThrow = async (id: SideProject["id"]) => {
     },
   });
   if (!sideProject) {
-    throw json(`SideProject not found`, { status: 404 });
+    throw json(`Side Project not found`, { status: 404 });
   }
   return sideProject;
 };
 
-export const deleteSideProject = async (id: SideProject["id"]) => {
+export const deleteSideProject = (id: SideProject["id"]) => {
   return prisma.sideProject.delete({
     where: {
       id,
@@ -51,7 +84,7 @@ export const deleteSideProject = async (id: SideProject["id"]) => {
   });
 };
 
-export const publishSideProject = async (id: SideProject["id"]) => {
+export const publishSideProject = (id: SideProject["id"]) => {
   return prisma.sideProject.update({
     data: {
       published: true,
@@ -62,7 +95,7 @@ export const publishSideProject = async (id: SideProject["id"]) => {
   });
 };
 
-export const unpublishSideProject = async (id: SideProject["id"]) => {
+export const unpublishSideProject = (id: SideProject["id"]) => {
   return prisma.sideProject.update({
     data: {
       published: false,
@@ -73,7 +106,7 @@ export const unpublishSideProject = async (id: SideProject["id"]) => {
   });
 };
 
-export const updateSideProject = async ({
+export const updateSideProject = ({
   id,
   title,
   year,
@@ -100,7 +133,7 @@ export const updateSideProject = async ({
   });
 };
 
-export const createSideProject = async ({
+export const createSideProject = ({
   title,
   year,
   company,

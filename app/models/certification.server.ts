@@ -1,29 +1,63 @@
 import { json } from "@remix-run/node";
-import type { Certification } from "@prisma/client";
+import type { Certification, Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { Certification } from "@prisma/client";
 export type CertificationNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllCertificationsByUsername = async ({
+export type CertificationsWithPostsIncluded = Array<
+  Prisma.CertificationGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllCertificationsByUsername = ({
   profileUsername,
   published,
 }: Pick<Certification, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.certification.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
         published: true,
       }),
     },
+
     orderBy: [{ expires: "desc" }, { issued: "desc" }, { updatedAt: "desc" }],
   });
 };
 
-export const getCertification = async (id: Certification["id"]) => {
+export const getCertification = (id: Certification["id"]) => {
   return prisma.certification.findUnique({
     where: {
       id,
@@ -43,7 +77,7 @@ export const getCertificationOrThrow = async (id: Certification["id"]) => {
   return certification;
 };
 
-export const deleteCertification = async (id: Certification["id"]) => {
+export const deleteCertification = (id: Certification["id"]) => {
   return prisma.certification.delete({
     where: {
       id,
@@ -51,7 +85,7 @@ export const deleteCertification = async (id: Certification["id"]) => {
   });
 };
 
-export const publishCertification = async (id: Certification["id"]) => {
+export const publishCertification = (id: Certification["id"]) => {
   return prisma.certification.update({
     data: {
       published: true,
@@ -62,7 +96,7 @@ export const publishCertification = async (id: Certification["id"]) => {
   });
 };
 
-export const unpublishCertification = async (id: Certification["id"]) => {
+export const unpublishCertification = (id: Certification["id"]) => {
   return prisma.certification.update({
     data: {
       published: false,
@@ -73,7 +107,7 @@ export const unpublishCertification = async (id: Certification["id"]) => {
   });
 };
 
-export const updateCertification = async ({
+export const updateCertification = ({
   id,
   issued,
   expires,
@@ -109,7 +143,7 @@ export const updateCertification = async ({
   });
 };
 
-export const createCertification = async ({
+export const createCertification = ({
   issued,
   expires,
   name,

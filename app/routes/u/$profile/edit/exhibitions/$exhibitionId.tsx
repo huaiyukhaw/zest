@@ -1,13 +1,13 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteExhibition, getExhibitionOrThrow, publishExhibition, unpublishExhibition, updateExhibition } from "~/models/exhibition.server"
 import { CustomFormProps } from "~/types"
-
 import { exhibitionValidator as validator } from "~/validators/exhibition"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.exhibitionId) throw new Error("Exhibition id not found")
@@ -40,12 +40,12 @@ export const action: ActionFunction = async ({ request, params }) => {
             break;
 
         case "edit":
-            const editResult = await validator.validate(form);
-            if (editResult.error) return validationError(editResult.error);
+            const result = await validator.validate(form);
+            if (result.error) return validationError(result.error);
 
             await updateExhibition({
                 id: params.exhibitionId,
-                ...editResult.data,
+                ...result.data,
             })
             break;
 
@@ -60,7 +60,7 @@ export const ExhibitionForm: React.FC<CustomFormProps> = ({
 }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
                     Exhibitions
                 </h2>
@@ -71,14 +71,15 @@ export const ExhibitionForm: React.FC<CustomFormProps> = ({
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <FormInput
                         name="title"
                         label="Exhibition title*"
                         type="text"
-                        placeholder="My Great Show"
+                        placeholder="My Great Exhibition"
+                        autoFocus
                     />
                     <YearSelect
                         name="year"
@@ -128,6 +129,13 @@ export const ExhibitionForm: React.FC<CustomFormProps> = ({
 }
 
 const ExhibitionIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <ExhibitionForm
             subaction="edit"

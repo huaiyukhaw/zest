@@ -1,18 +1,51 @@
 import { json } from "@remix-run/node";
-import type { Speaking } from "@prisma/client";
+import type { Prisma, Speaking } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { Speaking } from "@prisma/client";
 export type SpeakingNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllSpeakingByUsername = async ({
+export type SpeakingWithPostsIncluded = Array<
+  Prisma.SpeakingGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllSpeakingByUsername = ({
   profileUsername,
   published,
 }: Pick<Speaking, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.speaking.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
@@ -23,7 +56,7 @@ export const getAllSpeakingByUsername = async ({
   });
 };
 
-export const getSpeaking = async (id: Speaking["id"]) => {
+export const getSpeaking = (id: Speaking["id"]) => {
   return prisma.speaking.findUnique({
     where: {
       id,
@@ -43,7 +76,7 @@ export const getSpeakingOrThrow = async (id: Speaking["id"]) => {
   return speaking;
 };
 
-export const deleteSpeaking = async (id: Speaking["id"]) => {
+export const deleteSpeaking = (id: Speaking["id"]) => {
   return prisma.speaking.delete({
     where: {
       id,
@@ -51,7 +84,7 @@ export const deleteSpeaking = async (id: Speaking["id"]) => {
   });
 };
 
-export const publishSpeaking = async (id: Speaking["id"]) => {
+export const publishSpeaking = (id: Speaking["id"]) => {
   return prisma.speaking.update({
     data: {
       published: true,
@@ -62,7 +95,7 @@ export const publishSpeaking = async (id: Speaking["id"]) => {
   });
 };
 
-export const unpublishSpeaking = async (id: Speaking["id"]) => {
+export const unpublishSpeaking = (id: Speaking["id"]) => {
   return prisma.speaking.update({
     data: {
       published: false,
@@ -73,7 +106,7 @@ export const unpublishSpeaking = async (id: Speaking["id"]) => {
   });
 };
 
-export const updateSpeaking = async ({
+export const updateSpeaking = ({
   id,
   title,
   year,
@@ -109,7 +142,7 @@ export const updateSpeaking = async ({
   });
 };
 
-export const createSpeaking = async ({
+export const createSpeaking = ({
   title,
   year,
   event,

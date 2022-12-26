@@ -1,13 +1,16 @@
+@import url("./markdown-editor.css");
+@import url("./markdown.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   input {
-    @apply rounded-lg border border-gray-500 text-sm placeholder:text-sm placeholder:opacity-50
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent
+    @apply rounded-lg border border-gray-400 text-sm placeholder:text-sm
+    focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent
     aria-[invalid]:border-red-800 aria-[invalid]:placeholder-red-300 aria-[invalid]:caret-red-500
-    aria-[invalid]:focus-visible:border-red-500 aria-[invalid]:focus-visible:outline-none aria-[invalid]:focus-visible:ring-red-500
+    aria-[invalid]:focus-visible:border-red-500 aria-[invalid]:focus-visible:outline-red-500
     dark:border-transparent dark:bg-gray-700/50;
   }
 
@@ -36,12 +39,12 @@
   }
 
   textarea {
-    @apply w-full rounded-lg border border-gray-500 px-3 py-1.5
-    text-sm placeholder:text-sm placeholder:opacity-50
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-transparent
+    @apply w-full rounded-lg border border-gray-400 px-3 py-1.5
+    text-sm placeholder:text-sm
+    focus-visible:outline focus-visible:outline-2 focus-visible:outline-transparent
     aria-[invalid]:border-red-800 aria-[invalid]:placeholder-red-300 aria-[invalid]:caret-red-500
-    aria-[invalid]:focus-visible:border-red-500 aria-[invalid]:focus-visible:outline-none
-    aria-[invalid]:focus-visible:ring-red-500 dark:border-transparent dark:bg-gray-700/50;
+    aria-[invalid]:focus-visible:border-red-500
+    aria-[invalid]:focus-visible:outline-red-500 dark:border-transparent dark:bg-gray-700/50;
   }
 
   label {
@@ -59,19 +62,23 @@
   }
 
   .dialog-footer {
-    @apply m-1 flex h-16 items-center justify-end gap-1.5;
-  }
-
-  .btn-primary {
-    @apply rounded-lg bg-primary/80 px-3 py-1 text-sm hover:bg-primary focus-visible:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 disabled:opacity-50 dark:text-white dark:ring-offset-gray-800;
+    @apply flex h-16 items-center justify-end gap-1.5;
   }
 
   .btn-secondary {
-    @apply rounded-lg border border-gray-200 bg-white px-3 py-1 text-sm hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 disabled:opacity-50 dark:border-transparent dark:bg-gray-700 dark:text-white dark:ring-offset-gray-800 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600;
+    @apply rounded-lg border border-gray-300 bg-white px-3 py-1 text-sm focus-visible:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-500 enabled:hover:bg-gray-100 disabled:opacity-50 dark:border-transparent dark:bg-gray-700 dark:text-white dark:focus-visible:bg-gray-600 dark:enabled:hover:bg-gray-600;
   }
 
   .btn-transparent {
-    @apply rounded-lg bg-transparent px-3 py-1 text-sm hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2 disabled:opacity-50 dark:text-white dark:ring-offset-gray-800 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600;
+    @apply rounded-lg border border-transparent bg-transparent px-3 py-1 text-sm focus-visible:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-500 enabled:hover:bg-gray-100 disabled:opacity-50 dark:text-white dark:focus-visible:bg-gray-600 dark:enabled:hover:bg-gray-600;
+  }
+
+  .btn-danger {
+    @apply rounded-lg border border-transparent bg-transparent px-3 py-1 text-sm font-medium text-red-500 focus-visible:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 enabled:hover:bg-red-800 enabled:hover:text-white disabled:opacity-50 dark:text-red-600 dark:focus-visible:bg-red-600 dark:enabled:hover:bg-red-700 dark:enabled:hover:text-white;
+  }
+
+  .btn-bordered {
+    @apply rounded-lg border border-gray-300 bg-transparent px-3 py-1 text-sm focus-visible:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-500 enabled:hover:bg-gray-100 disabled:opacity-50 dark:border-gray-700 dark:text-white dark:focus-visible:bg-gray-600 dark:enabled:hover:bg-gray-600;
   }
 }
 

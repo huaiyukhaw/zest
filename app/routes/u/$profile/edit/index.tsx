@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import type { ActionFunction, LoaderFunction, UploadHandler } from "@remix-run/node"
 import {
     redirect,
@@ -7,25 +7,32 @@ import {
     unstable_createMemoryUploadHandler as createMemoryUploadHandler,
     unstable_parseMultipartFormData as parseMultipartFormData,
 } from "@remix-run/node"
-import { Form, Link, useLoaderData, useSubmit, useTransition } from "@remix-run/react"
-import { FormDefaults, GenericObject, setFormDefaults, useFormContext, ValidatedForm, validationError } from "remix-validated-form"
+import { Form, useLoaderData, useSubmit, useTransition } from "@remix-run/react"
+import { FormDefaults, setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormImageInput, FormInput, FormTextArea, SubmitButton } from "~/components/form"
-import { getProfileByUsernameOrThrow, updateProfile, updateProfileAvatar } from "~/models/profile.server"
+import { getProfileByUsername, updateProfile, updateProfileAvatar } from "~/models/profile.server"
 
-import { generalValidator as validator, avatarSchema, avatarValidator } from "~/validators/general"
-import { isDeepEqual } from "~/utils/isDeepEqual"
+import { generalClientValidator as clientValidator, generalServerValidator as serverValidator, avatarSchema, avatarValidator } from "~/validators/general"
 import { deleteImage, uploadImage } from "~/utils"
 import { z } from "zod"
 import clsx from "clsx"
 import type { UploadApiResponse } from "cloudinary";
 import { AlertDialog } from "~/components/radix"
+import { FormHiddenInput } from "~/components/form"
 
 type AvatarLoaderData = z.infer<typeof avatarSchema>
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.profile) throw new Error("Profile username not found")
 
-    const profile = await getProfileByUsernameOrThrow(params.profile)
+    const profile = await getProfileByUsername(params.profile, true);
+
+    if (!profile) {
+        const data = {
+            profileUsername: params.profile
+        }
+        throw json(data, { status: 404 })
+    }
 
     const {
         username,
@@ -50,6 +57,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     return json<FormDefaults & AvatarLoaderData>({
         ...setFormDefaults("profileGeneralForm", {
             username,
+            currentUsername: username,
             displayName: displayName ?? "",
             jobTitle: jobTitle ?? "",
             location: location ?? "",
@@ -86,7 +94,7 @@ export const action: ActionFunction = async ({ request, params }) => {
             const { submittedData: { avatar }, error } = await avatarValidator.validate(form)
             if (error) return validationError(error);
             await updateProfileAvatar({ username: params.profile, avatar: avatar ?? null })
-            return json({
+            return json<AvatarLoaderData>({
                 avatar: avatar ?? null
             })
 
@@ -96,14 +104,21 @@ export const action: ActionFunction = async ({ request, params }) => {
             if (avatarId) {
                 await deleteImage(avatarId.toString())
             }
-            return json({
+            return json<AvatarLoaderData>({
                 avatar: null
             })
 
         case "general":
-            const result = await validator.validate(form);
+            const result = await serverValidator.validate(form);
             if (result.error) return validationError(result.error);
-            const profile = await getProfileByUsernameOrThrow(params.profile)
+            const profile = await getProfileByUsername(params.profile, true);
+
+            if (!profile) {
+                const data = {
+                    profileUsername: params.profile
+                }
+                throw json(data, { status: 404 })
+            }
             const updatedProfile = await updateProfile({ id: profile.id, ...result.data })
             return redirect(`/u/${updatedProfile.username}/edit/`)
 
@@ -117,7 +132,7 @@ const AvatarUploader = ({ showSpinner = true }: { showSpinner?: boolean }) => {
 
     return (
         <ValidatedForm validator={avatarValidator} action="?index&action=avatar" method="post" id="profileAvatarForm" subaction="uploadAvatar" encType="multipart/form-data" onChange={(event) => {
-            submit(event.currentTarget)
+            submit(event.currentTarget, { replace: true })
         }}>
             <FormImageInput name="avatar" className="flex gap-4 items-center justify-start" showSpinner={showSpinner} />
         </ValidatedForm>
@@ -132,9 +147,9 @@ const AvatarViewer = (avatar: { id: string, url: string }) => {
     return (
         <div className="flex gap-4 items-center justify-start">
             <img className="
-            group object-cover aspect-ratio h-24 w-24 rounded-full
-            flex flex-col items-center justify-center
-        "
+                group object-cover aspect-ratio h-24 w-24 rounded-full
+                flex flex-col items-center justify-center
+            "
                 src={avatar.url}
                 alt="Avatar"
             />
@@ -169,29 +184,13 @@ const AvatarViewer = (avatar: { id: string, url: string }) => {
 }
 
 const ProfileGeneralPage = () => {
-    const { defaultValues, getValues } = useFormContext("profileGeneralForm")
-    const [formDefaultValues, setFormDefaultValues] = useState<GenericObject>();
     const [isDirty, setIsDirty] = useState<boolean>(false)
 
     const { avatar } = useLoaderData<AvatarLoaderData>()
 
-    useEffect(() => {
-        const validate = async () => {
-            const validatedFormDefaultValues = defaultValues ? (await validator.validate(defaultValues)).data : {}
-            setFormDefaultValues(validatedFormDefaultValues);
-        };
-        if (defaultValues) validate()
-
-    }, [defaultValues]);
-
-    const handleFormChange = async () => {
-        const formCurrentValues = await validator.validate(getValues())
-        setIsDirty(!isDeepEqual(formCurrentValues.data, formDefaultValues))
-    }
-
     return (
         <>
-            <div className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1">
+            <div className="overflow-y-auto scrollbar-hide flex flex-col flex-1">
                 {
                     avatar == null ? (
                         <AvatarUploader />
@@ -200,14 +199,11 @@ const ProfileGeneralPage = () => {
                     )
                 }
                 <ValidatedForm
-                    validator={validator}
+                    validator={clientValidator}
                     resetAfterSubmit
                     method="post"
                     id="profileGeneralForm"
-                    onChange={handleFormChange}
-                    onSubmit={async () => {
-                        handleFormChange()
-                    }}
+                    onChange={() => setIsDirty(true)}
                     onReset={() => setIsDirty(false)}
                     subaction="general"
                     encType="multipart/form-data"
@@ -220,6 +216,9 @@ const ProfileGeneralPage = () => {
                         placeholder="Your unique @handle"
                         maxLength={15}
                         transform={(value) => value.toLowerCase().trim()}
+                    />
+                    <FormHiddenInput
+                        name="currentUsername"
                     />
                     <FormInput
                         name="displayName"
@@ -266,17 +265,14 @@ const ProfileGeneralPage = () => {
             <div className="dialog-footer">
                 {
                     isDirty ? <>
-                        <button type="reset" className="btn-transparent">
-                            Cancel
-                        </button>
+                        <AlertDialog.Cancel className="btn-transparent">
+                            Done
+                        </AlertDialog.Cancel>
                         <SubmitButton formId="profileGeneralForm">Save</SubmitButton>
                     </> : (
                         <AlertDialog.Cancel className="btn-secondary">
                             Done
                         </AlertDialog.Cancel>
-                        // <Link to="../../" className="btn-secondary">
-                        //     Done
-                        // </Link>
                     )
                 }
             </div>

@@ -65,4 +65,9 @@ export const defaultRoutes: Array<RouteType> = [
     name: "Social Links",
     path: "links",
   },
+  {
+    id: "PostSection",
+    name: "Posts",
+    path: "posts",
+  },
 ];

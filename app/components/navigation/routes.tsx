@@ -19,13 +19,14 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
     const onDragEnd = (items: SortableItemType[]) => {
         submit({ sectionOrder: items.map(item => item.id).toString() }, {
             method: "post",
-            action: currentPathname
+            action: currentPathname,
+            replace: true
         })
     }
 
     return (
         <Form method="post">
-            <NavLink to="." end>
+            <NavLink to="." end prefetch="intent">
                 {
                     ({ isActive }) => (
                         <div className={
@@ -48,10 +49,18 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
                     )
                 }
             </NavLink>
-            <SortableList items={routes} onItemsChange={setRoutes as React.Dispatch<React.SetStateAction<SortableItemType[]>>} onDragEnd={onDragEnd}>
+            <SortableList
+                items={routes}
+                onItemsChange={setRoutes as React.Dispatch<React.SetStateAction<SortableItemType[]>>}
+                onDragEnd={onDragEnd}
+            >
                 <ul>
                     {routes.map(({ id, name, path }) => (
-                        <SortableItem id={id} key={id} useHandle>
+                        <SortableItem
+                            id={id}
+                            key={id}
+                            useHandle
+                        >
                             {
                                 ({ isDragging, activeIndex, listeners }) => (
                                     <li
@@ -63,12 +72,15 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
                                             )
                                         }
                                     >
-                                        <NavLink to={path} className={
-                                            clsx(
-                                                "flex-1 ",
-                                                isDragging && "cursor-default"
-                                            )
-                                        }>
+                                        <NavLink
+                                            id={`nav-${id}`}
+                                            to={path}
+                                            className={
+                                                clsx(
+                                                    "flex-1",
+                                                    isDragging && "cursor-default"
+                                                )
+                                            }>
                                             {
                                                 ({ isActive }) => (
                                                     <div className="pl-9 py-1.5 absolute inset-0">
@@ -128,7 +140,7 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
                     ))}
                 </ul>
             </SortableList>
-        </Form>
+        </Form >
     )
 }
 

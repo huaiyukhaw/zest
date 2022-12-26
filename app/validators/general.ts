@@ -1,5 +1,6 @@
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
+import { isUsernameAvailable } from "~/models/profile.server";
 
 export const generalSchema = z.object({
   username: z
@@ -22,6 +23,7 @@ export const generalSchema = z.object({
       message:
         "Your username can only contain lowercase letters, numbers and '_'",
     }),
+  currentUsername: z.string(),
   displayName: z
     .string({
       invalid_type_error: "Your display name can only be text.",
@@ -79,7 +81,22 @@ export const generalSchema = z.object({
     .nullable(),
 });
 
-export const generalValidator = withZod(generalSchema);
+export const generalClientValidator = withZod(generalSchema);
+export const generalServerValidator = withZod(
+  generalSchema.refine(
+    async ({ username, currentUsername }) => {
+      if (username === currentUsername) {
+        return true;
+      }
+      const usernameAvailable = await isUsernameAvailable(username);
+      return usernameAvailable;
+    },
+    {
+      message: "That username has been taken. Please choose another.",
+      path: ["username"],
+    }
+  )
+);
 
 export const avatarSchema = z.object({
   avatar: z.preprocess(

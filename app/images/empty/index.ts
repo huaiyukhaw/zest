@@ -11,6 +11,7 @@ import EmptyEducation from "./education.webp";
 import EmptyCertification from "./certification.webp";
 import EmptyLink from "./link.webp";
 import EmptyTeam from "./team.webp";
+import EmptyPost from "./post.webp";
 
 export {
   EmptyProject,
@@ -26,4 +27,5 @@ export {
   EmptyCertification,
   EmptyLink,
   EmptyTeam,
+  EmptyPost,
 };

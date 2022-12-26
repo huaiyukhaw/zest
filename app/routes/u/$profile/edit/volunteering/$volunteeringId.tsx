@@ -1,13 +1,14 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteVolunteering, getVolunteeringOrThrow, publishVolunteering, unpublishVolunteering, updateVolunteering } from "~/models/volunteering.server"
 import { CustomFormProps } from "~/types"
 
 import { volunteeringValidator as validator } from "~/validators/volunteering"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.volunteeringId) throw new Error("Volunteering id not found")
@@ -58,7 +59,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 export const VolunteeringForm: React.FC<CustomFormProps> = ({ subaction, formId }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
                     Volunteering
                 </h2>
@@ -69,7 +70,7 @@ export const VolunteeringForm: React.FC<CustomFormProps> = ({ subaction, formId 
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <YearSelect
@@ -92,7 +93,7 @@ export const VolunteeringForm: React.FC<CustomFormProps> = ({ subaction, formId 
                         label="Title*"
                         type="text"
                         placeholder="Volunteer, coordinator, etc"
-
+                        autoFocus
                     />
                     <FormInput
                         name="organization"
@@ -135,6 +136,13 @@ export const VolunteeringForm: React.FC<CustomFormProps> = ({ subaction, formId 
 }
 
 const VolunteeringIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <VolunteeringForm subaction="edit" formId="editVolunteeringForm" />
     )

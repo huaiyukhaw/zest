@@ -1,18 +1,51 @@
 import { json } from "@remix-run/node";
-import type { Feature } from "@prisma/client";
+import type { Feature, Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
 import type { ThrownResponse } from "@remix-run/react";
-
 export type { Feature } from "@prisma/client";
 export type FeatureNotFoundResponse = ThrownResponse<404, string>;
 
-export const getAllFeaturesByUsername = async ({
+export type FeaturesWithPostsIncluded = Array<
+  Prisma.FeatureGetPayload<{
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true;
+              content: true;
+              published: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+>;
+
+export const getAllFeaturesByUsername = ({
   profileUsername,
   published,
 }: Pick<Feature, "profileUsername"> & {
   published?: boolean;
 }) => {
   return prisma.feature.findMany({
+    include: {
+      posts: {
+        include: {
+          post: {
+            select: {
+              title: true,
+              content: true,
+              published: true,
+            },
+          },
+        },
+        orderBy: {
+          assignedAt: "desc",
+        },
+      },
+    },
     where: {
       profileUsername,
       ...(published && {
@@ -23,7 +56,7 @@ export const getAllFeaturesByUsername = async ({
   });
 };
 
-export const getFeature = async (id: Feature["id"]) => {
+export const getFeature = (id: Feature["id"]) => {
   return prisma.feature.findUnique({
     where: {
       id,
@@ -43,7 +76,7 @@ export const getFeatureOrThrow = async (id: Feature["id"]) => {
   return feature;
 };
 
-export const deleteFeature = async (id: Feature["id"]) => {
+export const deleteFeature = (id: Feature["id"]) => {
   return prisma.feature.delete({
     where: {
       id,
@@ -51,7 +84,7 @@ export const deleteFeature = async (id: Feature["id"]) => {
   });
 };
 
-export const publishFeature = async (id: Feature["id"]) => {
+export const publishFeature = (id: Feature["id"]) => {
   return prisma.feature.update({
     data: {
       published: true,
@@ -62,7 +95,7 @@ export const publishFeature = async (id: Feature["id"]) => {
   });
 };
 
-export const unpublishFeature = async (id: Feature["id"]) => {
+export const unpublishFeature = (id: Feature["id"]) => {
   return prisma.feature.update({
     data: {
       published: false,
@@ -73,7 +106,7 @@ export const unpublishFeature = async (id: Feature["id"]) => {
   });
 };
 
-export const updateFeature = async ({
+export const updateFeature = ({
   id,
   title,
   year,
@@ -100,7 +133,7 @@ export const updateFeature = async ({
   });
 };
 
-export const createFeature = async ({
+export const createFeature = ({
   title,
   year,
   publisher,

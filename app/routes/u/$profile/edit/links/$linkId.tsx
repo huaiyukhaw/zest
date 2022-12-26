@@ -1,13 +1,14 @@
 import { json, redirect } from "@remix-run/node"
 import type { ActionFunction, LoaderFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
+import { Link, useBeforeUnload } from "@remix-run/react"
 import { setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput, SubmitButton, FormTextArea, YearSelect } from "~/components/form"
-import FormHiddenInput from "~/components/form/FormHiddenInput"
+import { FormHiddenInput } from "~/components/form"
 import { deleteLink, getLinkOrThrow, publishLink, unpublishLink, updateLink } from "~/models/link.server"
 import { CustomFormProps } from "~/types"
 
 import { linkValidator as validator } from "~/validators"
+import { useCallback } from "react"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.linkId) throw new Error("Link id not found")
@@ -60,7 +61,7 @@ export const LinkForm: React.FC<CustomFormProps> = ({
 }) => {
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center">
+            <div className="mb-4 flex h-10 items-center">
                 <h2 className="text-xl">
                     Social Links
                 </h2>
@@ -71,7 +72,7 @@ export const LinkForm: React.FC<CustomFormProps> = ({
                 method="post"
                 subaction={subaction}
                 id={formId}
-                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4"
+                className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
                 <div className="flex gap-3">
                     <FormInput
@@ -79,6 +80,7 @@ export const LinkForm: React.FC<CustomFormProps> = ({
                         label="Name of platform*"
                         type="text"
                         placeholder="LinkedIn, Twitter, Medium etc."
+                        autoFocus
                     />
                     <FormInput
                         name="username"
@@ -108,6 +110,13 @@ export const LinkForm: React.FC<CustomFormProps> = ({
 }
 
 const LinkIdPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <LinkForm subaction="edit" formId="editLinkForm" />
     )

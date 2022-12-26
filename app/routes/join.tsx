@@ -1,17 +1,14 @@
 import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useSearchParams } from "@remix-run/react";
-
 import { getUserId, createUserSession } from "~/session.server";
-
 import { createUser } from "~/models/user.server";
 import { safeRedirect } from "~/utils";
-
 import clsx from "clsx"
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { FormInput, SubmitButton } from "~/components/form";
 import { joinClientValidator, joinServerValidator } from "~/validators";
-import FormHiddenInput from "~/components/form/FormHiddenInput";
+import { FormHiddenInput } from "~/components/form"
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -86,7 +83,7 @@ const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
             name="email"
             label="Email address"
             type="email"
-            autoFocus={true}
+            autoFocus
             autoCapitalize="off"
             spellCheck={false}
             showSuccessIcon
@@ -116,7 +113,15 @@ const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
                 </div>
               </div>)
             }
-            <SubmitButton full={asModal} primary={asModal} className="py-2">Create</SubmitButton>
+            <SubmitButton
+              className={
+                clsx(
+                  asModal && "w-full"
+                )
+              }
+            >
+              Create
+            </SubmitButton>
           </div>
         </ValidatedForm>
       </div >

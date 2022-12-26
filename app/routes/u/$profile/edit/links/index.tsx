@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     const links = await getAllLinksByUsername({
         profileUsername: params.profile
     })
-    return json({ links });
+    return json<LinksLoaderData>({ links });
 }
 
 const LinksIndexPage = () => {
@@ -25,7 +25,7 @@ const LinksIndexPage = () => {
 
     return (
         <>
-            <div className="mx-1 mb-4 flex h-10 items-center justify-between gap-3">
+            <div className="mb-4 flex h-10 items-center justify-between gap-3">
                 <h2 className="text-xl">
                     Social Links
                 </h2>
@@ -38,7 +38,7 @@ const LinksIndexPage = () => {
                     </Link>
                 </div>
             </div>
-            <div className="overflow-y-auto scrollbar-hide flex flex-col flex-1 m-1 py-4 divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4 divide-y divide-gray-200 dark:divide-gray-700">
                 {
                     links.length > 0 ? (
                         links.map(({
@@ -72,19 +72,28 @@ const LinksIndexPage = () => {
                                             </a>
                                         </div>
                                     </div>
-                                    <div className="flex gap-3 mt-4">
+                                    <div className="flex gap-3 items-baseline mt-4">
                                         <Form action={id} method="post">
                                             <input type="hidden" name="subaction" value={
                                                 published ? "draft" : "publish"
                                             } />
                                             <button type="submit" className="text-xs text-gray-500 dark:text-gray-400 hover:underline hover:underline-offset-2">{
-                                                published ? "Revert to draft" : "Publish"
+                                                published ? "Unpublish" : "Publish"
                                             }</button>
                                         </Form>
                                         <div>
                                             <Link to={id} className="text-xs text-gray-500 dark:text-gray-400 hover:underline hover:underline-offset-2">Edit</Link>
                                         </div>
-                                        <Form action={id} method="post">
+                                        <Form
+                                            action={id}
+                                            method="post"
+                                            onSubmit={(event) => {
+                                                if (!confirm("Are you sure you want to // delete this item?")) {
+                                                    event.preventDefault();
+                                                }
+                                            }
+                                            }
+                                        >
                                             <input type="hidden" name="subaction" value="delete" />
                                             <button type="submit" className="text-xs text-gray-500 dark:text-gray-400 hover:underline hover:underline-offset-2">Delete</button>
                                         </Form>

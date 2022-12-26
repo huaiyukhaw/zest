@@ -4,10 +4,13 @@ import type { LoaderFunction, MetaFunction } from "@remix-run/node"
 import { json } from "@remix-run/node";
 import { getProfileByUsername } from "~/models/profile.server";
 import type { ProfileWithAllIncluded } from "~/models/profile.server"
-import SadLemon from "~/images/sad.png"
 import { ErrorFragment } from "~/components/boundaries";
 import { SectionTemplate } from "~/components/templates";
 import { defaultRoutes } from "~/utils";
+import markdownToTxt from "markdown-to-txt";
+import { sanitize } from "isomorphic-dompurify";
+import { useRef } from "react";
+import html2canvas from "html2canvas"
 
 export type ProfileLoaderData = {
     profile: ProfileWithAllIncluded
@@ -36,7 +39,7 @@ export const loader: LoaderFunction = async ({ params }) => {
         });
     }
 
-    const profile = await getProfileByUsername(params.profile, true);
+    const profile = await getProfileByUsername(params.profile, true)
 
     if (!profile) {
         const data = {
@@ -45,13 +48,14 @@ export const loader: LoaderFunction = async ({ params }) => {
         throw json(data, { status: 404 })
     }
 
-    return json({ profile });
+    return json<ProfileLoaderData>({ profile: profile as ProfileWithAllIncluded });
 }
 
 const ProfilePage = () => {
     const { profile } = useLoaderData<ProfileLoaderData>();
 
     const {
+        username,
         avatar,
         displayName,
         jobTitle,
@@ -71,6 +75,7 @@ const ProfilePage = () => {
         education,
         certifications,
         links,
+        posts,
         sectionOrder
     } = profile
 
@@ -82,7 +87,7 @@ const ProfilePage = () => {
     const GeneralSection = () => (
         <div className="flex gap-6 mb-6 items-center">
             {
-                avatar && JSON.parse(avatar).url && (
+                (avatar && JSON.parse(avatar).url) ? (
                     <img className="
                                 group object-cover aspect-ratio h-24 w-24 rounded-full
                                 flex flex-col items-center justify-center
@@ -90,13 +95,13 @@ const ProfilePage = () => {
                         src={JSON.parse(avatar).url}
                         alt="Avatar"
                     />
-                )
+                ) : null
             }
             <div>
-                <h2 className="text-lg font-medium text-gray-700 dark:text-gray-200">
+                <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
                     {displayName}
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap">
+                <p className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap mt-1">
                     {jobTitle && jobTitle}{(jobTitle && location) && " at "}{location && location}{((jobTitle || location) && pronouns) && ", "}{pronouns && pronouns}
                 </p>
                 {
@@ -122,7 +127,7 @@ const ProfilePage = () => {
 
     const BioSection = () => {
         return bio ? (
-            <div className="mb-6">
+            <div className="pb-10">
                 <h2 className="text-base font-medium text-gray-700 dark:text-gray-200">
                     About
                 </h2>
@@ -134,166 +139,179 @@ const ProfilePage = () => {
     }
 
     const ProjectSection = () => {
-        return projects.length > 0 ? (
+        return (projects.length > 0) ? (
             <SectionTemplate header="Projects" items={
-                projects.map(({ id, title, year, company, url, description }) => ({
-                    id,
-                    title: `${title}${company ? ` at ${company}` : ""}`,
-                    description,
-                    duration: year,
-                    url
-                }))
+                projects.map(({ id, title, year, company, url, description, posts }) => {
+                    return ({
+                        id,
+                        title: `${title}${company ? ` at ${company}` : ""}`,
+                        description,
+                        duration: year,
+                        url,
+                        posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
+                    })
+                })
             } />
         ) : null
     }
 
     const SideProjectSection = () => {
-        return sideProjects.length > 0 ? (
+        return (sideProjects.length > 0) ? (
             <SectionTemplate header="Side Projects" items={
-                sideProjects.map(({ id, title, year, company, url, description }) => ({
+                sideProjects.map(({ id, title, year, company, url, description, posts }) => ({
                     id,
                     title: `${title}${company ? ` at ${company}` : ""}`,
                     description,
                     duration: year,
-                    url
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const ExhibitionSection = () => {
-        return exhibitions.length > 0 ? (
+        return (exhibitions.length > 0) ? (
             <SectionTemplate header="Exhibitions" items={
-                exhibitions.map(({ id, title, year, venue, location, url, description }) => ({
+                exhibitions.map(({ id, title, year, venue, location, url, description, posts }) => ({
                     id,
                     title: `${title}${venue ? ` at ${venue}` : ""}`,
                     subtitle: location,
                     description,
                     duration: year,
-                    url
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const SpeakingSection = () => {
-        return speaking.length > 0 ? (
+        return (speaking.length > 0) ? (
             <SectionTemplate header="Speaking" items={
-                speaking.map(({ id, title, year, event, location, url, description }) => ({
+                speaking.map(({ id, title, year, event, location, url, description, posts }) => ({
                     id,
                     title: `${title}${event ? ` at ${event}` : ""}`,
                     subtitle: location,
                     description,
                     duration: year,
-                    url
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const WritingSection = () => {
-        return writing.length > 0 ? (
+        return (writing.length > 0) ? (
             <SectionTemplate header="Writing" items={
-                writing.map(({ id, title, year, publisher, url, description }) => ({
+                writing.map(({ id, title, year, publisher, url, description, posts }) => ({
                     id,
                     title: `${title}${publisher ? `, ${publisher}` : ""}`,
                     description,
                     duration: year,
-                    url
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const AwardSection = () => {
-        return awards.length > 0 ? (
+        return (awards.length > 0) ? (
             <SectionTemplate header="Awards" items={
-                awards.map(({ id, title, year, presenter, url, description }) => ({
+                awards.map(({ id, title, year, presenter, url, description, posts }) => ({
                     id,
                     title: `${title}${presenter ? ` from ${presenter}` : ""}`,
                     description,
                     duration: year,
-                    url
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const FeatureSection = () => {
-        return features.length > 0 ? (
+        return (features.length > 0) ? (
             <SectionTemplate header="Features" items={
-                features.map(({ id, title, year, publisher, url, description }) => ({
+                features.map(({ id, title, year, publisher, url, description, posts }) => ({
                     id,
                     title: `${title}${publisher ? ` on ${publisher}` : ""}`,
                     description,
                     duration: year,
-                    url
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const WorkExperienceSection = () => {
-        return workExperience.length > 0 ? (
+        return (workExperience.length > 0) ? (
             <SectionTemplate header="Work Experience" items={
-                workExperience.map(({ id, title, from, to, company, location, url, description }) => ({
+                workExperience.map(({ id, title, from, to, company, location, url, description, posts }) => ({
                     id,
                     title: `${title} at ${company}`,
                     subtitle: location,
                     description,
-                    duration: `${from} — ${to}`,
-                    url
+                    duration: (from === to) ? from : `${from} — ${to}`,
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const VolunteeringSection = () => {
-        return volunteering.length > 0 ? (
+        return (volunteering.length > 0) ? (
             <SectionTemplate header="Volunteering" items={
-                volunteering.map(({ id, from, to, title, organization, location, url, description }) => ({
+                volunteering.map(({ id, from, to, title, organization, location, url, description, posts }) => ({
                     id,
                     title: `${title} at ${organization}`,
                     subtitle: location,
                     description,
-                    duration: `${from} — ${to}`,
-                    url
+                    duration: (from === to) ? from : `${from} — ${to}`,
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const EducationSection = () => {
-        return education.length > 0 ? (
+        return (education.length > 0) ? (
             <SectionTemplate header="Education" items={
-                education.map(({ id, from, to, degree, school, location, url, description }) => ({
+                education.map(({ id, from, to, degree, school, location, url, description, posts }) => ({
                     id,
                     title: `${degree} at ${school}`,
                     subtitle: location,
                     description,
-                    duration: `${from} — ${to}`,
-                    url
+                    duration: (from === to) ? from : `${from} — ${to}`,
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const CertificationSection = () => {
-        return certifications.length > 0 ? (
+        return (certifications.length > 0) ? (
             <SectionTemplate header="Certification" items={
-                certifications.map(({ id, issued, expires, name, organization, url, description }) => ({
+                certifications.map(({ id, issued, expires, name, organization, url, description, posts }) => ({
                     id,
                     title: `${name} at ${organization}`,
                     description,
                     duration: `${issued}${expires === "Does not expire" ? "" : ` — ${expires}`}`,
-                    url
+                    url,
+                    posts: posts ? posts.map(post => post.post).filter((post) => post.published) : []
                 }))
             } />
         ) : null
     }
 
     const SocialLinkSection = () => {
-        return links.length > 0 ? (
+        return (links.length > 0) ? (
             <SectionTemplate header="Social Links" items={
                 links.map(({ id, name, username, url }) => ({
                     id,
@@ -302,6 +320,29 @@ const ProfilePage = () => {
                     url
                 }))
             } />
+        ) : null
+    }
+
+    const PostSection = () => {
+        return (posts.length > 0) ? (
+            <SectionTemplate
+                header="Posts"
+                items={
+                    posts.map(({ id, slug, title, tags, content, updatedAt }) => ({
+                        id,
+                        title: title ?? "",
+                        tags: tags,
+                        caption: content ? sanitize(markdownToTxt(content)) : "",
+                        duration: new Intl
+                            .DateTimeFormat('us-EN', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                            })
+                            .format(new Date(updatedAt)),
+                        url: `/posts/${slug}`
+                    }))
+                } />
         ) : null
     }
 
@@ -320,11 +361,46 @@ const ProfilePage = () => {
         EducationSection,
         CertificationSection,
         SocialLinkSection,
+        PostSection
     }
+
+    const canvasRef = useRef<HTMLDivElement>(null)
+
+    const downloadCanvasAsPNG = () => {
+        if (canvasRef.current) {
+            html2canvas(canvasRef.current, {
+                scale: 3,
+                backgroundColor: null,
+                useCORS: true
+            }).then((canvas) => {
+                var dt = canvas.toDataURL('image/png', 1.0);
+                /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
+                dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+
+                /* In addition to <a>'s "download" attribute, you can define HTTP-style headers */
+                dt = dt.replace(/^data:application\/octet-stream/, `data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=${username}.png`);
+
+                saveAs(dt, `${username}.png`);
+            })
+        }
+    };
+
+    const saveAs = (uri: string, filename: string) => {
+        const link = document.createElement("a");
+        if (typeof link.download === "string") {
+            link.href = uri;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            window.open(uri);
+        }
+    };
 
     return (
         <>
-            <div className="max-w-screen-sm mx-auto mt-4 mb-20 sm:mt-20 px-4">
+            <div className="max-w-screen-sm mx-auto pt-4 pb-14 sm:pt-14 px-4 space-y-6 bg-white dark:bg-gray-800" ref={canvasRef}>
                 <GeneralSection />
                 <BioSection />
                 {sections.map(({ id }) => {
@@ -332,7 +408,9 @@ const ProfilePage = () => {
                     return <Section key={id} />
                 })}
             </div>
-            <Outlet />
+            <Outlet context={{
+                downloadCanvasAsPNG
+            }} />
         </>
     );
 }
@@ -343,31 +421,28 @@ export const CatchBoundary = () => {
     switch (caught.status) {
         case 401:
             return (
-                <div className="h-screen">
-                    <div className="flex flex-col items-center justify-center h-screen">
-                        <img src={SadLemon} alt="" className="w-16 h-16" />
-                        <div className="mt-4 z-20 text-xl font-semibold">You don't have access to edit this profile.</div>
-                        <div className="mt-1 z-20">Contact <span className="font-semibold">
-                            {caught.data.profileOwnerEmail}
-                        </span> to get access</div>
-                        <div className="mt-4 z-20">
-                            <Link to="/" className="btn-secondary">Head back</Link>
-                        </div>
-                        <div className="absolute z-0 select-none opacity-[5%] filter transition duration-200 blur-sm">
-                            <h1 className="text-[20rem] font-black">{caught.status}</h1>
-                        </div>
+                <div className="h-screen px-4 text-center flex flex-col items-center justify-center">
+                    <div className="mt-4 z-20 text-3xl font-bold">You don't have access to edit this profile.</div>
+                    <div className="mt-2 z-20">Contact <span className="font-semibold">
+                        {caught.data.profileOwnerEmail}
+                    </span> to get access</div>
+                    <div className="mt-4 z-20">
+                        <Link to="/" className="btn-secondary">Head back</Link>
+                    </div>
+                    <div className="absolute z-0 select-none opacity-[2%] filter transition duration-200 blur-[2px]">
+                        <h1 className="text-[20rem] font-black">{caught.status}</h1>
                     </div>
                 </div>
             );
 
         case 404:
-            return (
-                <div className="h-screen">
-                    <div className="flex flex-col items-center justify-center h-screen">
+            if (caught.data.profileUsername) {
+                return (
+                    <div className="h-screen px-4 text-center flex flex-col items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-16 h-16 text-green-500 dark:text-green-400">
                             <path fillRule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
                         </svg>
-                        <div className="mt-4 z-20 text-xl font-semibold">{caught.data.profileUsername} is available!</div>
+                        <div className="mt-4 z-20 text-2xl font-bold">{caught.data.profileUsername} is available!</div>
                         <div className="mt-8 z-20">
                             <Form action="/u">
                                 <input type="hidden" name="username" value={caught.data.profileUsername} />
@@ -375,22 +450,31 @@ export const CatchBoundary = () => {
                             </Form>
                         </div>
                     </div>
+                )
+            }
+            return (
+                <div className="h-screen px-4 text-center flex flex-col items-center justify-center">
+                    <div className="mt-4 z-20 text-2xl font-bold">{caught.data}</div>
+                    <div className="mt-2 z-20">We couldn't find the page you're looking for!</div>
+                    <div className="mt-4 z-20">
+                        <Link to="/" className="btn-secondary">Head back</Link>
+                    </div>
+                    <div className="absolute z-0 select-none opacity-[5%] filter transition duration-200 blur-sm">
+                        <h1 className="text-[20rem] font-black">{caught.status}</h1>
+                    </div>
                 </div>
             )
 
         default:
             return (
-                <div className="h-screen">
-                    <div className="flex flex-col items-center justify-center h-screen">
-                        <img src={SadLemon} alt="" className="w-16 h-16" />
-                        <div className="mt-4 z-20 text-xl font-semibold">{caught.data}</div>
-                        <div className="mt-1 z-20">We couldn't find the page you're looking for!</div>
-                        <div className="mt-4 z-20">
-                            <Link to="/" className="btn-secondary">Head back</Link>
-                        </div>
-                        <div className="absolute z-0 select-none opacity-[5%] filter transition duration-200 blur-sm">
-                            <h1 className="text-[20rem] font-black">{caught.status}</h1>
-                        </div>
+                <div className="h-screen px-4 text-center flex flex-col items-center justify-center">
+                    <div className="mt-4 z-20 text-2xl font-bold">{caught.data}</div>
+                    <div className="mt-2 z-20">We couldn't find the page you're looking for!</div>
+                    <div className="mt-4 z-20">
+                        <Link to="/" className="btn-secondary">Head back</Link>
+                    </div>
+                    <div className="absolute z-0 select-none opacity-[5%] filter transition duration-200 blur-sm">
+                        <h1 className="text-[20rem] font-black">{caught.status}</h1>
                     </div>
                 </div>
             )

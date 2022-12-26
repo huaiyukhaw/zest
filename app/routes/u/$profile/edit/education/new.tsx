@@ -4,6 +4,8 @@ import { validationError } from "remix-validated-form"
 import { createEducation } from "~/models/education.server"
 import { educationValidator as validator } from "~/validators"
 import { EducationForm } from "./$educationId"
+import { useBeforeUnload } from "@remix-run/react"
+import { useCallback } from "react"
 
 export const action: ActionFunction = async ({ request, params }) => {
     if (!params.profile) throw new Error("Profile username not found")
@@ -24,6 +26,13 @@ export const action: ActionFunction = async ({ request, params }) => {
 }
 
 const NewEducationPage = () => {
+    useBeforeUnload(
+        useCallback((event) => {
+            event.preventDefault()
+            return event.returnValue = "You have unsaved changes, leave anyway?";
+        }, [])
+    );
+
     return (
         <EducationForm subaction="new" formId="newEducationForm" />
     )
