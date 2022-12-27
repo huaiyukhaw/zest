@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Link, useSearchParams } from "@remix-run/react";
+import { Form, Link, useSearchParams } from "@remix-run/react";
 import { getUserId, createUserSession } from "~/session.server";
 import { createUser } from "~/models/user.server";
 import { safeRedirect } from "~/utils";
@@ -22,9 +22,12 @@ export const action: ActionFunction = async ({ request }) => {
     await request.formData()
   );
 
+  console.log(result)
   if (result.error) return validationError(result.error);
 
   const { email, password, redirectTo } = result.data;
+
+
 
   const safeRedirectTo = safeRedirect(redirectTo, "/");
 
@@ -95,6 +98,7 @@ const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
             showSuccessIcon
           />
           <FormHiddenInput name="redirectTo" value={redirectTo} />
+          <div className="cf-turnstile" data-sitekey="0x4AAAAAAABvVw6X7q8_XAGV" data-callback="javascriptCallback"></div>
           <div className="flex items-center justify-between">
             {
               !asModal &&
