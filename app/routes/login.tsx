@@ -92,12 +92,14 @@ const LoginPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
             autoCapitalize="off"
             spellCheck={false}
             showSuccessIcon
+            autoComplete="email"
           />
           <FormInput
             name="password"
             label="Password"
             type="password"
             showSuccessIcon
+            autoComplete="current-password"
           />
           <FormHiddenInput name="redirectTo" value={redirectTo} />
           <div className="flex flex-col sm:flex-row gap-2 sm:justify-between">

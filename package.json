@@ -57,6 +57,7 @@
         "react-dom": "^18.2.0",
         "react-select": "^5.7.0",
         "react-textarea-autosize": "^8.4.0",
+        "react-turnstile": "^1.0.6",
         "rehype-sanitize": "^5.0.1",
         "remix-validated-form": "^4.6.5",
         "slugify": "^1.6.5",

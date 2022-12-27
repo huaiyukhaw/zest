@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, Link, useSearchParams } from "@remix-run/react";
+import { Link, useSearchParams } from "@remix-run/react";
 import { getUserId, createUserSession } from "~/session.server";
 import { createUser } from "~/models/user.server";
 import { safeRedirect } from "~/utils";
@@ -9,6 +9,7 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 import { FormInput, SubmitButton } from "~/components/form";
 import { joinClientValidator, joinServerValidator } from "~/validators";
 import { FormHiddenInput } from "~/components/form"
+import Turnstile from "react-turnstile";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -26,8 +27,6 @@ export const action: ActionFunction = async ({ request }) => {
   if (result.error) return validationError(result.error);
 
   const { email, password, redirectTo } = result.data;
-
-
 
   const safeRedirectTo = safeRedirect(redirectTo, "/");
 
@@ -50,6 +49,7 @@ export const meta: MetaFunction = () => {
 type JoinPageProps = {
   asModal?: boolean
 }
+
 
 const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
   const [searchParams] = useSearchParams();
@@ -90,15 +90,20 @@ const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
             autoCapitalize="off"
             spellCheck={false}
             showSuccessIcon
+            autoComplete="email"
           />
           <FormInput
             name="password"
             label="Password"
             type="password"
             showSuccessIcon
+            autoComplete="new-password"
           />
           <FormHiddenInput name="redirectTo" value={redirectTo} />
-          <div className="cf-turnstile" data-sitekey="0x4AAAAAAABvVw6X7q8_XAGV" data-callback="javascriptCallback"></div>
+          <Turnstile
+            sitekey="0x4AAAAAAABvVw6X7q8_XAGV"
+            onVerify={(token) => alert(token)}
+          />
           <div className="flex items-center justify-between">
             {
               !asModal &&
