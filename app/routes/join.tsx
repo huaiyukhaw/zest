@@ -9,7 +9,7 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 import { FormInput, SubmitButton } from "~/components/form";
 import { joinClientValidator, joinServerValidator } from "~/validators";
 import { FormHiddenInput } from "~/components/form"
-import Turnstile from "react-turnstile";
+import { Turnstile } from '@marsidev/react-turnstile'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -100,10 +100,7 @@ const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
             autoComplete="new-password"
           />
           <FormHiddenInput name="redirectTo" value={redirectTo} />
-          <Turnstile
-            sitekey="0x4AAAAAAABvVw6X7q8_XAGV"
-            onVerify={(token) => alert(token)}
-          />
+          <Turnstile siteKey='0x4AAAAAAABvVw6X7q8_XAGV' />
           <div className="flex items-center justify-between">
             {
               !asModal &&
