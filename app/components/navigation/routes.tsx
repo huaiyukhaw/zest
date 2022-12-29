@@ -8,10 +8,10 @@ import type { SortableItemType } from "~/components/sortable"
 
 export type RoutesProps = {
     sectionOrder: Array<RouteType> | null,
-    onClick?: () => void,
+    onRouteChange?: () => void,
 }
 
-export const Routes: React.FC<RoutesProps> = ({ sectionOrder, onClick }) => {
+export const Routes: React.FC<RoutesProps> = ({ sectionOrder, onRouteChange }) => {
     const [routes, setRoutes] = useState<RouteType[]>(() => sectionOrder ?? defaultRoutes)
     const matches = useMatches()
     const currentPathname = matches[matches.length - 1].pathname
@@ -32,7 +32,7 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder, onClick }) => {
                 to="."
                 prefetch="intent"
                 end
-                onClick={onClick}
+                onClick={onRouteChange}
             >
                 {
                     ({ isActive }) => (
@@ -82,7 +82,7 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder, onClick }) => {
                                         <NavLink
                                             id={`nav-${id}`}
                                             to={path}
-                                            onClick={onClick}
+                                            onClick={onRouteChange}
                                             className={
                                                 clsx(
                                                     "flex-1",

@@ -195,7 +195,7 @@ const ProfileEditPage = () => {
                                         Profile
                                     </h3>
                                 </div>
-                                <Routes sectionOrder={sectionOrder} onClick={() => {
+                                <Routes sectionOrder={sectionOrder} onRouteChange={() => {
                                     if (window.innerWidth < 640) {
                                         setIsSidebarOpen(false)
                                     }
