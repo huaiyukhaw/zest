@@ -72,7 +72,7 @@ export const VolunteeringForm: React.FC<CustomFormProps> = ({ subaction, formId 
                 id={formId}
                 className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-x-3">
                     <YearSelect
                         name="from"
                         label="From*"
@@ -87,7 +87,7 @@ export const VolunteeringForm: React.FC<CustomFormProps> = ({ subaction, formId 
                         extraOption="Now"
                     />
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-x-3">
                     <FormInput
                         name="title"
                         label="Title*"
@@ -102,7 +102,7 @@ export const VolunteeringForm: React.FC<CustomFormProps> = ({ subaction, formId 
                         placeholder="Non-profit org."
                     />
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-x-3">
                     <FormInput
                         name="location"
                         label="Location"

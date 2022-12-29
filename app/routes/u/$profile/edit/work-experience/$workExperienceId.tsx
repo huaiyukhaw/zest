@@ -72,7 +72,7 @@ export const WorkExperienceForm: React.FC<CustomFormProps> = ({ subaction, formI
                 id={formId}
                 className="overflow-y-auto scrollbar-hide flex flex-col flex-1 py-4"
             >
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-x-3">
                     <YearSelect
                         name="from"
                         label="From*"
@@ -87,7 +87,7 @@ export const WorkExperienceForm: React.FC<CustomFormProps> = ({ subaction, formI
                         extraOption="Now"
                     />
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-x-3">
                     <FormInput
                         name="title"
                         label="Title*"
@@ -102,7 +102,7 @@ export const WorkExperienceForm: React.FC<CustomFormProps> = ({ subaction, formI
                         placeholder="Acme inc."
                     />
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-x-3">
                     <FormInput
                         name="location"
                         label="Location"

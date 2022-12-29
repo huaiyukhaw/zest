@@ -160,6 +160,7 @@ export const PostForm: React.FC<CustomFormProps> = ({
                     textareaProps={{
                         placeholder: "Write your post content here...",
                     }}
+                    hideToolbar={window.innerWidth < 640 ? true : false}
                 />
                 <FormHiddenInput name="published" value={subaction == "new" ? "true" : published ? "true" : "false"} />
                 <FormHiddenInput name="awardId" value={awardId} />
@@ -204,21 +205,20 @@ export const PostForm: React.FC<CustomFormProps> = ({
                                 shadow-[0_4px_40px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_40px_rgba(0,0,0,0.5)]
                             "
                             >
-                                <DropdownMenu.Item asChild>
-                                    <button
-                                        type="button"
-                                        onClick={() => setPreview((currentPreview) =>
+                                <DropdownMenu.Item
+                                    className="
+                                        w-full flex select-none items-center rounded-md px-2 py-2 text-xs
+                                        text-gray-700 dark:text-gray-300 focus:bg-gray-50 dark:focus:bg-gray-800/50
+                                    "
+                                    onSelect={
+                                        () => setPreview((currentPreview) =>
                                             currentPreview === "edit"
                                                 ? "preview"
                                                 : "edit"
-                                        )}
-                                        className="
-                                            w-full flex select-none items-center rounded-md px-2 py-2 text-xs
-                                            text-gray-700 dark:text-gray-300 focus:bg-gray-50 dark:focus:bg-gray-800/50
-                                        "
-                                    >
-                                        {preview === "edit" ? "Preview changes" : "Edit post"}
-                                    </button>
+                                        )
+                                    }
+                                >
+                                    {preview === "edit" ? "Preview changes" : "Edit post"}
                                 </DropdownMenu.Item>
                                 {
                                     (defaultValues !== undefined && Object.values(defaultValues).length > 0) && (
@@ -249,14 +249,15 @@ export const PostForm: React.FC<CustomFormProps> = ({
                                                     dark:hover:text-white dark:focus:text-white
                                                     text-red-700 dark:text-red-600 font-semibold
                                                 "
-                                                onSelect={() => {
-                                                    if (confirm("Are you sure you want to delete this item?")) {
-                                                        submit(
-                                                            { subaction: "delete" },
-                                                            { method: "post", replace: true }
-                                                        )
+                                                onSelect={
+                                                    () => {
+                                                        if (confirm("Are you sure you want to delete this item?")) {
+                                                            submit(
+                                                                { subaction: "delete" },
+                                                                { method: "post", replace: true }
+                                                            )
+                                                        }
                                                     }
-                                                }
                                                 }
                                             >
                                                 Delete
