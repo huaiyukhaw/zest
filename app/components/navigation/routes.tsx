@@ -7,10 +7,11 @@ import { SortableItem, SortableList } from "~/components/sortable";
 import type { SortableItemType } from "~/components/sortable"
 
 export type RoutesProps = {
-    sectionOrder: Array<RouteType> | null
+    sectionOrder: Array<RouteType> | null,
+    onClick?: () => void,
 }
 
-export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
+export const Routes: React.FC<RoutesProps> = ({ sectionOrder, onClick }) => {
     const [routes, setRoutes] = useState<RouteType[]>(() => sectionOrder ?? defaultRoutes)
     const matches = useMatches()
     const currentPathname = matches[matches.length - 1].pathname
@@ -27,7 +28,12 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
 
     return (
         <Form method="post">
-            <NavLink to="." end prefetch="intent">
+            <NavLink
+                to="."
+                prefetch="intent"
+                end
+                onClick={onClick}
+            >
                 {
                     ({ isActive }) => (
                         <div className={
@@ -68,7 +74,7 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
                                         className={
                                             clsx(
                                                 "relative group/item flex items-center justify-between",
-                                                isDragging && "bg-gray-100 dark:bg-gray-700",
+                                                isDragging && "bg-gray-100 dark:bg-gray-700 scale-90 rounded-lg",
                                                 activeIndex < 0 && "hover:bg-gray-100/40 dark:hover:bg-gray-700/40",
                                             )
                                         }
@@ -76,6 +82,7 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
                                         <NavLink
                                             id={`nav-${id}`}
                                             to={path}
+                                            onClick={onClick}
                                             className={
                                                 clsx(
                                                     "flex-1",
@@ -97,7 +104,8 @@ export const Routes: React.FC<RoutesProps> = ({ sectionOrder }) => {
                                                         </span>
                                                         <div className={
                                                             clsx(
-                                                                isActive && "absolute inset-0 bg-gray-100 dark:bg-gray-700 mix-blend-darken dark:mix-blend-lighten"
+                                                                isActive && "absolute inset-0 bg-gray-100 dark:bg-gray-700 mix-blend-darken dark:mix-blend-lighten",
+                                                                isDragging && "rounded-lg"
                                                             )
                                                         }></div>
                                                     </div>

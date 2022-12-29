@@ -6,6 +6,8 @@ import clsx from "clsx";
 
 
 export const Root = DialogPrimitive.Root;
+export const Portal = DialogPrimitive.Portal;
+export const Overlay = DialogPrimitive.Overlay;
 export const Trigger = DialogPrimitive.Trigger;
 export const Title = DialogPrimitive.Title
 export const Description = DialogPrimitive.Description

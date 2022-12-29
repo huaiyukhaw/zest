@@ -1,4 +1,4 @@
-import { Link, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { Link, useFetcher, useLoaderData } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
 import { getAllWorkExperienceByUsername } from "~/models/work-experience.server"
@@ -23,7 +23,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 }
 
 const WorkExperienceIndexPage = () => {
-    const navigate = useNavigate();
     const { workExperience } = useLoaderData<WorkExperienceLoaderData>()
     const fetcher = useFetcher()
 
@@ -33,7 +32,7 @@ const WorkExperienceIndexPage = () => {
                 <h2 className="text-xl">
                     Work Experience
                 </h2>
-                <div>
+                <div className="flex-none">
                     <Link
                         to="new"
                         className="btn-secondary"
@@ -213,7 +212,7 @@ const WorkExperienceIndexPage = () => {
                 }
             </div>
             <div className="dialog-footer">
-                <AlertDialog.Cancel className="btn-secondary" onClick={() => navigate("/u/huaiyukhaw")}>
+                <AlertDialog.Cancel className="btn-secondary">
                     Done
                 </AlertDialog.Cancel>
             </div>

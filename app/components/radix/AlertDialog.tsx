@@ -5,6 +5,8 @@ import { Fragment } from "react";
 import clsx from "clsx";
 
 export const Root = AlertDialogPrimitive.Root;
+export const Portal = AlertDialogPrimitive.Portal;
+export const Overlay = AlertDialogPrimitive.Overlay;
 export const Trigger = AlertDialogPrimitive.Trigger;
 export const Title = AlertDialogPrimitive.Title
 export const Description = AlertDialogPrimitive.Description

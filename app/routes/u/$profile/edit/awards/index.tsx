@@ -1,4 +1,4 @@
-import { Link, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { Link, useFetcher, useLoaderData } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
 import { getAllAwardsByUsername } from "~/models/award.server"
@@ -23,7 +23,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 }
 
 const AwardsIndexPage = () => {
-    const navigate = useNavigate();
     const { awards } = useLoaderData<AwardsLoaderData>()
     const fetcher = useFetcher()
 
@@ -206,7 +205,7 @@ const AwardsIndexPage = () => {
                 }
             </div>
             <div className="dialog-footer">
-                <AlertDialog.Cancel className="btn-secondary" onClick={() => navigate("/u/huaiyukhaw")}>
+                <AlertDialog.Cancel className="btn-secondary">
                     Done
                 </AlertDialog.Cancel>
             </div>

@@ -1,4 +1,4 @@
-import { Link, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { Link, useFetcher, useLoaderData } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
 import { getAllVolunteeringByUsername } from "~/models/volunteering.server"
@@ -23,7 +23,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 }
 
 const VolunteeringIndexPage = () => {
-    const navigate = useNavigate();
     const { volunteering } = useLoaderData<VolunteeringLoaderData>()
     const fetcher = useFetcher()
 
@@ -213,7 +212,7 @@ const VolunteeringIndexPage = () => {
                 }
             </div>
             <div className="dialog-footer">
-                <AlertDialog.Cancel className="btn-secondary" onClick={() => navigate("/u/huaiyukhaw")}>
+                <AlertDialog.Cancel className="btn-secondary">
                     Done
                 </AlertDialog.Cancel>
             </div>

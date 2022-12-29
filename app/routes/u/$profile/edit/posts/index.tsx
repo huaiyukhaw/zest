@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node"
 import { json } from "@remix-run/node"
-import { Link, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { Link, useFetcher, useLoaderData } from "@remix-run/react"
 import clsx from "clsx"
 import { AlertDialog } from "~/components/radix"
 import { TagLabels } from "~/components/templates"
@@ -25,7 +25,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 }
 
 const PostsIndexPage = () => {
-    const navigate = useNavigate()
     const { posts } = useLoaderData<PostsLoaderData>()
     const fetcher = useFetcher()
 
@@ -143,7 +142,7 @@ const PostsIndexPage = () => {
                 }
             </div>
             <div className="dialog-footer">
-                <AlertDialog.Cancel className="btn-secondary" onClick={() => navigate("/u/huaiyukhaw")}>
+                <AlertDialog.Cancel className="btn-secondary">
                     Done
                 </AlertDialog.Cancel>
             </div>

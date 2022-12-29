@@ -1,4 +1,4 @@
-import { Form, Link, useLoaderData, useNavigate } from "@remix-run/react"
+import { Form, Link, useLoaderData } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
 import type { Link as SocialLink } from "@prisma/client"
@@ -20,7 +20,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 }
 
 const LinksIndexPage = () => {
-    const navigate = useNavigate();
     const { links } = useLoaderData<LinksLoaderData>()
 
     return (
@@ -117,7 +116,7 @@ const LinksIndexPage = () => {
                 }
             </div>
             <div className="dialog-footer">
-                <AlertDialog.Cancel className="btn-secondary" onClick={() => navigate("/u/huaiyukhaw")}>
+                <AlertDialog.Cancel className="btn-secondary">
                     Done
                 </AlertDialog.Cancel>
             </div>

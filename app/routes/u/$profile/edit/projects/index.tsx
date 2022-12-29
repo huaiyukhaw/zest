@@ -1,4 +1,4 @@
-import { Link, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { Link, useFetcher, useLoaderData } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
 import { getAllProjectsByUsername } from "~/models/project.server"
@@ -23,7 +23,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 }
 
 const ProjectsIndexPage = () => {
-    const navigate = useNavigate();
     const { projects } = useLoaderData<ProjectsLoaderData>()
     const fetcher = useFetcher()
 
@@ -205,7 +204,7 @@ const ProjectsIndexPage = () => {
                 }
             </div>
             <div className="dialog-footer">
-                <AlertDialog.Cancel className="btn-secondary" onClick={() => navigate("/u/huaiyukhaw")}>
+                <AlertDialog.Cancel className="btn-secondary">
                     Done
                 </AlertDialog.Cancel>
             </div>

@@ -1,4 +1,4 @@
-import { Link, useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { Link, useFetcher, useLoaderData } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
 import { getAllSpeakingByUsername } from "~/models/speaking.server"
@@ -23,7 +23,6 @@ export const loader: LoaderFunction = async ({ params }) => {
 }
 
 const SpeakingIndexPage = () => {
-    const navigate = useNavigate();
     const { speaking } = useLoaderData<SpeakingLoaderData>()
     const fetcher = useFetcher()
 
@@ -212,7 +211,7 @@ const SpeakingIndexPage = () => {
                 }
             </div>
             <div className="dialog-footer">
-                <AlertDialog.Cancel className="btn-secondary" onClick={() => navigate("/u/huaiyukhaw")}>
+                <AlertDialog.Cancel className="btn-secondary">
                     Done
                 </AlertDialog.Cancel>
             </div>

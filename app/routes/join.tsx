@@ -5,7 +5,7 @@ import { getUserId, createUserSession } from "~/session.server";
 import { createUser } from "~/models/user.server";
 import { safeRedirect } from "~/utils";
 import clsx from "clsx"
-import { ValidatedForm, validationError } from "remix-validated-form";
+import { useField, ValidatedForm, validationError } from "remix-validated-form";
 import { FormInput, SubmitButton } from "~/components/form";
 import { joinClientValidator, joinServerValidator } from "~/validators";
 import { FormHiddenInput } from "~/components/form"
@@ -23,13 +23,11 @@ export const action: ActionFunction = async ({ request }) => {
     await request.formData()
   );
 
-  console.log(result)
   if (result.error) return validationError(result.error);
 
   const { email, password, redirectTo } = result.data;
 
   const safeRedirectTo = safeRedirect(redirectTo, "/");
-
   const user = await createUser(email, password);
 
   return createUserSession({
@@ -54,6 +52,9 @@ type JoinPageProps = {
 const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? undefined;
+  const { error: turnstileError } = useField("cf-turnstile-response", {
+    formId: "joinForm"
+  })
 
   return (
     <div className={
@@ -81,7 +82,13 @@ const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
           </>
         }
 
-        <ValidatedForm validator={joinClientValidator} action="/join" method="post" className="space-y-2">
+        <ValidatedForm
+          id="joinForm"
+          validator={joinClientValidator}
+          action="/join"
+          method="post"
+          className="space-y-2"
+        >
           <FormInput
             name="email"
             label="Email address"
@@ -100,7 +107,15 @@ const JoinPage: React.FC<JoinPageProps> = ({ asModal = false }) => {
             autoComplete="new-password"
           />
           <FormHiddenInput name="redirectTo" value={redirectTo} />
-          <Turnstile siteKey='0x4AAAAAAABvVw6X7q8_XAGV' />
+          <Turnstile
+            siteKey='0x4AAAAAAABvVw6X7q8_XAGV'
+            options={{ responseFieldName: "cfTurnstileResponse" }}
+          />
+          {
+            (turnstileError) && (
+              <p className="mt-1 text-xs font-semibold text-red-600" aria-live="polite">{turnstileError}</p>
+            )
+          }
           <div className="flex items-center justify-between">
             {
               !asModal &&

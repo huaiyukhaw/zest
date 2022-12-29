@@ -3,7 +3,7 @@ import { json, redirect } from "@remix-run/node"
 import type { LoaderFunction, ActionFunction } from "@remix-run/node"
 import { requireUserId } from "~/session.server";
 import { createProfile, getProfileListItems } from "~/models/profile.server";
-import { Link, NavLink, useCatch, useLoaderData } from "@remix-run/react";
+import { Link, useCatch, useLoaderData } from "@remix-run/react";
 import { AlertDialog } from "~/components/radix";
 import { ErrorFragment } from "~/components/boundaries";
 import { ValidatedForm, validationError, setFormDefaults, useFormContext } from "remix-validated-form";
@@ -22,9 +22,7 @@ type ProfilesLoaderData = {
 export const loader: LoaderFunction = async ({ request }) => {
     const userId = await requireUserId(request);
     const profiles = await getProfileListItems({ userId });
-
     const url = new URL(request.url);
-    // const devMode = url.searchParams.get("dev");
     const claimUsername = url.searchParams.get("username")
 
     if (claimUsername) {
@@ -36,10 +34,6 @@ export const loader: LoaderFunction = async ({ request }) => {
         })
     }
 
-    // if (profiles.length === 1 && devMode !== process.env.DEV_SECRET) {
-    //     return redirect(`/u/${profiles[0].username}`)
-    // }
-
     return json<ProfilesLoaderData>({
         profiles
     })
@@ -49,7 +43,6 @@ export const action: ActionFunction = async ({
     request,
 }) => {
     const userId = await requireUserId(request);
-
     const result = await profileServerValidator.validate(
         await request.formData()
     );
@@ -57,9 +50,9 @@ export const action: ActionFunction = async ({
     if (result.error) return validationError(result.error);
 
     const { username, displayName } = result.data;
-
     const profile = await createProfile({ username, displayName, userId });
-    return redirect(`/u/${profile.username}`)
+
+    return redirect(`/u/${profile.username}/edit?new=true`)
 };
 
 const UserIndexPage = () => {
@@ -84,7 +77,11 @@ const UserIndexPage = () => {
                 {profiles.length === 0 ? (
                     <p className="p-4">No profiles yet</p>
                 ) : (
-                    <div className="flex flex-col flex-1 overflow-y-auto scrollbar-hide max-w-sm w-full border-y border-gray-200 dark:border-gray-700">
+                    <div className="
+                        flex flex-col flex-1 overflow-y-auto scrollbar-hide max-w-sm w-full
+                        border-y border-gray-200 dark:border-gray-700
+                        divide-y divide-gray-200 dark:divide-gray-700
+                    ">
                         {profiles.map((profile) => {
                             let avatarUrl: string | null | undefined = null
 
@@ -108,11 +105,13 @@ const UserIndexPage = () => {
                                                 className="
                                                     object-cover aspect-ratio w-8 h-8 rounded-full
                                                     flex flex-col items-center justify-center select-none
-                                                    bg-primary
-                                                    text-white text-xs font-semibold
+                                                    bg-gray-300 dark:bg-gray-600
+                                                    text-xs font-semibold text-gray-400 dark:text-gray-500
                                                 "
                                             >
-                                                HY
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                                                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+                                                </svg>
                                             </div>
                                         )
                                     }

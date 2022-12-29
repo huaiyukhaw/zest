@@ -81,7 +81,7 @@ const ProfileEditPage = () => {
     const fullscreen = searchParams.get("view") === "fullscreen" ?? undefined;
 
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false)
-    const [showSidebar, setShowSidebar] = useState<boolean>(!fullscreen)
+    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(!fullscreen)
     const { sectionOrder } = useLoaderData<SectionOrderData>()
 
     const { downloadCanvasAsPNG } = useOutletContext<{
@@ -152,50 +152,64 @@ const ProfileEditPage = () => {
                     <div className="flex h-[95vh] sm:h-[75vh]">
                         <div className={
                             clsx(
-                                "relative flex-none py-6 border-r border-gray-200 dark:border-gray-700",
-                                showSidebar ? "max-w-[200px] w-full" : "w-fit"
+                                "relative flex-none py-6",
+                                isSidebarOpen ? "max-w-[70vw] sm:max-w-[200px] w-full border-r border-gray-200 dark:border-gray-700" : "w-fit"
                             )
                         }>
                             {
-                                showSidebar ? (
+                                (isSidebarOpen) ? (
                                     <button
                                         type="button"
-                                        className="h-fit rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 hover:text-gray-700 dark:hover:text-gray-200 text-gray-400 dark:text-gray-600 absolute m-auto -right-3 bottom-6"
-                                        onClick={() => setShowSidebar(val => !val)}
+                                        className={clsx(
+                                            "sm:hidden absolute top-4 right-4 inline-flex items-center justify-center rounded-full p-1",
+                                            "focus-visible:ring focus-visible:outline-yellow-500 focus-visible:outline-opacity-75"
+                                        )}
+                                        onClick={() => setIsSidebarOpen(false)}
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6 text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-400">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
                                 ) : (
-                                    <div className="ml-6">
-                                        <button
-                                            type="button"
-                                            className="h-fit rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 p-1 hover:text-gray-700 dark:hover:text-gray-200 text-gray-400 dark:text-gray-600 absolute m-auto -right-3 bottom-6"
-                                            onClick={() => setShowSidebar(val => !val)}
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-                                            </svg>
-                                        </button>
-                                    </div>
+                                    <button
+                                        type="button"
+                                        className="
+                                            flex items-center h-fit rounded-lg p-1 absolute m-auto
+                                            bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700
+                                            hover:text-gray-700 dark:hover:text-gray-200 text-gray-400 dark:text-gray-400
+                                            -right-12 bottom-4 z-50
+                                        "
+                                        onClick={() => setIsSidebarOpen(true)}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                        </svg>
+                                    </button>
                                 )
                             }
                             <div className={clsx(
-                                !showSidebar && "hidden"
+                                !isSidebarOpen && "hidden",
                             )}>
                                 <div className="pl-9 pr-6 py-1.5">
                                     <h3 className="text-xs text-gray-500 dark:text-gray-400">
                                         Profile
                                     </h3>
                                 </div>
-                                <Routes sectionOrder={sectionOrder} />
+                                <Routes sectionOrder={sectionOrder} onClick={() => {
+                                    if (window.innerWidth < 640) {
+                                        setIsSidebarOpen(false)
+                                    }
+                                }} />
                             </div>
                         </div>
-                        <div className="
-                            flex flex-col min-w-0 flex-1 mt-8 [&>*]:px-8
-                            divide-y divide-gray-200 dark:divide-gray-700
-                        ">
+                        <div className={
+                            clsx(
+                                "flex flex-col min-w-0 grow shrink-0 pt-8 [&>*]:px-8",
+                                "divide-y divide-gray-200 dark:divide-gray-700",
+                                "bg-white dark:bg-gray-800",
+                                isSidebarOpen ? "rounded-r-2xl" : "rounded-2xl"
+                            )
+                        }>
                             <Outlet />
                         </div>
                     </div>

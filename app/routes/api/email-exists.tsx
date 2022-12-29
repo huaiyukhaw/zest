@@ -2,8 +2,7 @@
  * Endpoint used for email asyncValidation
  */
 import { z } from "zod";
-import { json } from "@remix-run/node";
-import type { LoaderFunction } from "@remix-run/node";
+import { json, type LoaderFunction, type ActionFunction } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
 import { isEmailAvailable } from "~/models/user.server";
 
