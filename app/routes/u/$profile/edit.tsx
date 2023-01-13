@@ -1,10 +1,11 @@
-import { useState } from "react"
+import { useState, Fragment } from "react"
 import { json } from "@remix-run/node";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node"
-import { useMatches, useOutletContext, useSubmit } from "@remix-run/react"
-import { AlertDialog } from "~/components/radix";
+import { useOutletContext, useSubmit } from "@remix-run/react"
+import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import * as Sidebar from "@radix-ui/react-dialog";
 import { requireUserId } from "~/session.server";
-import { Outlet, useLoaderData, useSearchParams } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { getProfileByUsername, updateSectionOrder } from "~/models/profile.server";
 import type { EditProfileCatchData } from "~/routes/u/$profile";
 import { Routes } from "~/components/navigation";
@@ -12,9 +13,17 @@ import { defaultRoutes } from "~/utils";
 import type { RouteType } from "~/utils";
 import clsx from "clsx";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { Transition } from '@headlessui/react'
 
 export type SectionOrderData = {
     sectionOrder: Array<RouteType> | null
+}
+
+export type ProfileEditPageOutletContext = {
+    sidebar: {
+        isSidebarOpen: boolean,
+        openSidebar: () => void
+    }
 }
 
 export const loader: LoaderFunction = async ({
@@ -78,17 +87,13 @@ export const action: ActionFunction = async ({ request, params }) => {
 }
 
 const ProfileEditPage = () => {
-    const [searchParams] = useSearchParams();
-    const fullscreen = searchParams.get("view") === "fullscreen" ?? undefined;
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false)
-    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(!fullscreen)
+    const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
     const { sectionOrder } = useLoaderData<SectionOrderData>()
     const { downloadCanvasAsPNG } = useOutletContext<{
         downloadCanvasAsPNG: () => void,
     }>()
     const submit = useSubmit()
-    const matches = useMatches()
-    const isInCollectionPage = matches[matches.length - 1].pathname.split("/").length === 5
 
     return (
         <AlertDialog.Root open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen} >
@@ -185,81 +190,135 @@ const ProfileEditPage = () => {
                     </DropdownMenu.Content>
                 </DropdownMenu.Portal>
             </DropdownMenu.Root>
-            <AlertDialog.Transition show={isAlertDialogOpen}>
-                <AlertDialog.Content lg noPadding>
-                    <div className="flex h-[95vh] sm:h-[75vh]">
-                        <div className={
-                            clsx(
-                                "relative flex-none py-6",
-                                isSidebarOpen ? "max-w-[70vw] sm:max-w-[200px] w-full border-r border-gray-200 dark:border-gray-700" : "w-fit"
-                            )
-                        }>
-                            {
-                                (isSidebarOpen) ? (
-                                    <button
-                                        type="button"
-                                        className={clsx(
-                                            "sm:hidden absolute top-4 right-4 inline-flex items-center justify-center rounded-full p-1",
-                                            "focus-visible:ring focus-visible:outline-yellow-500 focus-visible:outline-opacity-75"
-                                        )}
-                                        onClick={() => setIsSidebarOpen(false)}
+            <Transition.Root show={isAlertDialogOpen}>
+                <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                >
+                    <AlertDialog.Overlay
+                        forceMount
+                        className="fixed inset-0 z-20 bg-black/50"
+                    />
+                </Transition.Child>
+                <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
+                >
+                    <AlertDialog.Content
+                        forceMount
+                        className={clsx(
+                            "fixed z-30 overflow-x-hidden",
+                            "w-[95vw] max-w-3xl rounded-2xl md:w-full",
+                            "top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
+                            "bg-white dark:bg-gray-800",
+                            "focus-visible:ring focus-visible:outline-yellow-500 focus-visible:outline-opacity-75",
+                        )}
+                    >
+                        <div className="flex h-[95vh] sm:h-[75vh]">
+                            <Sidebar.Root open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+                                <Transition.Root show={isSidebarOpen} className="fixed z-40 inset-y-0 sm:static">
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="ease-out duration-300"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="ease-in duration-200 delay-500"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6 text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-400">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                ) : (isInCollectionPage) && (
-                                    <button
-                                        type="button"
-                                        className="
-                                            flex items-center h-fit rounded-lg p-1 absolute m-auto
-                                            bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700
-                                            hover:text-gray-700 dark:hover:text-gray-200 text-gray-400 dark:text-gray-400
-                                            -right-12 bottom-4 z-50
-                                        "
-                                        onClick={() => setIsSidebarOpen(true)}
+                                        <Sidebar.Overlay
+                                            forceMount
+                                            className="fixed inset-0 z-40 bg-black/40 sm:hidden"
+                                        />
+                                    </Transition.Child>
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="transition ease-in-out duration-300 transform"
+                                        enterFrom="-translate-x-full"
+                                        enterTo="translate-x-0"
+                                        leave="transition ease-in-out duration-300 transform delay-500"
+                                        leaveFrom="translate-x-0"
+                                        leaveTo="-translate-x-full"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                                        </svg>
-                                    </button>
-                                )
-                            }
-                            <div className={clsx(
-                                !isSidebarOpen && "hidden",
-                            )}>
-                                <div className="pl-9 pr-6 py-1.5">
-                                    <h3 className="text-xs text-gray-500 dark:text-gray-400">
-                                        Profile
-                                    </h3>
-                                </div>
-                                <Routes
-                                    sectionOrder={sectionOrder}
-                                    onRouteChange={() => {
-                                        if (window.innerWidth < 640) {
-                                            setIsSidebarOpen(false)
-                                        }
-                                    }}
-                                />
+                                        <Sidebar.Content
+                                            forceMount
+                                            className={clsx(
+                                                "fixed z-50",
+                                                "w-screen max-w-[350px] sm:max-w-[200px] h-full",
+                                                "sm:border-r border-gray-200 dark:border-gray-700",
+                                                "drop-shadow-lg sm:drop-shadow-none",
+                                                "inset-y-0 left-0",
+                                                "bg-white dark:bg-gray-800",
+                                                "relative flex-none py-6 rounded-l-2xl",
+                                                "!pointer-events-auto"
+                                            )}
+                                        >
+                                            <div>
+                                                <button
+                                                    type="button"
+                                                    className={clsx(
+                                                        "sm:hidden absolute top-4 right-4 inline-flex items-center justify-center rounded-full p-1",
+                                                        "focus-visible:ring focus-visible:outline-yellow-500 focus-visible:outline-opacity-75"
+                                                    )}
+                                                    onClick={() => setIsSidebarOpen(false)}
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6 text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-400">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                                <div className="pl-9 pr-6 py-1.5">
+                                                    <h3 className="text-xs text-gray-500 dark:text-gray-400">
+                                                        Profile
+                                                    </h3>
+                                                </div>
+                                                <Routes
+                                                    sectionOrder={sectionOrder}
+                                                    onRouteChange={() => {
+                                                        if (window.innerWidth < 640) {
+                                                            setIsSidebarOpen(false)
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </Sidebar.Content>
+                                    </Transition.Child>
+                                </Transition.Root>
+                            </Sidebar.Root>
+                            <div
+                                className={
+                                    clsx(
+                                        "flex flex-col min-w-0 grow shrink-0 pt-8 [&>*]:px-8",
+                                        "divide-y divide-gray-200 dark:divide-gray-700",
+                                        "bg-white dark:bg-gray-800",
+                                    )
+                                }
+                            >
+                                <Outlet context={{
+                                    sidebar: {
+                                        isSidebarOpen,
+                                        openSidebar: () => setIsSidebarOpen(true)
+                                    }
+                                }} />
                             </div>
                         </div>
-                        <div
-                            className={
-                                clsx(
-                                    "flex flex-col min-w-0 grow shrink-0 pt-8 [&>*]:px-8",
-                                    "divide-y divide-gray-200 dark:divide-gray-700",
-                                    "bg-white dark:bg-gray-800",
-                                    isSidebarOpen ? "rounded-r-2xl pointer-events-none sm:pointer-events-auto" : "rounded-2xl"
-                                )
-                            }
-                        >
-                            <Outlet />
-                        </div>
-                    </div>
-                </AlertDialog.Content>
-            </AlertDialog.Transition>
+                    </AlertDialog.Content>
+                </Transition.Child>
+            </Transition.Root>
         </AlertDialog.Root >
     )
 }
 
 export default ProfileEditPage
+
+// Transition animation when toggling sidebar
+// Maybe use headless ui transition

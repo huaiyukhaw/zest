@@ -7,11 +7,10 @@ import {
     unstable_createMemoryUploadHandler as createMemoryUploadHandler,
     unstable_parseMultipartFormData as parseMultipartFormData,
 } from "@remix-run/node"
-import { Form, useLoaderData, useSubmit, useTransition } from "@remix-run/react"
+import { Form, useLoaderData, useOutletContext, useSubmit, useTransition } from "@remix-run/react"
 import { FormDefaults, setFormDefaults, ValidatedForm, validationError } from "remix-validated-form"
 import { FormImageInput, FormInput, FormTextArea, SubmitButton } from "~/components/form"
 import { getProfileByUsername, updateProfile, updateProfileAvatar } from "~/models/profile.server"
-
 import { generalClientValidator as clientValidator, generalServerValidator as serverValidator, avatarSchema, avatarValidator } from "~/validators/general"
 import { deleteImage, uploadImage } from "~/utils"
 import { z } from "zod"
@@ -19,6 +18,7 @@ import clsx from "clsx"
 import type { UploadApiResponse } from "cloudinary";
 import { AlertDialog } from "~/components/radix"
 import { FormHiddenInput } from "~/components/form"
+import { ProfileEditPageOutletContext } from "~/routes/u/$profile/edit"
 
 type AvatarLoaderData = z.infer<typeof avatarSchema>
 
@@ -185,8 +185,8 @@ const AvatarViewer = (avatar: { id: string, url: string }) => {
 
 const ProfileGeneralPage = () => {
     const [isDirty, setIsDirty] = useState<boolean>(false)
-
     const { avatar } = useLoaderData<AvatarLoaderData>()
+    const { sidebar: { openSidebar } } = useOutletContext<ProfileEditPageOutletContext>()
 
     return (
         <>
@@ -262,14 +262,25 @@ const ProfileGeneralPage = () => {
                     />
                 </ValidatedForm>
             </div>
-            <div className="dialog-footer">
+            <div className="flex h-16 items-center gap-1.5 justify-between sm:justify-end">
+                <button
+                    type="button"
+                    className="sm:hidden hover:text-gray-700 dark:hover:text-gray-200 text-gray-400 dark:text-gray-400"
+                    onClick={openSidebar}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
                 {
-                    isDirty ? <>
-                        <AlertDialog.Cancel className="btn-transparent">
-                            Done
-                        </AlertDialog.Cancel>
-                        <SubmitButton formId="profileGeneralForm">Save</SubmitButton>
-                    </> : (
+                    isDirty ? (
+                        <div className="flex items-center gap-1.5 justify-end">
+                            <AlertDialog.Cancel className="btn-transparent">
+                                Done
+                            </AlertDialog.Cancel>
+                            <SubmitButton formId="profileGeneralForm">Save</SubmitButton>
+                        </div>
+                    ) : (
                         <AlertDialog.Cancel className="btn-secondary">
                             Done
                         </AlertDialog.Cancel>

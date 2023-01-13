@@ -125,7 +125,7 @@ export const VolunteeringForm: React.FC<CustomFormProps> = ({ subaction, formId 
                 </div>
                 <FormHiddenInput name="published" value={subaction == "new" ? "true" : undefined} />
             </ValidatedForm>
-            <div className="dialog-footer">
+            <div className="flex h-16 items-center justify-end gap-1.5">
                 <Link to="../volunteering" className="btn-transparent">
                     Cancel
                 </Link>

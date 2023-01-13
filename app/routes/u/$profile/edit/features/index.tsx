@@ -1,4 +1,4 @@
-import { Link, useFetcher, useLoaderData } from "@remix-run/react"
+import { Link, useFetcher, useLoaderData, useOutletContext } from "@remix-run/react"
 import { json } from "@remix-run/node"
 import type { LoaderFunction } from "@remix-run/node"
 import { getAllFeaturesByUsername } from "~/models/feature.server"
@@ -9,6 +9,7 @@ import clsx from "clsx"
 import { marked } from "marked"
 import { sanitize } from 'isomorphic-dompurify';
 import markdownToTxt from "markdown-to-txt"
+import { ProfileEditPageOutletContext } from "~/routes/u/$profile/edit"
 
 export type FeaturesLoaderData = {
     features: FeaturesWithPostsIncluded
@@ -25,6 +26,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 const FeaturesIndexPage = () => {
     const { features } = useLoaderData<FeaturesLoaderData>()
     const fetcher = useFetcher()
+    const { sidebar: { openSidebar } } = useOutletContext<ProfileEditPageOutletContext>()
 
     return (
         <>
@@ -201,7 +203,16 @@ const FeaturesIndexPage = () => {
                     )
                 }
             </div>
-            <div className="dialog-footer">
+            <div className="flex h-16 items-center gap-1.5 justify-between sm:justify-end">
+                <button
+                    type="button"
+                    className="sm:hidden hover:text-gray-700 dark:hover:text-gray-200 text-gray-400 dark:text-gray-400"
+                    onClick={openSidebar}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
                 <AlertDialog.Cancel className="btn-secondary">
                     Done
                 </AlertDialog.Cancel>

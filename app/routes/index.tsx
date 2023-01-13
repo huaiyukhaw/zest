@@ -59,10 +59,10 @@ const Index = () => {
                   <Dialog.Content>
                     {isNewUser ?
                       <>
-                        <Dialog.Title className="dialog-title">
+                        <Dialog.Title className="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
                           Create a new profile ✨
                         </Dialog.Title>
-                        <Dialog.Description className="dialog-desc">
+                        <Dialog.Description className="mb-4 text-sm text-gray-700 dark:text-gray-400">
                           By continuing you agree to our <span className="text-gray-900 dark:text-white">
                             terms of service
                           </span> and <span className="text-gray-900 dark:text-white">
@@ -82,10 +82,10 @@ const Index = () => {
                           </div>
                         </div>
                       </> : <>
-                        <Dialog.Title className="dialog-title">
+                        <Dialog.Title className="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
                           Login to your account 👋
                         </Dialog.Title>
-                        <Dialog.Description className="dialog-desc">
+                        <Dialog.Description className="mb-4 text-sm text-gray-700 dark:text-gray-400">
                           By continuing you agree to our <span className="text-gray-900 dark:text-white">
                             terms of service
                           </span> and <span className="text-gray-900 dark:text-white">

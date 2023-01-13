@@ -53,18 +53,6 @@
 }
 
 @layer components {
-  .dialog-title {
-    @apply mb-2 text-lg font-medium text-gray-900 dark:text-gray-100;
-  }
-
-  .dialog-desc {
-    @apply mb-4 text-sm text-gray-700 dark:text-gray-400;
-  }
-
-  .dialog-footer {
-    @apply flex h-16 items-center justify-end gap-1.5;
-  }
-
   .btn-secondary {
     @apply rounded-lg border border-gray-300 bg-white px-3 py-1 text-sm focus-visible:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-500 enabled:hover:bg-gray-100 disabled:opacity-50 dark:border-transparent dark:bg-gray-700 dark:text-white dark:focus-visible:bg-gray-600 dark:enabled:hover:bg-gray-600;
   }

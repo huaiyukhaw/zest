@@ -134,12 +134,12 @@ const UserIndexPage = () => {
                     </AlertDialog.Trigger>
                     <AlertDialog.Transition show={isAlertDialogOpen}>
                         <AlertDialog.Content>
-                            <AlertDialog.Title className="dialog-title">
+                            <AlertDialog.Title className="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
                                 {
                                     defaultValues?.username ? "Claim your username 👋" : "Welcome to Zest 👋"
                                 }
                             </AlertDialog.Title>
-                            <AlertDialog.Description className="dialog-desc">
+                            <AlertDialog.Description className="mb-4 text-sm text-gray-700 dark:text-gray-400">
                                 We just need a few details to finish creating your profile. You can always change this later.
                             </AlertDialog.Description>
                             <ValidatedForm
