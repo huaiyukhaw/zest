@@ -176,7 +176,7 @@ const ProjectsIndexPage = () => {
                                             action={id}
                                             method="post"
                                             onSubmit={(event) => {
-                                                if (!confirm("Are you sure you want to // delete this item?")) {
+                                                if (!confirm("Are you sure you want to delete this item?")) {
                                                     event.preventDefault();
                                                 }
                                             }
