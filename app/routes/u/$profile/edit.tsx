@@ -380,8 +380,7 @@ const ProfileEditPage = () => {
                             <div className="mb-4">
                                 {
                                     typeof window !== "undefined" && (
-                                        <QRCodeCanvas value={window.location.href.replace("/edit", "")} />
-                                        // <QRCodeCanvas value={`${window.location.hostname}/u/${profile?.username}`} />
+                                        <QRCodeCanvas value={`${window.location.hostname}/u/${profile?.username}`} />
                                     )
                                 }
                             </div>
