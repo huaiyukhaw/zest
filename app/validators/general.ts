@@ -11,7 +11,7 @@ export const generalSchema = z.object({
     })
     .trim()
     .min(4, {
-      message: "Your username must be longer than 4 characters.",
+      message: "Your username must be longer than 3 characters.",
     })
     .max(15, {
       message: "Your username must be shorter than 15 characters.",
@@ -31,7 +31,7 @@ export const generalSchema = z.object({
     })
     .trim()
     .min(1, {
-      message: "Your display name must be longer than 1 character.",
+      message: "Display name is required.",
     })
     .max(48, {
       message: "Your display name must be shorter than 48 characters.",

@@ -10,7 +10,7 @@ export const profileSchema = z.object({
       required_error: "Username is required",
     })
     .min(4, {
-      message: "Your username must be longer than 4 characters.",
+      message: "Your username must be longer than 3 characters.",
     })
     .max(15, {
       message: "Your username must be shorter than 15 characters.",
@@ -27,7 +27,7 @@ export const profileSchema = z.object({
       required_error: "Display name is required.",
     })
     .min(1, {
-      message: "Your display name must be longer than 1 character.",
+      message: "Display name is required.",
     })
     .max(50, {
       message: "Your display name must be shorter than 50 characters.",

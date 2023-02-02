@@ -24,7 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (result.error) return validationError(result.error);
 
   const { email, password, remember, redirectTo } = result.data;
-  const safeRedirectTo = safeRedirect(redirectTo, "/u");
+  const safeRedirectTo = safeRedirect(redirectTo, "/app");
 
   const user = await verifyLogin(email, password);
 

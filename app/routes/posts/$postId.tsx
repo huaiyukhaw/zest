@@ -64,7 +64,7 @@ const PostPage = () => {
                 }
                 <div>
                     <Link
-                        to={`/u/${profile.username}`}
+                        to={`/${profile.username}`}
                         className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:underline hover:underline-offset-2"
                     >
                         {profile.displayName}
