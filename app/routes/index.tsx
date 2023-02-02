@@ -18,7 +18,7 @@ const Index = () => {
       {
         (user) ? (
           <>
-            <Link to="u" className="btn-secondary mt-10">
+            <Link to="app" className="btn-secondary mt-10">
               Continue
             </Link>
             <Form action="/logout" method="post">
