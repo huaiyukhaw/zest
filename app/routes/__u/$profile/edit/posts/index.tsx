@@ -5,7 +5,7 @@ import clsx from "clsx"
 import { AlertDialog } from "~/components/radix"
 import { TagLabels } from "~/components/templates"
 import { EmptyPost } from "~/images/empty"
-import { getAllPostsByUsername } from "~/models/post.server"
+import { getAllPosts } from "~/models/post.server"
 import type { PostWithTags } from "~/models/post.server"
 import { sanitize } from "isomorphic-dompurify"
 import markdownToTxt from "markdown-to-txt"
@@ -18,8 +18,9 @@ export type PostsLoaderData = {
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.profile) throw new Error("Profile username not found")
 
-    const posts = await getAllPostsByUsername({
-        profileUsername: params.profile
+    const posts = await getAllPosts({
+        profileUsername: params.profile,
+        published: true
     })
 
     return json<PostsLoaderData>({ posts });
@@ -81,7 +82,7 @@ const PostsIndexPage = () => {
                                 {(tags.length > 0) && (
                                     <TagLabels tags={tags} />
                                 )}
-                                <div className="flex justify-between items-baseline mt-4">
+                                <div className="flex flex-wrap justify-between items-baseline gap-2 mt-4">
                                     <div className="flex gap-3 items-baseline">
                                         <fetcher.Form action={id} method="post">
                                             <input type="hidden" name="subaction" value={

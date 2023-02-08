@@ -3,8 +3,8 @@ import { prisma } from "~/db.server";
 
 export type { ProfilesOnTags, Tag } from "@prisma/client";
 
-export const getAllTagsByProfileUsername = (
-  profileUsername: ProfilesOnTags["profileUsername"]
+export const getAllTags = (
+  profileUsername?: ProfilesOnTags["profileUsername"]
 ) => {
   return prisma.profilesOnTags.findMany({
     select: {

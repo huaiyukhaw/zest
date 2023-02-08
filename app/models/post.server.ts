@@ -27,21 +27,70 @@ export type PostWithTags = Prisma.PostGetPayload<{
   };
 }>;
 
-export const getAllPostsByUsername = ({
-  profileUsername,
-  published,
-}: Pick<Post, "profileUsername"> & {
+type GetAllPostsParams = {
+  profileUsername?: string;
+  tags?: string[];
   published?: boolean;
-}) => {
+};
+
+export const getAllPosts = (params?: GetAllPostsParams) => {
+  const { profileUsername, tags, published } = params ?? {
+    profileUsername: undefined,
+    tags: undefined,
+    published: undefined,
+  };
+
   return prisma.post.findMany({
     include: {
       tags: true,
     },
     where: {
       profileUsername,
-      ...(published && {
-        published: true,
+      ...(tags && {
+        tags: {
+          some: {
+            value: {
+              in: tags,
+            },
+          },
+        },
       }),
+      published,
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+};
+
+export const getAllPostsWithProfile = (params?: GetAllPostsParams) => {
+  const { profileUsername, tags, published } = params ?? {
+    profileUsername: undefined,
+    tags: undefined,
+    published: undefined,
+  };
+
+  return prisma.post.findMany({
+    include: {
+      tags: true,
+      profile: {
+        select: {
+          username: true,
+          avatar: true,
+          displayName: true,
+        },
+      },
+    },
+    where: {
+      profileUsername,
+      ...(tags && {
+        tags: {
+          some: {
+            value: {
+              in: tags,
+            },
+          },
+        },
+      }),
+      published,
     },
     orderBy: { updatedAt: "desc" },
   });

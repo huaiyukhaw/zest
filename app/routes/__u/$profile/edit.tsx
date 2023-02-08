@@ -1,7 +1,7 @@
 import { useState, Fragment } from "react"
 import { json } from "@remix-run/node";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node"
-import { useOutletContext, useSubmit } from "@remix-run/react"
+import { useNavigate, useOutletContext, useSubmit } from "@remix-run/react"
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Dialog from "@radix-ui/react-dialog";
 import { requireUserId } from "~/session.server";
@@ -102,6 +102,7 @@ const ProfileEditPage = () => {
         downloadCanvasAsPNG: () => void,
     }>()
     const submit = useSubmit()
+    const navigate = useNavigate()
 
     return (
         <>
@@ -149,6 +150,19 @@ const ProfileEditPage = () => {
                                     className="w-5 h-5"
                                 >
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                </svg>
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                                className="
+                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
+                                    border border-gray-300 dark:border-transparent
+                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
+                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
+                                "
+                                onSelect={() => navigate("/app")}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                                 </svg>
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
@@ -245,25 +259,27 @@ const ProfileEditPage = () => {
                             <div className="flex h-[95vh] sm:h-[75vh]">
                                 <Dialog.Root open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
                                     <Transition.Root show={isSidebarOpen} className="fixed z-40 inset-y-0 sm:static">
-                                        <Transition.Child
-                                            as={Fragment}
-                                            enter="ease-out duration-300"
-                                            enterFrom="opacity-0"
-                                            enterTo="opacity-100"
-                                            leave="ease-in duration-200 delay-300"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
-                                        >
-                                            <Dialog.Overlay
-                                                forceMount
-                                                className="fixed inset-0 z-40 bg-black/40 sm:hidden"
-                                                onClick={() => {
-                                                    if (window.innerWidth < 640) {
-                                                        setIsSidebarOpen(false)
-                                                    }
-                                                }}
-                                            />
-                                        </Transition.Child>
+                                        {(typeof window !== "undefined" && window.innerWidth < 640) && (
+                                            <Transition.Child
+                                                as={Fragment}
+                                                enter="ease-out duration-300"
+                                                enterFrom="opacity-0"
+                                                enterTo="opacity-100"
+                                                leave="ease-in duration-200 delay-300"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                            >
+                                                <Dialog.Overlay
+                                                    forceMount
+                                                    className="fixed inset-0 z-40 bg-black/40 sm:hidden"
+                                                    onClick={() => {
+                                                        if (window.innerWidth < 640) {
+                                                            setIsSidebarOpen(false)
+                                                        }
+                                                    }}
+                                                />
+                                            </Transition.Child>
+                                        )}
                                         <Transition.Child
                                             as={Fragment}
                                             enter="transition ease-in-out duration-300 transform"
@@ -320,7 +336,7 @@ const ProfileEditPage = () => {
                                 <div
                                     className={
                                         clsx(
-                                            "flex flex-col min-w-0 grow shrink-0 pt-8 [&>*]:px-8",
+                                            "flex flex-col grow shrink-0 pt-8 [&>*]:px-8 w-min",
                                             "divide-y divide-gray-200 dark:divide-gray-700",
                                             "bg-white dark:bg-gray-800",
                                         )

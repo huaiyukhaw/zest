@@ -340,7 +340,7 @@ const ProfilePage = () => {
                                 day: 'numeric',
                             })
                             .format(new Date(updatedAt)),
-                        url: `/posts/${slug}`
+                        url: `/post/${slug}`
                     }))
                 } />
         ) : null

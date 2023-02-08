@@ -8,20 +8,18 @@ import type { PostLoaderData } from "./$postId"
 import { safeRedirect } from "~/utils"
 import { useBeforeUnload } from "@remix-run/react"
 import { useCallback } from "react"
-import { getAllTagsByProfileUsername } from "~/models/tag.server"
+import { getAllTags } from "~/models/tag.server"
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.profile) throw new Error("Profile username not found")
 
-    const tags = await getAllTagsByProfileUsername(params.profile)
+    const tags = await getAllTags(params.profile)
 
     return json<PostLoaderData>({
-        options: [
-            {
-                label: "Your recent tags",
-                options: tags
-            }
-        ],
+        options: [{
+            label: "Your recent tags",
+            options: tags
+        }],
     });
 }
 

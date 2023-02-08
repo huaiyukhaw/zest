@@ -23,7 +23,7 @@ type Item = {
 }
 
 interface SectionTemplateProps extends React.ComponentProps<"div"> {
-    header: string,
+    header?: string,
     items: Item[]
 }
 
@@ -31,9 +31,13 @@ interface SectionTemplateProps extends React.ComponentProps<"div"> {
 export const SectionTemplate: React.FC<SectionTemplateProps> = ({ header, items, ...rest }) => {
     return (
         <div {...rest}>
-            <h2 className="mb-1 text-base font-medium text-gray-700 dark:text-gray-200">
-                {header}
-            </h2>
+            {
+                (header) && (
+                    <h2 className="mb-1 text-base font-medium text-gray-700 dark:text-gray-200">
+                        {header}
+                    </h2>
+                )
+            }
             <div className="overflow-y-auto scrollbar-hide flex flex-col flex-1">
                 {
                     items.map(({
@@ -95,7 +99,7 @@ export const SectionTemplate: React.FC<SectionTemplateProps> = ({ header, items,
                                                 {
                                                     posts.map(({ id, slug, title, tags, content }) => (
                                                         <Link
-                                                            to={`/posts/${slug}`}
+                                                            to={`/post/${slug}`}
                                                             className="
                                                                     w-full
                                                                     rounded-lg border border-gray-200 dark:border-gray-700 px-4 -mx-5 py-3 disabled:opacity-50

@@ -14,7 +14,7 @@ import type { PreviewType } from "@uiw/react-md-editor"
 import { Link, useBeforeUnload, useLoaderData, useSearchParams, useSubmit, useTransition } from "@remix-run/react"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import clsx from "clsx"
-import { getAllTagsByProfileUsername } from "~/models/tag.server"
+import { getAllTags } from "~/models/tag.server"
 
 export type PostLoaderData = {
     options: ComboboxOptions
@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     if (!params.postId) throw new Error("Post id not found")
 
     const post = await getPostOrThrow(params.postId)
-    const tags = await getAllTagsByProfileUsername(params.profile)
+    const tags = await getAllTags(params.profile)
 
     return json<FormDefaults & PostLoaderData>({
         options: [

@@ -1,7 +1,7 @@
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { isUsernameAvailable } from "~/models/profile.server";
-import { usernameSchema } from "./profile";
+import { usernameSchema } from "~/validators/username";
 
 export const generalSchema = z.object({
   username: usernameSchema,
