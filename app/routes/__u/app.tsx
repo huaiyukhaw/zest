@@ -88,7 +88,7 @@ const UserIndexPage = () => {
                             if (profile.avatar) {
                                 const parsedAvatar = avatarSchema.safeParse({ avatar: profile.avatar })
                                 if (parsedAvatar.success) {
-                                    avatarUrl = parsedAvatar.data.avatar?.url
+                                    avatarUrl = parsedAvatar.data.avatar?.url.replace("upload/", "upload/c_fill,w_32/")
                                 }
                             }
                             return (

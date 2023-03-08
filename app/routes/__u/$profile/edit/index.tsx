@@ -150,7 +150,7 @@ const AvatarViewer = (avatar: { id: string, url: string }) => {
                 group object-cover aspect-ratio h-24 w-24 rounded-full
                 flex flex-col items-center justify-center
             "
-                src={avatar.url}
+                src={avatar.url.replace("upload/", "upload/c_fill,w_96/")}
                 alt="Avatar"
             />
             <Form method="post" encType="multipart/form-data" action="?index&action=avatar">

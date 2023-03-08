@@ -92,7 +92,7 @@ const ProfilePage = () => {
                                 group object-cover aspect-ratio h-24 w-24 rounded-full
                                 flex flex-col items-center justify-center
                             "
-                        src={JSON.parse(avatar).url}
+                        src={JSON.parse(avatar).url.replace("upload/", "upload/c_fill,w_96/")}
                         alt="Avatar"
                     />
                 ) : null
