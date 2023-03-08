@@ -81,51 +81,59 @@ const PostsIndexPage = () => {
                 </span>
                 <div className="flex-1 border-b border-gray-200 dark:border-gray-700"></div>
             </div>
-            <div className="flex flex-col my-2 mx-1 divide-y divide-gray-200 dark:divide-gray-700">
-                {
-                    posts.map(({
-                        id,
-                        slug,
-                        title,
-                        tags,
-                        content,
-                        createdAt
-                    }) => (
-                        <div className="pt-6 pb-8" key={id}>
-                            <div className="flex gap-2 items-center mb-2">
-                                <p className="peer text-xs text-gray-500 dark:text-gray-400">
-                                    {new Intl
-                                        .DateTimeFormat('us-EN', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                        })
-                                        .format(new Date(createdAt))}
-                                </p>
-                            </div>
-                            <Link to={`/post/${slug}`} className="group">
-                                <p
-                                    className="text-lg font-semibold text-gray-700 dark:text-gray-200 group-hover:underline group-hover:underline-offset-2"
-                                >
-                                    {title}
-                                </p>
-                                {
-                                    (content) && (
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 break-words line-clamp-3 mt-1">
-                                            {sanitize(markdownToTxt(content))}
+            {
+                (posts.length > 0) ? (
+                    <div className="flex flex-col my-2 mx-1 divide-y divide-gray-200 dark:divide-gray-700">
+                        {
+                            posts.map(({
+                                id,
+                                slug,
+                                title,
+                                tags,
+                                content,
+                                createdAt
+                            }) => (
+                                <div className="pt-6 pb-8" key={id}>
+                                    <div className="flex gap-2 items-center mb-2">
+                                        <p className="peer text-xs text-gray-500 dark:text-gray-400">
+                                            {new Intl
+                                                .DateTimeFormat('us-EN', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                })
+                                                .format(new Date(createdAt))}
                                         </p>
-                                    )
-                                }
-                            </Link>
-                            {
-                                (tags && tags.length > 0) && (
-                                    <TagLabels tags={tags} />
-                                )
-                            }
-                        </div>
-                    ))
-                }
-            </div>
+                                    </div>
+                                    <Link to={`/post/${slug}`} className="group">
+                                        <p
+                                            className="text-lg font-semibold text-gray-700 dark:text-gray-200 group-hover:underline group-hover:underline-offset-2"
+                                        >
+                                            {title}
+                                        </p>
+                                        {
+                                            (content) && (
+                                                <p className="text-sm text-gray-500 dark:text-gray-400 break-words line-clamp-3 mt-1">
+                                                    {sanitize(markdownToTxt(content))}
+                                                </p>
+                                            )
+                                        }
+                                    </Link>
+                                    {
+                                        (tags && tags.length > 0) && (
+                                            <TagLabels tags={tags} />
+                                        )
+                                    }
+                                </div>
+                            ))
+                        }
+                    </div>
+                ) : (
+                    <div className="mt-4 text-center">
+                        <p className="text-gray-500 dark:text-gray-400">No posts found</p>
+                    </div>
+                )
+            }
         </div>
     )
 }
