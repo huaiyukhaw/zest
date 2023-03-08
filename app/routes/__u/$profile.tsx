@@ -98,7 +98,7 @@ const ProfilePage = () => {
                 ) : null
             }
             <div>
-                <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                <h2 className="text-3xl font-semibold text-gray-700 dark:text-gray-200">
                     {displayName}
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 break-words whitespace-pre-wrap mt-1">
@@ -127,7 +127,7 @@ const ProfilePage = () => {
 
     const BioSection = () => {
         return bio ? (
-            <div className="pb-10">
+            <div>
                 <h2 className="text-base font-medium text-gray-700 dark:text-gray-200">
                     About
                 </h2>
@@ -325,24 +325,29 @@ const ProfilePage = () => {
 
     const PostSection = () => {
         return (posts.length > 0) ? (
-            <SectionTemplate
-                header="Posts"
-                items={
-                    posts.map(({ id, slug, title, tags, content, updatedAt }) => ({
-                        id,
-                        title: title ?? "",
-                        tags: tags,
-                        caption: content ? sanitize(markdownToTxt(content)) : "",
-                        duration: new Intl
-                            .DateTimeFormat('us-EN', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                            })
-                            .format(new Date(updatedAt)),
-                        url: `/post/${slug}`
-                    }))
-                } />
+            <div>
+                <SectionTemplate
+                    header="Posts"
+                    items={
+                        posts.map(({ id, slug, title, tags, content, updatedAt }) => ({
+                            id,
+                            title: title ?? "",
+                            tags: tags,
+                            caption: content ? sanitize(markdownToTxt(content)) : "",
+                            duration: new Intl
+                                .DateTimeFormat('us-EN', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                })
+                                .format(new Date(updatedAt)),
+                            url: `/post/${slug}`
+                        }))
+                    } />
+                <div className="mt-4">
+                    <Link to="/" className="text-sm text-gray-600 dark:text-gray-300  hover:text-gray-700 dark:hover:text-gray-200 hover:underline underline-offset-4">View all posts</Link>
+                </div>
+            </div>
         ) : null
     }
 
