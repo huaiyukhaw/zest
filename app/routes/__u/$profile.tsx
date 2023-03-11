@@ -345,7 +345,7 @@ const ProfilePage = () => {
                         }))
                     } />
                 <div className="mt-4">
-                    <Link to="/" className="text-sm text-gray-600 dark:text-gray-300  hover:text-gray-700 dark:hover:text-gray-200 hover:underline underline-offset-4">View all posts</Link>
+                    <Link to="posts" className="text-sm text-gray-600 dark:text-gray-300  hover:text-gray-700 dark:hover:text-gray-200 hover:underline underline-offset-4">View all posts</Link>
                 </div>
             </div>
         ) : null

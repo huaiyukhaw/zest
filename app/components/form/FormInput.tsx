@@ -11,9 +11,10 @@ export interface FormInputProps extends Omit<React.ComponentProps<"input">, "id"
     formId?: string
     transform?: (value: string) => string
     transparent?: boolean
+    inputClassName?: string
 }
 
-export const FormInput: React.FC<FormInputProps> = ({ formId, label, name, className = "flex-1", validationBehavior, maxLength, showSuccessIcon = false, hideError = false, transform, transparent = false, ...rest }) => {
+export const FormInput: React.FC<FormInputProps> = ({ formId, label, name, className = "flex-1", validationBehavior, maxLength, showSuccessIcon = false, hideError = false, transform, transparent = false, inputClassName, ...rest }) => {
     const { error, getInputProps, touched } = useField(name, {
         ... (formId) && { formId },
         validationBehavior: {
@@ -45,7 +46,8 @@ export const FormInput: React.FC<FormInputProps> = ({ formId, label, name, class
                         ...rest,
                     })}
                     className={clsx(
-                        transparent && "bg-transparent border-transparent"
+                        transparent && "bg-transparent border-transparent",
+                        inputClassName
                     )}
                     aria-invalid={error ? true : undefined}
                 />

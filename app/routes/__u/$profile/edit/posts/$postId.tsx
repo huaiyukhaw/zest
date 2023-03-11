@@ -160,7 +160,7 @@ export const PostForm: React.FC<CustomFormProps> = ({
                     textareaProps={{
                         placeholder: "Write your post content here...",
                     }}
-                    hideToolbar={window.innerWidth < 640 ? true : false}
+                    hideToolbar={typeof window !== "undefined" && window.innerWidth < 640 ? true : false}
                 />
                 <FormHiddenInput name="published" value={subaction == "new" ? "true" : published ? "true" : "false"} />
                 <FormHiddenInput name="awardId" value={awardId} />

@@ -51,7 +51,7 @@ export const FormCombobox: React.FC<FormComboboxProps> = ({
             </div>
             <div className="mt-1">
                 <CreatableSelect
-                    name="tags"
+                    name={name}
                     options={options}
                     value={values}
                     onChange={(val) => {

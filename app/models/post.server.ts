@@ -604,4 +604,6 @@ export const createPost = async ({
       },
     });
   }
+
+  return post;
 };

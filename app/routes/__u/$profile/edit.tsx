@@ -1,7 +1,7 @@
 import { useState, Fragment } from "react"
 import { json } from "@remix-run/node";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node"
-import { useNavigate, useOutletContext, useSubmit } from "@remix-run/react"
+import { Link, useNavigate, useOutletContext, useSubmit } from "@remix-run/react"
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Dialog from "@radix-ui/react-dialog";
 import { requireUserId } from "~/session.server";
@@ -107,121 +107,129 @@ const ProfileEditPage = () => {
     return (
         <>
             <AlertDialog.Root open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen} >
-                <DropdownMenu.Root>
-                    <DropdownMenu.Trigger className="fixed bottom-6 left-6 text-sm p-4 bg-white hover:bg-gray-200 border border-gray-300 dark:border-transparent dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600 text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white disabled:opacity-50 flex items-center gap-1 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
-                        </svg>
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Portal>
-                        <DropdownMenu.Content
-                            side="top"
-                            sideOffset={5}
-                            align="start"
-                            className="
+                <div className="fixed bottom-6 left-6 flex gap-2">
+                    <DropdownMenu.Root>
+                        <DropdownMenu.Trigger className="text-sm p-4 bg-white hover:bg-gray-200 border border-gray-300 dark:border-transparent drop-shadow-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600 text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white disabled:opacity-50 flex items-center gap-1 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                            </svg>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Portal>
+                            <DropdownMenu.Content
+                                side="top"
+                                sideOffset={5}
+                                align="start"
+                                className="
                                 radix-side-top:animate-slide-up
                                 group flex flex-col gap-2 print:hidden
                             "
-                        >
-                            <DropdownMenu.Item
-                                className="
+                            >
+                                <DropdownMenu.Item
+                                    className="
                                     flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm
                                     bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
                                     text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
                                 "
-                                onSelect={
-                                    () => {
-                                        if (confirm("Are you sure you want to log out?")) {
-                                            submit(
-                                                null,
-                                                { method: "post", action: "/logout", replace: true }
-                                            )
+                                    onSelect={
+                                        () => {
+                                            if (confirm("Are you sure you want to log out?")) {
+                                                submit(
+                                                    null,
+                                                    { method: "post", action: "/logout", replace: true }
+                                                )
+                                            }
                                         }
                                     }
-                                }
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-5 h-5"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                                </svg>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                                className="
-                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent
-                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
-                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
-                                "
-                                onSelect={() => navigate("/app")}
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-                                </svg>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                                className="
-                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent
-                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
-                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
-                                "
-                                onSelect={() => print()}
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
-                                </svg>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                                className="
-                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent
-                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
-                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
-                                "
-                                onSelect={() => downloadCanvasAsPNG()}
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                </svg>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                                className="
-                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent
-                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
-                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
-                                "
-                                onSelect={() => setIsQrDialogOpen(true)}
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
-                                </svg>
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item asChild>
-                                <AlertDialog.Trigger
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-5 h-5"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                    </svg>
+                                </DropdownMenu.Item>
+                                <DropdownMenu.Item
                                     className="
+                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm
+                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
+                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
+                                "
+                                    onSelect={() => navigate("/app")}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                                    </svg>
+                                </DropdownMenu.Item>
+                                <DropdownMenu.Item
+                                    className="
+                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm
+                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
+                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
+                                "
+                                    onSelect={() => print()}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
+                                    </svg>
+                                </DropdownMenu.Item>
+                                <DropdownMenu.Item
+                                    className="
+                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm
+                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
+                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
+                                "
+                                    onSelect={() => downloadCanvasAsPNG()}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                    </svg>
+                                </DropdownMenu.Item>
+                                <DropdownMenu.Item
+                                    className="
+                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm
+                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
+                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
+                                "
+                                    onSelect={() => setIsQrDialogOpen(true)}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
+                                    </svg>
+                                </DropdownMenu.Item>
+                                <DropdownMenu.Item asChild>
+                                    <AlertDialog.Trigger
+                                        className="
                                         flex items-center gap-1 p-4 disabled:opacity-50 rounded-full
-                                        border border-gray-300 dark:border-transparent
+                                        border border-gray-300 dark:border-transparent drop-shadow-sm
                                         bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
                                         text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
                                     "
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                                    </svg>
-                                </AlertDialog.Trigger>
-                            </DropdownMenu.Item>
-                        </DropdownMenu.Content>
-                    </DropdownMenu.Portal>
-                </DropdownMenu.Root>
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                        </svg>
+                                    </AlertDialog.Trigger>
+                                </DropdownMenu.Item>
+                            </DropdownMenu.Content>
+                        </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+                    <Link
+                        to="../new-story"
+                        className="text-sm py-4 px-5 bg-white hover:bg-gray-200 border border-gray-300 dark:border-transparent drop-shadow-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600 text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white disabled:opacity-50 flex items-center gap-1 rounded-full"
+                    >
+                        Write a post
+                    </Link>
+                </div>
                 <Transition.Root show={isAlertDialogOpen}>
                     <Transition.Child
                         as={Fragment}

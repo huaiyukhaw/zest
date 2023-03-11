@@ -8,12 +8,10 @@ export interface FormMarkdownEditorProps extends Omit<MDEditorProps, "id" | "val
     label?: string;
     name: string;
     validationBehavior?: Partial<ValidationBehaviorOptions>;
-    showSuccessIcon?: boolean
     formId?: string
-    maxLength?: number
 }
 
-export const FormMarkdownEditor: React.FC<FormMarkdownEditorProps> = ({ formId, label, name, className = "flex-1 flex flex-col", validationBehavior, maxLength, showSuccessIcon = false, previewOptions, ...rest }) => {
+export const FormMarkdownEditor: React.FC<FormMarkdownEditorProps> = ({ formId, label, name, className = "flex-1 flex flex-col", validationBehavior, previewOptions, ...rest }) => {
     const { error, getInputProps } = useField(name, {
         ... (formId) && { formId },
         validationBehavior: {
