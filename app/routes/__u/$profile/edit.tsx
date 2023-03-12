@@ -400,7 +400,7 @@ const ProfileEditPage = () => {
                             )}
                         >
                             <h3 className="mb-2 font-medium text-gray-900 dark:text-white">{profile?.displayName}</h3>
-                            <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">{profile?.username}</p>
+                            <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">@{profile?.username}</p>
                             <div className="mb-4">
                                 {
                                     typeof window !== "undefined" && (

@@ -1,6 +1,6 @@
 import { createPost } from "~/models/post.server"
 import { safeRedirect } from "~/utils"
-import { type LoaderFunction, type ActionFunction, json, redirect } from "@remix-run/node"
+import { type LoaderFunction, type ActionFunction, type LinksFunction, json, redirect } from "@remix-run/node"
 import { useControlField, useFormContext, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput } from "~/components/form"
 import { CustomFormProps } from "~/types"
@@ -10,23 +10,31 @@ import { FormHiddenInput } from "~/components/form"
 import { Link, useBeforeUnload, useLoaderData, useSubmit, useTransition } from "@remix-run/react"
 import { getProfileByUsername, type Profile } from "~/models/profile.server"
 import FormQuillEditor from "~/components/form/FormQuillEditor"
+import { requireUserId } from "~/session.server"
+import { type EditProfileCatchData } from "./$profile"
 
-import styles from 'react-quill/dist/quill.bubble.css';
+import styles from "react-quill/dist/quill.bubble.css";
 
-export function links() {
-    return [{ rel: "stylesheet", href: styles }];
-}
+export const links: LinksFunction = () => [
+    { rel: "stylesheet", href: styles },
+];
 
 export type StoryLoaderData = {
     profile: Profile,
 }
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
     if (!params.profile) throw new Error("Profile username not found")
 
+    const userId = await requireUserId(request);
     const profile = await getProfileByUsername(params.profile)
 
     if (!profile) throw new Error("Profile username not found")
+
+    if (!profile.userId.includes(userId)) {
+        const data: EditProfileCatchData = { profileOwnerEmail: profile.userEmail }
+        throw json(data, { status: 401 })
+    }
 
     return json<StoryLoaderData>({
         profile: profile,
@@ -85,7 +93,7 @@ export const StoryForm: React.FC<CustomFormProps> = ({
 
     return (
         <>
-            <div className="flex h-16 items-center justify-between gap-1.5">
+            <div className="bubble flex h-16 items-center justify-between gap-1.5 mx-4">
                 <h1 className="text-gray-600 dark:text-gray-300 text-sm font-medium">Draft in&nbsp;
                     <Link to={`/${profile.username}`} className="hover:underline underline-offset-2">{profile.displayName}</Link>
                 </h1>
@@ -132,12 +140,12 @@ export const StoryForm: React.FC<CustomFormProps> = ({
                         placeholder="Title"
                         hideError
                         transparent
-                        inputClassName="text-5xl placeholder:text-5xl font-extrabold placeholder:font-semibold text-gray-700 dark:text-gray-200"
+                        inputClassName="text-5xl placeholder:text-5xl font-extrabold placeholder:font-normal text-gray-700 dark:text-gray-200"
                     />
                 </div>
                 <FormQuillEditor
-                    name="content"
                     placeholder="Write your story..."
+                    name="content"
                 />
                 <FormHiddenInput name="published" value={subaction == "new" ? "true" : published ? "true" : "false"} />
             </ValidatedForm>

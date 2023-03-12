@@ -5,6 +5,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (prefers-color-scheme: light) {
+  .ql-editor.ql-blank:before {
+    color: rgba(64, 64, 64, 0.6) !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .ql-editor.ql-blank:before {
+    color: rgba(229, 229, 229, 0.6) !important;
+  }
+}
+
 @layer base {
   input {
     @apply rounded-lg border border-gray-400 text-sm placeholder:text-sm
