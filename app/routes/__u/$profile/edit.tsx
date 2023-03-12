@@ -1,7 +1,7 @@
 import { useState, Fragment } from "react"
 import { json } from "@remix-run/node";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node"
-import { Link, useNavigate, useOutletContext, useSubmit } from "@remix-run/react"
+import { Link, useNavigate, useSubmit } from "@remix-run/react"
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Dialog from "@radix-ui/react-dialog";
 import { requireUserId } from "~/session.server";
@@ -98,9 +98,6 @@ const ProfileEditPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
     const [isQrDialogOpen, setIsQrDialogOpen] = useState<boolean>(false)
     const { sectionOrder, profile } = useLoaderData<EditProfileData>()
-    const { downloadCanvasAsPNG } = useOutletContext<{
-        downloadCanvasAsPNG: () => void,
-    }>()
     const submit = useSubmit()
     const navigate = useNavigate()
 
@@ -109,7 +106,7 @@ const ProfileEditPage = () => {
             <AlertDialog.Root open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen} >
                 <div className="fixed bottom-6 left-6 flex gap-2">
                     <DropdownMenu.Root>
-                        <DropdownMenu.Trigger className="text-sm p-4 bg-white hover:bg-gray-200 border border-gray-300 dark:border-transparent drop-shadow-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600 text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white disabled:opacity-50 flex items-center gap-1 rounded-full">
+                        <DropdownMenu.Trigger className="print:hidden text-sm p-4 bg-white hover:bg-gray-200 border border-gray-300 dark:border-transparent drop-shadow-sm hover:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600 text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white disabled:opacity-50 flex items-center gap-1 rounded-full">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
                             </svg>
@@ -121,13 +118,13 @@ const ProfileEditPage = () => {
                                 align="start"
                                 className="
                                 radix-side-top:animate-slide-up
-                                group flex flex-col gap-2 print:hidden
+                                print:hidden group flex flex-col gap-2
                             "
                             >
                                 <DropdownMenu.Item
                                     className="
                                     flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent drop-shadow-sm
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm hover:outline-none
                                     bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
                                     text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
                                 "
@@ -156,7 +153,7 @@ const ProfileEditPage = () => {
                                 <DropdownMenu.Item
                                     className="
                                     flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent drop-shadow-sm
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm hover:outline-none
                                     bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
                                     text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
                                 "
@@ -169,7 +166,7 @@ const ProfileEditPage = () => {
                                 <DropdownMenu.Item
                                     className="
                                     flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent drop-shadow-sm
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm hover:outline-none
                                     bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
                                     text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
                                 "
@@ -182,20 +179,7 @@ const ProfileEditPage = () => {
                                 <DropdownMenu.Item
                                     className="
                                     flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent drop-shadow-sm
-                                    bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
-                                    text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
-                                "
-                                    onSelect={() => downloadCanvasAsPNG()}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                    </svg>
-                                </DropdownMenu.Item>
-                                <DropdownMenu.Item
-                                    className="
-                                    flex items-center gap-1 p-4 disabled:opacity-50 rounded-full cursor-pointer
-                                    border border-gray-300 dark:border-transparent drop-shadow-sm
+                                    border border-gray-300 dark:border-transparent drop-shadow-sm hover:outline-none
                                     bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
                                     text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
                                 "
@@ -210,7 +194,7 @@ const ProfileEditPage = () => {
                                     <AlertDialog.Trigger
                                         className="
                                         flex items-center gap-1 p-4 disabled:opacity-50 rounded-full
-                                        border border-gray-300 dark:border-transparent drop-shadow-sm
+                                        border border-gray-300 dark:border-transparent drop-shadow-sm hover:outline-none
                                         bg-white hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600
                                         text-sm text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white
                                     "
@@ -225,7 +209,7 @@ const ProfileEditPage = () => {
                     </DropdownMenu.Root>
                     <Link
                         to="../new-story"
-                        className="text-sm py-4 px-5 bg-white hover:bg-gray-200 border border-gray-300 dark:border-transparent drop-shadow-sm dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600 text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white disabled:opacity-50 flex items-center gap-1 rounded-full"
+                        className="print:hidden text-sm py-4 px-5 bg-white hover:bg-gray-200 border border-gray-300 dark:border-transparent drop-shadow-sm hover:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600 text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white disabled:opacity-50 flex items-center gap-1 rounded-full"
                     >
                         Write a post
                     </Link>
@@ -389,26 +373,30 @@ const ProfileEditPage = () => {
                     >
                         <Dialog.Content
                             forceMount
-                            className={clsx(
-                                "fixed z-30 overflow-x-hidden",
-                                "pt-8 pb-4",
-                                "flex flex-col items-center justify-center",
-                                "w-[95vw] max-w-sm rounded-2xl md:w-full",
-                                "top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
-                                "bg-white dark:bg-gray-800",
-                                "outline-none"
-                            )}
+                            asChild
                         >
-                            <h3 className="mb-2 font-medium text-gray-900 dark:text-white">{profile?.displayName}</h3>
-                            <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">@{profile?.username}</p>
-                            <div className="mb-4">
-                                {
-                                    typeof window !== "undefined" && (
-                                        <QRCodeCanvas value={`${window.location.hostname}/${profile?.username}`} />
-                                    )
-                                }
+                            <div
+                                className={clsx(
+                                    "fixed z-30 overflow-x-hidden",
+                                    "pt-8 pb-4",
+                                    "flex flex-col items-center justify-center",
+                                    "w-[95vw] max-w-sm rounded-2xl md:w-full",
+                                    "top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]",
+                                    "bg-white dark:bg-gray-800",
+                                    "outline-none"
+                                )}
+                            >
+                                <h3 className="mb-2 font-medium text-gray-900 dark:text-white">{profile?.displayName}</h3>
+                                <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">@{profile?.username}</p>
+                                <div className="mb-4">
+                                    {
+                                        typeof window !== "undefined" && (
+                                            <QRCodeCanvas value={`${window.location.hostname}/${profile?.username}`} />
+                                        )
+                                    }
+                                </div>
+                                <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">Scan the QR to view this profile.</p>
                             </div>
-                            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">Scan the QR to view this profile.</p>
                         </Dialog.Content>
                     </Transition.Child>
                 </Transition.Root>

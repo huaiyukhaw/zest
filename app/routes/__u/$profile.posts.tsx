@@ -1,8 +1,9 @@
-import { json, Response, type LoaderFunction } from "@remix-run/node";
-import { Link, type ThrownResponse, useCatch, useLoaderData, useParams } from "@remix-run/react";
+import { json, type MetaFunction, Response, type LoaderFunction } from "@remix-run/node";
+import { Link, type ThrownResponse, useCatch, useLoaderData } from "@remix-run/react";
 import { sanitize } from "isomorphic-dompurify";
 import markdownToTxt from "markdown-to-txt";
 import { TagLabels } from "~/components/templates"
+import Watermark from "~/components/templates/watermark";
 import { getAllPosts, type PostWithTags } from "~/models/post.server";
 import { getProfileByUsername, type Profile } from "~/models/profile.server";
 import { avatarSchema } from "~/validators";
@@ -11,6 +12,12 @@ type PostsLoaderData = {
     posts: PostWithTags[],
     profile: Profile
 }
+
+export const meta: MetaFunction = ({ data }) => {
+    return ({
+        title: data?.profile?.displayName ?? "Remix CV"
+    })
+};
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (!params.profile) throw new Error("Profile username not found")
@@ -52,7 +59,7 @@ const PostsIndexPage = () => {
 
     return (
         <div className="max-w-screen-md mx-auto mt-4 mb-20 sm:mt-20 px-4">
-            <div className="my-6 flex items-center gap-3">
+            <div className="my-6 flex items-center gap-4">
                 {
                     (avatarUrl) ? (
                         <img src={avatarUrl} alt={`${profile.displayName}'s avatar`} className="object-cover aspect-ratio w-10 h-10 rounded-full" />
@@ -71,7 +78,7 @@ const PostsIndexPage = () => {
                         </div>
                     )
                 }
-                <h1 className="text-[40px] font-medium text-gray-700 dark:text-gray-200">
+                <h1 className="text-4xl font-semibold text-gray-700 dark:text-gray-200">
                     {profile.displayName}
                 </h1>
             </div>
@@ -134,6 +141,7 @@ const PostsIndexPage = () => {
                     </div>
                 )
             }
+            <Watermark />
         </div>
     )
 }

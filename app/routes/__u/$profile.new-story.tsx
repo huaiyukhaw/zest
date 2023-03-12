@@ -1,6 +1,6 @@
 import { createPost } from "~/models/post.server"
 import { safeRedirect } from "~/utils"
-import { type LoaderFunction, type ActionFunction, type LinksFunction, json, redirect } from "@remix-run/node"
+import { type LoaderFunction, type ActionFunction, type LinksFunction, json, redirect, type MetaFunction } from "@remix-run/node"
 import { useControlField, useFormContext, ValidatedForm, validationError } from "remix-validated-form"
 import { FormInput } from "~/components/form"
 import { CustomFormProps } from "~/types"
@@ -14,6 +14,7 @@ import { requireUserId } from "~/session.server"
 import { type EditProfileCatchData } from "./$profile"
 
 import styles from "react-quill/dist/quill.bubble.css";
+import Watermark from "~/components/templates/watermark"
 
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: styles },
@@ -22,6 +23,12 @@ export const links: LinksFunction = () => [
 export type StoryLoaderData = {
     profile: Profile,
 }
+
+export const meta: MetaFunction = ({ data }) => {
+    return ({
+        title: data?.profile?.displayName ?? "Remix CV"
+    })
+};
 
 export const loader: LoaderFunction = async ({ request, params }) => {
     if (!params.profile) throw new Error("Profile username not found")
@@ -164,6 +171,7 @@ const NewStoryPage = () => {
     return (
         <div className="max-w-screen-lg mx-auto h-screen flex flex-col">
             <StoryForm subaction="new" formId="newStoryForm" />
+            <Watermark />
         </div>
     )
 }

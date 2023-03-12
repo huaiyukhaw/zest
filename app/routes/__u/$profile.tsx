@@ -9,8 +9,7 @@ import { SectionTemplate } from "~/components/templates";
 import { defaultRoutes } from "~/utils";
 import markdownToTxt from "markdown-to-txt";
 import { sanitize } from "isomorphic-dompurify";
-import { useRef } from "react";
-import html2canvas from "html2canvas"
+import Watermark from "~/components/templates/watermark";
 
 export type ProfileLoaderData = {
     profile: ProfileWithAllIncluded
@@ -325,7 +324,7 @@ const ProfilePage = () => {
 
     const PostSection = () => {
         return (posts.length > 0) ? (
-            <div>
+            <div className="print:hidden">
                 <SectionTemplate
                     header="Posts"
                     items={
@@ -369,43 +368,9 @@ const ProfilePage = () => {
         PostSection
     }
 
-    const canvasRef = useRef<HTMLDivElement>(null)
-
-    const downloadCanvasAsPNG = () => {
-        if (canvasRef.current) {
-            html2canvas(canvasRef.current, {
-                scale: 3,
-                backgroundColor: null,
-                useCORS: true
-            }).then((canvas) => {
-                var dt = canvas.toDataURL('image/png', 1.0);
-                /* Change MIME type to trick the browser to downlaod the file instead of displaying it */
-                dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
-
-                /* In addition to <a>'s "download" attribute, you can define HTTP-style headers */
-                dt = dt.replace(/^data:application\/octet-stream/, `data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=${username}.png`);
-
-                saveAs(dt, `${username}.png`);
-            })
-        }
-    };
-
-    const saveAs = (uri: string, filename: string) => {
-        const link = document.createElement("a");
-        if (typeof link.download === "string") {
-            link.href = uri;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } else {
-            window.open(uri);
-        }
-    };
-
     return (
         <>
-            <div className="max-w-screen-sm mx-auto pt-4 pb-14 sm:pt-14 px-4 space-y-6 bg-white dark:bg-gray-800" ref={canvasRef}>
+            <div className="max-w-screen-sm mx-auto pt-4 pb-14 sm:pt-14 px-4 space-y-6 bg-white dark:bg-gray-800">
                 <GeneralSection />
                 <BioSection />
                 {sections.map(({ id }) => {
@@ -413,9 +378,8 @@ const ProfilePage = () => {
                     return <Section key={id} />
                 })}
             </div>
-            <Outlet context={{
-                downloadCanvasAsPNG
-            }} />
+            <Watermark />
+            <Outlet />
         </>
     );
 }

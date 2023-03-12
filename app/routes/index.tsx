@@ -13,8 +13,14 @@ const Index = () => {
 
   return (
     <main className="flex flex-col items-center justify-center gap-y-2 min-h-screen mx-4">
+      <div className="flex items-center gap-1.5 mb-4">
+        <img src="/zest.svg" alt="" className="w-7 h-7" />
+        <span className="text-lg">
+          Zest CV
+        </span>
+      </div>
       <h1 className="text-3xl sm:text-4xl md:text-5xl text-black dark:text-white text-center">The Professional Profile</h1>
-      <p className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 text-center">for people in tech with robust work profiles at its core.</p>
+      <h2 className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 text-center">for people in tech with robust work profiles at its core.</h2>
       {
         (user) ? (
           <>
