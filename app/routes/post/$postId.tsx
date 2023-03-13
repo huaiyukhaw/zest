@@ -8,6 +8,7 @@ import type { ThrownResponse } from "@remix-run/react";
 import MDEditor from '@uiw/react-md-editor';
 import { avatarSchema } from "~/validators";
 import { TagLabels } from "~/components/templates";
+import Watermark from "~/components/templates/watermark";
 
 type PostLoaderData = {
     post: PostWithProfile
@@ -106,6 +107,7 @@ const PostPage = () => {
                     })
                     .format(new Date(updatedAt))}
             </div>
+            <Watermark />
         </div>
     )
 }
