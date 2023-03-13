@@ -3,7 +3,6 @@ import { Link, type ThrownResponse, useCatch, useLoaderData } from "@remix-run/r
 import { sanitize } from "isomorphic-dompurify";
 import markdownToTxt from "markdown-to-txt";
 import { TagLabels } from "~/components/templates"
-import Watermark from "~/components/templates/watermark";
 import { getAllPosts, type PostWithTags } from "~/models/post.server";
 import { getProfileByUsername, type Profile } from "~/models/profile.server";
 import { avatarSchema } from "~/validators";
@@ -141,7 +140,6 @@ const PostsIndexPage = () => {
                     </div>
                 )
             }
-            <Watermark />
         </div>
     )
 }

@@ -13,6 +13,7 @@ import {
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getUser } from "./session.server";
 import { ErrorFragment } from "./components/boundaries";
+import Watermark from "./components/templates/watermark";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -42,6 +43,7 @@ const App = () => {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <Watermark />
       </body>
     </html>
   );

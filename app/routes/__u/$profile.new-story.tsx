@@ -12,9 +12,7 @@ import { getProfileByUsername, type Profile } from "~/models/profile.server"
 import FormQuillEditor from "~/components/form/FormQuillEditor"
 import { requireUserId } from "~/session.server"
 import { type EditProfileCatchData } from "./$profile"
-
 import styles from "react-quill/dist/quill.bubble.css";
-import Watermark from "~/components/templates/watermark"
 
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: styles },
@@ -171,7 +169,6 @@ const NewStoryPage = () => {
     return (
         <div className="max-w-screen-lg mx-auto h-screen flex flex-col">
             <StoryForm subaction="new" formId="newStoryForm" />
-            <Watermark />
         </div>
     )
 }
