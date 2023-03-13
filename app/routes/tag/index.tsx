@@ -1,6 +1,7 @@
 import { json, Response, type LoaderFunction } from "@remix-run/node";
 import { Link, type ThrownResponse, useCatch, useLoaderData } from "@remix-run/react";
 import { TagLabels } from "~/components/templates"
+import Watermark from "~/components/templates/watermark";
 import { getAllTags } from "~/models/tag.server";
 
 type TagsIndexLoaderData = {
@@ -41,6 +42,7 @@ const TagsIndexPage = () => {
                 <div className="flex-1 border-b border-gray-200 dark:border-gray-700"></div>
             </div>
             <TagLabels tags={tags} />
+            <Watermark />
         </div>
     )
 }

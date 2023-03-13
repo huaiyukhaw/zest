@@ -9,6 +9,7 @@ import { SectionTemplate } from "~/components/templates";
 import { defaultRoutes } from "~/utils";
 import markdownToTxt from "markdown-to-txt";
 import { sanitize } from "isomorphic-dompurify";
+import Watermark from "~/components/templates/watermark";
 
 export type ProfileLoaderData = {
     profile: ProfileWithAllIncluded
@@ -378,6 +379,7 @@ const ProfilePage = () => {
                 })}
             </div>
             <Outlet />
+            <Watermark />
         </>
     );
 }
