@@ -24,7 +24,7 @@ export type StoryLoaderData = {
 
 export const meta: MetaFunction = ({ data }) => {
     return ({
-        title: data?.profile?.displayName ?? "Remix CV"
+        title: data?.profile?.displayName ?? "Zest CV"
     })
 };
 
