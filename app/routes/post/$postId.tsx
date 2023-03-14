@@ -1,5 +1,4 @@
-import { json } from "@remix-run/node";
-import type { LoaderFunction } from "@remix-run/node";
+import { json, type LoaderFunction, type MetaFunction } from "@remix-run/node";
 import { getPostWithProfile } from "~/models/post.server";
 import type { PostWithProfile } from "~/models/post.server";
 import { Link } from "react-router-dom";
@@ -11,7 +10,8 @@ import { TagLabels } from "~/components/templates";
 import Watermark from "~/components/templates/watermark";
 
 type PostLoaderData = {
-    post: PostWithProfile
+    post: PostWithProfile,
+    metaTitle: string,
 }
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -27,8 +27,15 @@ export const loader: LoaderFunction = async ({ params }) => {
         throw new Response("Post not found", { status: 404 })
     }
 
-    return json<PostLoaderData>({ post });
+    return json<PostLoaderData>({ post, metaTitle: post.title ? `${post.title} | Zest CV` : "Zest CV" });
 }
+
+export const meta: MetaFunction = ({ data }: { data: PostLoaderData }) => {
+    const { metaTitle } = data
+    return {
+        title: metaTitle,
+    };
+};
 
 const PostPage = () => {
     const { post: { title, tags, content, profile, createdAt, updatedAt } } = useLoaderData<PostLoaderData>()
