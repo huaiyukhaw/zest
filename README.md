@@ -1,8 +1,44 @@
-# Remix Indie Stack
+# Zest CV
 
-![The Remix Indie Stack](https://repository-images.githubusercontent.com/465928257/a241fa49-bd4d-485a-a2a5-5cb8e4ee0abf)
+> The professional profile for people in tech with robust work profiles at its core.
 
-Learn more about [Remix Stacks](https://remix.run/stacks).
+Try it! [zest.huaiyukhaw.com](https://zest.huaiyukhaw.com)
+
+Zest is a profile builder that allows users to showcase their work portfolio. Enhanced user experience by incorporating
+essential blogging functionality such as markdown formatting, tagging, and QR code sharing.
+
+---
+
+## Author
+
+**Huaiyu Khaw** 
+- *Initial work* - [Zest ](https://github.com/huaiyukhaw/zest) (GitHub)
+- *Released on* [Vercel](https://vercel.com)
+- *Connect with me on* [LinkedIn](https://www.linkedin.com/in/huaiyukhaw)
+
+## Showcase
+
+This project was designed to demonstrate:
+
+- Use of React, Remix, Typescript and TailwindCSS to build a modern and responsive user interface.
+- Implementation of server-side rendering with Next.js for improved performance and search engine optimization.
+- Proper form validation by using Zod
+
+## Usage example
+
+The usage of LinkBio is straightforward: users simply create an account and customize their link in bio with their preferred links. Once they're done, they can share their link in bio with their audience, making it easier for them to find and connect with them.
+
+## Screenshots
+
+![image](https://user-images.githubusercontent.com/31930091/226646919-11f983f4-89e0-4420-9c59-befc4cbab95e.png)
+
+![image](https://user-images.githubusercontent.com/31930091/226651975-6a15d7a8-416d-40ff-a6c5-dcaa0b4915ca.png)
+
+![image](https://user-images.githubusercontent.com/31930091/226647491-499e8de7-92fd-452c-bbc5-93b6b8bef8f0.png)
+
+---
+
+Built from Remix Indie Stack. Learn more about [Remix Stacks](https://remix.run/stacks).
 
 ```
 npx create-remix@latest --template remix-run/indie-stack
