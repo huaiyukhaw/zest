@@ -14,7 +14,6 @@ export const ClientOnly = ({ children }: { children: React.ReactNode }) => {
     return mounted ? <>{children}</> : null;
 }
 
-
 export interface FormQuillEditorProps extends Omit<ReactQuillProps, "id" | "value" | "onChange"> {
     label?: string;
     name: string;
