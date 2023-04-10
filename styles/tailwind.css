@@ -17,6 +17,10 @@
   }
 }
 
+body {
+  overflow: auto !important;
+}
+
 @layer base {
   input {
     @apply rounded-lg border border-gray-400 text-sm placeholder:text-sm

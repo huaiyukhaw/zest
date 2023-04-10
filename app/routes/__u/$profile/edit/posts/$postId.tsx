@@ -15,6 +15,7 @@ import { Link, useBeforeUnload, useLoaderData, useSearchParams, useSubmit, useTr
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import clsx from "clsx"
 import { getAllTags } from "~/models/tag.server"
+import FormQuillEditor from "~/components/form/FormQuillEditor"
 
 export type PostLoaderData = {
     options: ComboboxOptions
@@ -62,7 +63,6 @@ export const action: ActionFunction = async ({ request, params }) => {
             const result = await validator.validate(form);
 
             if (result.error) return validationError(result.error);
-            console.log("edit result", result)
 
             const { title, tags, content, published } = result.data
 
@@ -162,6 +162,7 @@ export const PostForm: React.FC<CustomFormProps> = ({
                     }}
                     hideToolbar={typeof window !== "undefined" && window.innerWidth < 640 ? true : false}
                 />
+
                 <FormHiddenInput name="published" value={subaction == "new" ? "true" : published ? "true" : "false"} />
                 <FormHiddenInput name="awardId" value={awardId} />
                 <FormHiddenInput name="certificationId" value={certificationId} />
