@@ -1,6 +1,6 @@
 # Zest CV
 
-> The professional profile for people in tech with robust work profiles at its core.
+> The professional profile as a complete portfolio to showcase your proof-of-work.
 
 Try it! [zest.huaiyukhaw.com](https://zest.huaiyukhaw.com)
 
