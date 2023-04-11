@@ -20,7 +20,7 @@ const Index = () => {
         </span>
       </div>
       <h1 className="text-3xl sm:text-4xl md:text-5xl text-black dark:text-white text-center">The Professional Profile</h1>
-      <h2 className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 text-center">for people in tech with robust work profiles at its core.</h2>
+      <h2 className="text-sm sm:text-base md:text-lg text-gray-500 dark:text-gray-400 text-center">as a complete portfolio to showcase your proof-of-work.</h2>
       {
         (user) ? (
           <>
