@@ -1,10 +1,10 @@
 import { useState, Fragment } from "react"
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import type { LoaderFunction, ActionFunction } from "@remix-run/node"
 import { Link, useNavigate, useSubmit } from "@remix-run/react"
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import * as Dialog from "@radix-ui/react-dialog";
-import { requireUserId } from "~/session.server";
+import { getUser } from "~/session.server";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { getProfileByUsername, type Profile, updateSectionOrder } from "~/models/profile.server";
 import type { EditProfileCatchData } from "~/routes/__u/$profile";
@@ -33,7 +33,7 @@ export const loader: LoaderFunction = async ({
 }) => {
     if (!params.profile) throw new Error("Profile username not found")
 
-    const userId = await requireUserId(request);
+    const user = await getUser(request);
     const profile = await getProfileByUsername(params.profile, true);
 
     if (!profile) {
@@ -43,10 +43,10 @@ export const loader: LoaderFunction = async ({
         throw json(data, { status: 404 })
     }
 
-    const { userId: profileOwnerId, userEmail: profileOwnerEmail, sectionOrder } = profile
+    const { userEmail: profileOwnerEmail, sectionOrder } = profile
 
-    if (!profileOwnerId.includes(userId)) {
-        const data: EditProfileCatchData = { profileOwnerEmail }
+    if (user?.email !== profileOwnerEmail) {
+        const data: EditProfileCatchData = { profileOwnerEmail, profileUsername: params.profile }
         throw json(data, { status: 401 })
     }
 
