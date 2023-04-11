@@ -10,9 +10,11 @@ import { defaultRoutes } from "~/utils";
 import markdownToTxt from "markdown-to-txt";
 import { sanitize } from "isomorphic-dompurify";
 import Watermark from "~/components/templates/watermark";
+import { getUser } from "~/session.server";
 
 export type ProfileLoaderData = {
-    profile: ProfileWithAllIncluded
+    profile: ProfileWithAllIncluded,
+    isOwner?: boolean
 }
 
 export const meta: MetaFunction = ({ data }) => {
@@ -22,7 +24,8 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 export type EditProfileCatchData = {
-    profileOwnerEmail: string
+    profileOwnerEmail: string,
+    profileUsername: string
 }
 
 export type ProfileCatchData = {
@@ -31,14 +34,16 @@ export type ProfileCatchData = {
 
 export type ProfileThrownResponses = ThrownResponse | ThrownResponse<401, EditProfileCatchData> | ThrownResponse<404, ProfileCatchData>;
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
     if (!params.profile) {
         throw new Response("Profile username is missing", {
             status: 400,
         });
     }
 
+    const user = await getUser(request);
     const profile = await getProfileByUsername(params.profile, true)
+
 
     if (!profile) {
         const data = {
@@ -47,14 +52,13 @@ export const loader: LoaderFunction = async ({ params }) => {
         throw json(data, { status: 404 })
     }
 
-    return json<ProfileLoaderData>({ profile: profile as ProfileWithAllIncluded });
+    return json<ProfileLoaderData>({ profile: profile as ProfileWithAllIncluded, isOwner: user?.email === profile.userEmail });
 }
 
 const ProfilePage = () => {
-    const { profile } = useLoaderData<ProfileLoaderData>();
+    const { profile, isOwner } = useLoaderData<ProfileLoaderData>();
 
     const {
-        username,
         avatar,
         displayName,
         jobTitle,
@@ -379,7 +383,9 @@ const ProfilePage = () => {
                 })}
             </div>
             <Outlet />
-            <Watermark />
+            {
+                isOwner === false && (<Watermark />)
+            }
         </>
     );
 }
@@ -396,7 +402,7 @@ export const CatchBoundary = () => {
                         {caught.data.profileOwnerEmail}
                     </span> to get access</div>
                     <div className="mt-4 z-20">
-                        <Link to="/" className="btn-secondary">Head back</Link>
+                        <Link to={`/${caught.data.profileUsername}`} className="btn-secondary">View instead of editing</Link>
                     </div>
                     <div className="absolute z-0 select-none opacity-[2%] filter transition duration-200 blur-[2px]">
                         <h1 className="text-[20rem] font-black">{caught.status}</h1>

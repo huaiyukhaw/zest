@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     if (!profile) throw new Error("Profile username not found")
 
     if (!profile.userId.includes(userId)) {
-        const data: EditProfileCatchData = { profileOwnerEmail: profile.userEmail }
+        const data: EditProfileCatchData = { profileOwnerEmail: profile.userEmail, profileUsername: profile.username }
         throw json(data, { status: 401 })
     }
 
