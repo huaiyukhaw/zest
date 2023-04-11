@@ -30,11 +30,15 @@ The usage of LinkBio is straightforward: users simply create an account and cust
 
 ## Screenshots
 
-![image](https://user-images.githubusercontent.com/31930091/226646919-11f983f4-89e0-4420-9c59-befc4cbab95e.png)
+![screenshot 1](https://user-images.githubusercontent.com/31930091/226646919-11f983f4-89e0-4420-9c59-befc4cbab95e.png)
 
-![image](https://user-images.githubusercontent.com/31930091/226651975-6a15d7a8-416d-40ff-a6c5-dcaa0b4915ca.png)
+![screenshot 2](https://user-images.githubusercontent.com/31930091/226651975-6a15d7a8-416d-40ff-a6c5-dcaa0b4915ca.png)
 
-![image](https://user-images.githubusercontent.com/31930091/226647491-499e8de7-92fd-452c-bbc5-93b6b8bef8f0.png)
+![screenshot 3](https://user-images.githubusercontent.com/31930091/226647491-499e8de7-92fd-452c-bbc5-93b6b8bef8f0.png)
+
+## ER Diagram
+
+![erd](https://raw.githubusercontent.com/huaiyukhaw/zest/main/erd.svg)
 
 ---
 
